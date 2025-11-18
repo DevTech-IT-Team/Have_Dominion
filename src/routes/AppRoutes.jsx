@@ -14,7 +14,7 @@ export default function AppRoutes() {
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
-          <Route path="/lessons" element={<Lessons />} />
+          {/*<Route path="/lessons" element={<Lessons />} />*/}
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/services" element={<Services />} />

@@ -19,7 +19,7 @@ export default function Navbar() {
           <div className="hidden md:flex gap-8">
             <Link to="/" className="text-gray-300 hover:text-white transition">Home</Link>
             <Link to="/services" className="text-gray-300 hover:text-white transition">Services</Link>
-            <Link to="/lessons" className="text-gray-300 hover:text-white transition">Lessons</Link>
+            {/*<Link to="/lessons" className="text-gray-300 hover:text-white transition">Lessons</Link>*/}
             <Link to="/about" className="text-gray-300 hover:text-white transition">About</Link>
             <Link to="/contact" className="text-gray-300 hover:text-white transition">Contact</Link>
           </div>
