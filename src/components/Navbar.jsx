@@ -90,7 +90,7 @@ export default function Navbar() {
             <div className="hidden md:flex items-center">
               <Link 
                 to="/signup" 
-                className="px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 rounded-full transition-all duration-300 shadow-lg hover:shadow-red-500/30 hover:scale-105"
+                className="px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-red-800 to-red-900 hover:from-red-700 hover:to-red-800 rounded-full transition-all duration-300 shadow-lg hover:shadow-red-500/20 hover:scale-105 border border-red-700/50"
               >
                 Sign Up
               </Link>

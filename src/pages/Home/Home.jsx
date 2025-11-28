@@ -269,15 +269,15 @@ const Home = () => {
       `}</style>
 
       {/* Emergency Banner */}
-      <section id="emergency" className="relative crimson-gradient text-white py-3">
-        <div className="container mx-auto px-4 text-center">
-          <div className="flex flex-col md:flex-row items-center justify-center space-y-2 md:space-y-0 md:space-x-6">
+      <section id="emergency" className="relative crimson-gradient text-white py-1">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <div className="flex flex-col md:flex-row items-center justify-center space-y-0.5 md:space-y-0 md:space-x-3">
             <div className="flex items-center space-x-2">
               <Zap className="h-4 w-4 animate-pulse" />
-              <span className="font-bold">24/7 Compliance & Support Services</span>
+              <span className="font-medium">24/7 Compliance & Support Services</span>
             </div>
             <div className="flex items-center space-x-2">
-              <a href="tel:1-888-997-3744" className="bg-black text-red-400 font-semibold py-2 px-4 rounded-full hover:bg-gray-900 transition-all duration-300 flex items-center space-x-2">
+              <a href="tel:1-888-997-3744" className="bg-black text-red-400 font-medium py-1.5 px-3 rounded-full hover:bg-gray-900 transition-all duration-300 flex items-center space-x-1.5 text-sm">
                 <PhoneCall className="h-4 w-4" />
                 <span>Call Now: 1-888-997-3744</span>
               </a>
@@ -314,17 +314,18 @@ const Home = () => {
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link 
                   to="/creditor-academy" 
-                  className="relative overflow-hidden group bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold py-4 px-8 rounded-xl shadow-lg flex items-center justify-center space-x-2 transition-all duration-300 hover:scale-105 hover:shadow-red-600/30"
+                  className="relative overflow-hidden group bg-gradient-to-r from-red-800 to-red-900 text-white font-semibold py-4 px-8 rounded-full shadow-lg flex items-center justify-center space-x-2 transition-all duration-300 hover:from-red-700 hover:to-red-800 hover:shadow-red-500/20 hover:scale-105 border border-red-700/50"
                 >
                   <GraduationCap className="h-5 w-5" />
                   <span>Start at Creditor Academy</span>
-                  <span className="absolute inset-0 bg-gradient-to-r from-yellow-500 to-yellow-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
                 </Link>
-                <button className="relative overflow-hidden group border-2 border-red-600/80 text-red-400 font-medium py-4 px-8 rounded-xl transition-all duration-300 hover:scale-105 hover:bg-red-600/10 flex items-center justify-center space-x-2">
+                <Link 
+                  to="tel:1-888-997-3744"
+                  className="relative overflow-hidden group border-2 border-red-700/80 text-red-400 font-medium py-4 px-8 rounded-full transition-all duration-300 hover:bg-red-900/30 hover:border-red-600/80 hover:scale-105 flex items-center justify-center space-x-2"
+                >
                   <Phone className="h-5 w-5" />
                   <span>Call 1-888-997-3744</span>
-                  <span className="absolute inset-0 bg-gradient-to-r from-yellow-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                </button>
+                </Link>
               </div>
               <div className="flex items-center space-x-6 text-sm text-red-200">
                 <div className="flex items-center space-x-2">
@@ -430,19 +431,18 @@ const Home = () => {
               </div>
               <div className="relative h-64 md:h-80 lg:h-96 overflow-hidden">
                 <img 
-                  src="https://images.unsplash.com/photo-1604594849809-dfedbc827105?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80" 
-                  alt="Credit score and financial growth" 
+                  src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.1.0&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80" 
+                  alt="Dark abstract financial technology background" 
                   className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent md:from-transparent md:to-black/40"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent md:from-transparent md:to-black/60"></div>
                 <div className="absolute bottom-0 left-0 right-0 p-4 text-white text-center md:text-right">
                   <div className="inline-flex items-center px-4 py-2 bg-red-600/90 rounded-full text-sm font-semibold mb-2">
                     <CreditCard className="h-4 w-4 mr-2" />
                     <span>Credit Building</span>
-                    <span>Custom Builds</span>
                   </div>
-                  <h4 className="text-xl font-bold">Premium Audio</h4>
-                  <p className="text-sm opacity-90">Transform your ride with our experts</p>
+                  <h4 className="text-xl font-bold">Financial Freedom</h4>
+                  <p className="text-sm opacity-90">Build your credit with confidence</p>
                 </div>
               </div>
             </div>
@@ -513,18 +513,18 @@ const Home = () => {
               </div>
               <div className="relative h-64 md:h-80 lg:h-96 overflow-hidden">
                 <img 
-                  src="https://images.unsplash.com/photo-1604999565976-8913ad2ddb7c?ixlib=rb-4.1.0&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1200&q=80" 
-                  alt="Professional HAM radio equipment and communication setup" 
+                  src="https://images.unsplash.com/photo-1606761568499-6d2451b23c66?ixlib=rb-4.1.0&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80" 
+                  alt="Professional HAM radio equipment with glowing dials and controls" 
                   className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent md:from-transparent md:to-black/40"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent md:from-transparent md:to-black/60"></div>
                 <div className="absolute bottom-0 left-0 right-0 p-4 text-white text-center md:text-right">
                   <div className="inline-flex items-center px-4 py-2 bg-red-600/90 rounded-full text-sm font-semibold mb-2">
                     <Radio className="h-4 w-4 mr-2" />
                     <span>HAM Radio Training</span>
                   </div>
-                  <h4 className="text-xl font-bold">Global Communication</h4>
-                  <p className="text-sm opacity-90">Connect worldwide with our expert training</p>
+                  <h4 className="text-xl font-bold">Global Connectivity</h4>
+                  <p className="text-sm opacity-90">Master communication with our expert training</p>
                 </div>
               </div>
             </div>

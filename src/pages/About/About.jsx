@@ -170,7 +170,7 @@ export default function About() {
     <div 
       className="min-h-screen pt-20 pb-20 relative overflow-hidden"
       style={{
-        backgroundImage: 'url("/src/assets/smoke.jpg")',
+        backgroundImage: 'url("/smoke.jpg")',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
@@ -184,7 +184,7 @@ export default function About() {
       <div 
         className="absolute top-0 right-0 w-96 h-96 opacity-80 z-0"
         style={{
-          backgroundImage: 'url("/src/assets/smoke.jpg")',
+          backgroundImage: 'url("/smoke.jpg")',
           backgroundSize: 'cover',
           backgroundPosition: 'top right',
           maskImage: 'radial-gradient(circle at top right, black 20%, transparent 80%)',
@@ -197,7 +197,7 @@ export default function About() {
       <div 
         className="absolute bottom-0 left-0 w-96 h-96 opacity-80 z-0"
         style={{
-          backgroundImage: 'url("/src/assets/smoke.jpg")',
+          backgroundImage: 'url("/smoke.jpg")',
           backgroundSize: 'cover',
           backgroundPosition: 'bottom left',
           maskImage: 'radial-gradient(circle at bottom left, black 20%, transparent 80%)',
