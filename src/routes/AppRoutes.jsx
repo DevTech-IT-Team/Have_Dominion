@@ -17,6 +17,8 @@ import MyServices from '../pages/Dashboard/MyServices';
 import ComplianceTracker from '../pages/Dashboard/ComplianceTracker';
 import CreditorAcademy from '../pages/Dashboard/CreditorAcademy';
 import ProgressTracking from '../pages/Dashboard/ProgressTracking';
+import PrivacyPolicy from '../pages/PrivacyPolicy/PrivacyPolicy';
+import TermsOfService from '../pages/TermsOfService/TermsOfService';
 
 // A component to protect routes that require authentication
 function ProtectedRoute() {
@@ -64,6 +66,8 @@ export default function AppRoutes() {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/services" element={<Services />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="*" element={<NotFound />} />
       </Route>
       

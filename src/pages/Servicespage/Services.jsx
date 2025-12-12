@@ -13,7 +13,7 @@ export default function ServiceNeighborhood() {
     {
       id: 'ham-radio',
       title: 'HAM Radio Licensing',
-      color: '#FF8C00',
+      color: '#B8860B', // Dark Goldenrod
       icon: '📡',
       description: 'Get licensed and master amateur radio communication',
       buildings: [
@@ -63,7 +63,7 @@ export default function ServiceNeighborhood() {
     {
       id: 'private-membership',
       title: 'Private Membership',
-      color: '#FFA500',
+      color: '#B8860B', // Dark Goldenrod
       icon: '🎯',
       description: 'Exclusive coaching and private sector transition support',
       buildings: [
@@ -110,7 +110,7 @@ export default function ServiceNeighborhood() {
     {
       id: 'financial-coaching',
       title: 'Financial Coaching',
-      color: '#FF8C00',
+      color: '#BDB76B', // Dark Khaki
       icon: '💰',
       description: 'One-on-one financial education and private banking mastery',
       buildings: [
@@ -157,7 +157,7 @@ export default function ServiceNeighborhood() {
     {
       id: 'tradelines',
       title: 'Credit Tradelines',
-      color: '#D2691E',
+      color: '#B8860B', // Dark Goldenrod
       icon: '📈',
       description: 'Boost your credit profile with established credit lines',
       buildings: [
@@ -204,7 +204,7 @@ export default function ServiceNeighborhood() {
     {
       id: 'documents',
       title: 'Document Management',
-      color: '#D2691E',
+      color: '#DAA520', // Goldenrod
       icon: '📋',
       description: 'Secure document storage and compliance tracking system',
       buildings: [
@@ -229,41 +229,11 @@ export default function ServiceNeighborhood() {
       ]
     },
 
-    /* Commented out Software Development section
-    {
-      id: 'development',
-      title: 'Software Development',
-      color: '#FF8C00',
-      icon: '💻',
-      description: 'Custom software and secure app development services',
-      buildings: [
-        { 
-          name: 'Web Development', 
-          available: true, 
-          time: '24/7',
-          description: 'Custom website and web application development',
-          provider: 'Have Dominion',
-          rating: '4.9/5',
-          features: ['Responsive Design', 'Secure Coding', 'Performance Optimization', 'Maintenance']
-        },
-        { 
-          name: 'Mobile Apps', 
-          available: true, 
-          time: '24/7',
-          description: 'Secure mobile application development for F-Droid & Aurora',
-          provider: 'Have Dominion',
-          rating: '5.0/5',
-          features: ['Cross-platform', 'Privacy Focused', 'Offline Capability', 'Secure Authentication']
-        }
-      ]
-    },
-    */
-
     // Security & Protection Services
     {
       id: 'security',
       title: 'Security Services',
-      color: '#8B0000',
+      color: '#DAA520', // Goldenrod
       icon: '🛡️',
       description: 'Comprehensive digital and physical security solutions',
       buildings: [
@@ -305,97 +275,47 @@ export default function ServiceNeighborhood() {
     setSelectedCategory(null);
   };
 
-  const askAIQuestion = () => {
-    if (userQuestion.trim()) {
-      // Simulate AI response based on question content
-      let response = "";
-      const question = userQuestion.toLowerCase();
-      
-      if (question.includes('ham') || question.includes('radio')) {
-        response = "For HAM radio licensing, I recommend starting with our Technician License program. It's perfect for beginners and includes full FCC exam preparation with curated learning resources.";
-      } else if (question.includes('credit') || question.includes('score')) {
-        response = "Our Credit Tradelines service can help boost your credit score quickly. Combined with our Financial Coaching, you'll have a complete credit building strategy.";
-      } else if (question.includes('business') || question.includes('private')) {
-        response = "The Private Membership program includes business structure setup, private contracting guidance, and access to our exclusive Creditor Academy community.";
-      } else if (question.includes('financial') || question.includes('money')) {
-        response = "Our Financial Coaching provides one-on-one mentorship covering credit building, private banking, and strategies for achieving financial independence.";
-      } else {
-        response = "Based on your question, I recommend exploring our comprehensive services. Each program is designed to work together for complete personal and financial development.";
-      }
-      
-      setAiResponse(response);
-      setUserQuestion('');
-    }
-  };
-
   const CategoryDetailPanel = () => (
     <motion.div
       initial={{ opacity: 0, x: 300 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 300 }}
-      className="fixed right-0 top-0 h-full w-96 bg-gray-900/95 backdrop-blur-xl border-l border-gray-700 shadow-2xl z-50 overflow-y-auto"
+      className="fixed right-0 top-0 h-full w-96 bg-gradient-to-br from-yellow-50/95 to-white/95 backdrop-blur-xl border-l border-yellow-200 shadow-2xl z-50 overflow-y-auto"
     >
       {/* Panel Header */}
-      <div className="p-6 border-b border-gray-700">
+      <div className="p-6 border-b border-yellow-200 bg-white/50">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-3">
             <div 
-              className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
-              style={{ backgroundColor: selectedCategory.color + '20', color: selectedCategory.color }}
+              className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl shadow-lg"
+              style={{ 
+                backgroundColor: selectedCategory.color + '30',
+                color: selectedCategory.color,
+                border: `2px solid ${selectedCategory.color}20`
+              }}
             >
               {selectedCategory.icon}
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-white">{selectedCategory.title}</h2>
-              <p className="text-gray-400 text-sm">{selectedCategory.buildings.length} services available</p>
+              <h2 className="text-2xl font-bold text-gray-800">{selectedCategory.title}</h2>
+              <p className="text-gray-600 text-sm">{selectedCategory.buildings.length} services available</p>
             </div>
           </div>
           <button
             onClick={closeCategoryPanel}
-            className="p-2 hover:bg-gray-800 rounded-lg transition-colors text-gray-400 hover:text-white"
+            className="p-2 hover:bg-yellow-50 rounded-lg transition-colors text-gray-600 hover:text-gray-900"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
-        <p className="text-gray-300 text-sm">{selectedCategory.description}</p>
+        <p className="text-gray-700 text-sm">{selectedCategory.description}</p>
       </div>
-
-      {/* AI Question Section - Commented out as per request */}
-      {/* 
-      <div className="p-6 border-b border-gray-700">
-        <h3 className="text-lg font-semibold text-white mb-3">🤖 Have Dominion Assistant</h3>
-        <div className="space-y-3">
-          <textarea
-            value={userQuestion}
-            onChange={(e) => setUserQuestion(e.target.value)}
-            placeholder="Ask about our services... (e.g., Which HAM radio license should I start with?)"
-            className="w-full h-20 p-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none text-sm"
-          />
-          <button
-            onClick={askAIQuestion}
-            disabled={!userQuestion.trim()}
-            className="w-full py-2 bg-orange-600 hover:bg-orange-700 disabled:bg-gray-600 text-white rounded-lg font-medium transition-colors"
-          >
-            Ask Have Dominion AI
-          </button>
-          {aiResponse && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="p-3 bg-orange-500/10 border border-orange-500/20 rounded-lg"
-            >
-              <p className="text-orange-300 text-sm">{aiResponse}</p>
-            </motion.div>
-          )}
-        </div>
-      </div>
-      */}
 
       {/* Services List */}
-      <div className="p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">Available Services</h3>
+      <div className="p-6 bg-gradient-to-b from-white to-yellow-50/30">
+        <h3 className="text-lg font-semibold text-gray-800 mb-4">Available Services</h3>
         <div className="space-y-3">
           {selectedCategory.buildings.map((building, index) => (
             <motion.div
@@ -403,28 +323,35 @@ export default function ServiceNeighborhood() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="p-4 bg-gray-800/50 rounded-lg border border-gray-700 hover:border-orange-500/50 transition-colors cursor-pointer group"
+              className="p-4 bg-white/70 rounded-xl border border-yellow-100 hover:border-yellow-300 transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-md"
               onClick={() => alert(`Booking ${building.name} - Contact Have Dominion to get started!`)}
             >
               <div className="flex items-start justify-between mb-2">
-                <h4 className="text-white font-semibold group-hover:text-orange-300 transition-colors">
+                <h4 className="text-gray-800 font-semibold group-hover:text-yellow-700 transition-colors">
                   {building.name}
                 </h4>
-                <span className="text-green-400 text-sm font-medium bg-green-500/10 px-2 py-1 rounded">
+                <span className="text-emerald-600 text-sm font-medium bg-emerald-50 px-2 py-1 rounded border border-emerald-100">
                   {building.rating}
                 </span>
               </div>
-              <p className="text-gray-400 text-sm mb-2">{building.description}</p>
+              <p className="text-gray-600 text-sm mb-2">{building.description}</p>
               <div className="flex flex-wrap gap-1 mb-2">
                 {building.features.slice(0, 3).map((feature, idx) => (
-                  <span key={idx} className="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded">
+                  <span 
+                    key={idx} 
+                    className="text-xs bg-yellow-50 text-yellow-800 px-2 py-1 rounded border border-yellow-100"
+                  >
                     {feature}
                   </span>
                 ))}
               </div>
               <div className="flex items-center justify-between text-xs text-gray-500">
-                <span>🕒 {building.time}</span>
-                <span>👤 {building.provider}</span>
+                <span className="flex items-center gap-1">
+                  <span className="text-yellow-600">🕒</span> {building.time}
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="text-yellow-600">👤</span> {building.provider}
+                </span>
               </div>
             </motion.div>
           ))}
@@ -432,15 +359,15 @@ export default function ServiceNeighborhood() {
       </div>
 
       {/* Quick Actions */}
-      <div className="p-6 border-t border-gray-700">
+      <div className="p-6 border-t border-yellow-200 bg-white/70">
         <div className="space-y-2">
           <button 
             onClick={() => alert('Contact Have Dominion: info@havedominion.com')}
-            className="w-full py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-semibold transition-colors"
+            className="w-full py-3 bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-700 hover:to-yellow-800 text-white rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-yellow-500/30"
           >
             📞 Contact Have Dominion
           </button>
-          <button className="w-full py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-lg font-medium transition-colors border border-gray-600">
+          <button className="w-full py-3 bg-white hover:bg-yellow-50 text-gray-800 rounded-xl font-medium transition-all duration-300 border-2 border-yellow-200 hover:border-yellow-300">
             💰 Get Pricing Info
           </button>
         </div>
@@ -449,12 +376,12 @@ export default function ServiceNeighborhood() {
   );
 
   return (
-    <div className="min-h-screen bg-black pt-20 pb-20">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-amber-50 pt-20 pb-20">
       {/* Background Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-orange-600/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-red-800/10 rounded-full blur-3xl"></div>
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,140,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(139,0,0,0.03)_1px,transparent_1px)] bg-[size:64px_64px]"></div>
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-yellow-200/30 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-amber-100/20 rounded-full blur-3xl"></div>
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(218,165,32,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(139,128,0,0.05)_1px,transparent_1px)] bg-[size:64px_64px]"></div>
       </div>
 
       {/* Category Detail Panel Overlay */}
@@ -465,7 +392,7 @@ export default function ServiceNeighborhood() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
+              className="fixed inset-0 bg-yellow-900/10 backdrop-blur-sm z-40"
               onClick={closeCategoryPanel}
             />
             <CategoryDetailPanel />
@@ -485,7 +412,7 @@ export default function ServiceNeighborhood() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-6xl font-bold text-white mb-6"
+            className="text-6xl font-bold text-gray-900 mb-6 bg-gradient-to-r from-yellow-700 via-amber-700 to-yellow-800 bg-clip-text text-transparent"
           >
             Have Dominion Services
           </motion.h1>
@@ -493,7 +420,7 @@ export default function ServiceNeighborhood() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto"
+            className="text-xl text-gray-700 mb-8 max-w-2xl mx-auto"
           >
             Master your communication, finances, and future with our comprehensive service ecosystem
           </motion.p>
@@ -511,12 +438,12 @@ export default function ServiceNeighborhood() {
                 placeholder="Search Have Dominion services... (HAM radio, credit, financial, etc.)"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-6 py-4 bg-black/30 border border-gray-700 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 backdrop-blur-sm text-lg transition-all duration-300 hover:border-gray-600"
+                className="w-full px-6 py-4 bg-white/80 border-2 border-yellow-200 rounded-2xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 backdrop-blur-sm text-lg transition-all duration-300 hover:border-yellow-300 shadow-lg"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
                 >
                   ✕
                 </button>
@@ -542,30 +469,31 @@ export default function ServiceNeighborhood() {
                   transition: { duration: 0.3 }
                 }}
                 whileTap={{ scale: 0.98 }}
-                className="bg-gray-900/80 backdrop-blur-md border border-gray-700 rounded-2xl p-6 cursor-pointer shadow-xl hover:border-orange-500/50 transition-all duration-300"
+                className="bg-gradient-to-br from-white to-yellow-50/70 backdrop-blur-md border-2 border-yellow-100 rounded-2xl p-6 cursor-pointer shadow-xl hover:shadow-2xl hover:border-yellow-300 transition-all duration-300"
                 onClick={() => handleCategoryClick(block)}
               >
                 {/* Block Header */}
                 <div className="flex items-center space-x-4 mb-4">
                   <motion.div 
                     whileHover={{ scale: 1.1, rotate: 5 }}
-                    className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl bg-gray-800 border border-gray-700"
+                    className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl shadow-lg"
                     style={{ 
-                      backgroundColor: block.color + '15',
-                      color: block.color
+                      backgroundColor: block.color + '30',
+                      color: block.color,
+                      border: `2px solid ${block.color}20`
                     }}
                   >
                     {block.icon}
                   </motion.div>
                   <div className="flex-1">
-                    <h3 className="text-xl font-bold text-white">{block.title}</h3>
-                    <p className="text-gray-400 text-sm">
+                    <h3 className="text-xl font-bold text-gray-800">{block.title}</h3>
+                    <p className="text-gray-600 text-sm">
                       {block.buildings.length} specialized services
                     </p>
                   </div>
                 </div>
 
-                <p className="text-gray-300 text-sm mb-4 leading-relaxed">
+                <p className="text-gray-700 text-sm mb-4 leading-relaxed">
                   {block.description}
                 </p>
 
@@ -575,15 +503,17 @@ export default function ServiceNeighborhood() {
                     <motion.div 
                       key={idx}
                       whileHover={{ x: 4 }}
-                      className="flex items-center justify-between text-sm p-2 rounded-lg bg-gray-800/50 hover:bg-gray-800 transition-colors"
+                      className="flex items-center justify-between text-sm p-3 rounded-lg bg-white/50 border border-yellow-100 hover:bg-yellow-50/50 transition-colors"
                     >
                       <div>
-                        <span className="text-gray-200 font-medium">{building.name}</span>
-                        <p className="text-gray-400 text-xs">{building.provider}</p>
+                        <span className="text-gray-800 font-medium">{building.name}</span>
+                        <p className="text-gray-600 text-xs">{building.provider}</p>
                       </div>
                       <div className="text-right">
-                        <div className="text-green-400 text-xs font-medium">{building.time}</div>
-                        <div className="text-yellow-400 text-xs">⭐ {building.rating}</div>
+                        <div className="text-emerald-600 text-xs font-medium">{building.time}</div>
+                        <div className="text-yellow-600 text-xs flex items-center">
+                          <span className="text-yellow-500 mr-1">★</span> {building.rating}
+                        </div>
                       </div>
                     </motion.div>
                   ))}
@@ -595,7 +525,7 @@ export default function ServiceNeighborhood() {
                     className="text-center"
                     whileHover={{ scale: 1.05 }}
                   >
-                    <span className="text-orange-400 text-sm font-medium bg-orange-500/10 px-3 py-1 rounded-full border border-orange-500/20">
+                    <span className="text-yellow-700 text-sm font-medium bg-yellow-100 px-3 py-1 rounded-full border border-yellow-200">
                       +{block.buildings.length - 2} more services →
                     </span>
                   </motion.div>
@@ -612,14 +542,14 @@ export default function ServiceNeighborhood() {
             animate={{ opacity: 1 }}
             className="text-center py-16"
           >
-            <div className="text-8xl mb-6 text-gray-600">🔍</div>
-            <h3 className="text-2xl font-bold text-white mb-3">No services found</h3>
-            <p className="text-gray-400 text-lg">
+            <div className="text-8xl mb-6 text-yellow-200">🔍</div>
+            <h3 className="text-2xl font-bold text-gray-800 mb-3">No services found</h3>
+            <p className="text-gray-600 text-lg">
               Try searching for "HAM radio", "credit", "financial", "membership", etc.
             </p>
             <button
               onClick={() => setSearchQuery('')}
-              className="mt-6 px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-xl transition-colors font-medium border border-gray-600"
+              className="mt-6 px-6 py-3 bg-yellow-100 hover:bg-yellow-200 text-gray-800 rounded-xl transition-colors font-medium border-2 border-yellow-200"
             >
               Clear Search
             </button>
@@ -631,27 +561,27 @@ export default function ServiceNeighborhood() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8 }}
-          className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-900/90 backdrop-blur-lg rounded-2xl p-4 border border-gray-700 shadow-xl"
+          className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-white/90 backdrop-blur-lg rounded-2xl p-4 border-2 border-yellow-200 shadow-2xl"
         >
           <div className="flex space-x-3">
             <motion.button
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
-              className="px-6 py-3 bg-gradient-to-r from-orange-600 to-orange-800 hover:from-orange-700 hover:to-orange-900 text-white rounded-xl transition-all font-medium flex items-center space-x-2 shadow-lg hover:shadow-orange-500/20"
+              className="px-6 py-3 bg-gradient-to-r from-yellow-600 to-amber-700 hover:from-yellow-700 hover:to-amber-800 text-white rounded-xl transition-all font-medium flex items-center space-x-2 shadow-lg hover:shadow-yellow-500/30"
             >
               <span>Join Have Dominion</span>
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
-              className="px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-xl transition-all font-medium flex items-center space-x-2 border border-gray-600"
+              className="px-6 py-3 bg-white hover:bg-yellow-50 text-gray-800 rounded-xl transition-all font-medium flex items-center space-x-2 border-2 border-yellow-200 hover:border-yellow-300"
             >
               <span>Schedule Consultation</span>
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
-              className="px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-xl transition-all font-medium flex items-center space-x-2 border border-gray-600"
+              className="px-6 py-3 bg-white hover:bg-yellow-50 text-gray-800 rounded-xl transition-all font-medium flex items-center space-x-2 border-2 border-yellow-200 hover:border-yellow-300"
             >
               <span>Download Resources</span>
             </motion.button>

@@ -9,9 +9,6 @@ export default function About() {
   const autoRotateRef = useRef(null);
   const sectionRef = useRef(null);
 
-  // Add Font Awesome CSS in your index.html or App.js
-  // <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-
   const sections = [
     { id: 'pathway', label: 'The Pathway', icon: 'fa-solid fa-route' },
     { id: 'how-it-works', label: 'How It Works', icon: 'fa-solid fa-gears' },
@@ -85,22 +82,22 @@ export default function About() {
     {
       metric: 'Lifestyle Stability',
       description: 'Build a stable foundation for long-term personal growth',
-      icon: ''
+      icon: 'fa-solid fa-shield-heart'
     },
     {
       metric: 'Financial Confidence',
       description: 'Operate with financial certainty and strategic advantage',
-      icon: ''
+      icon: 'fa-solid fa-chart-line'
     },
     {
       metric: 'Long-term Growth',
       description: 'Sustainable personal and professional development',
-      icon: ''
+      icon: 'fa-solid fa-seedling'
     },
     {
       metric: 'Private Domain Access',
       description: 'Full integration into private systems and operations',
-      icon: ''
+      icon: 'fa-solid fa-key'
     }
   ];
 
@@ -122,14 +119,6 @@ export default function About() {
       }
     };
   }, [isAutoRotating, sections]);
-
-  // Progress simulation
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setProgress(prev => (prev >= 100 ? 0 : prev + 10));
-    }, 2000);
-    return () => clearInterval(interval);
-  }, []);
 
   const handleContentTap = () => {
     const newClickCount = clickCount + 1;
@@ -155,49 +144,14 @@ export default function About() {
     setActiveSection(sectionId);
   };
 
-  const getCurrentSectionIndex = () => {
-    return sections.findIndex(section => section.id === activeSection);
-  };
-
   return (
-    <div 
-      className="min-h-screen pt-20 pb-20 relative overflow-hidden"
-      style={{
-        backgroundImage: 'url("/smoke.jpg")',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
-        backgroundRepeat: 'no-repeat'
-      }}
-    >
-      {/* Main Background Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/80 to-black/70 backdrop-blur-sm"></div>
-      
-      {/* Corner Image Overlay - Top Right */}
-      <div 
-        className="absolute top-0 right-0 w-96 h-96 opacity-80 z-0"
-        style={{
-          backgroundImage: 'url("/smoke.jpg")',
-          backgroundSize: 'cover',
-          backgroundPosition: 'top right',
-          maskImage: 'radial-gradient(circle at top right, black 20%, transparent 80%)',
-          WebkitMaskImage: 'radial-gradient(circle at top right, black 20%, transparent 80%)',
-          filter: 'brightness(1.2)'
-        }}
-      ></div>
-
-      {/* Corner Image Overlay - Bottom Left */}
-      <div 
-        className="absolute bottom-0 left-0 w-96 h-96 opacity-80 z-0"
-        style={{
-          backgroundImage: 'url("/smoke.jpg")',
-          backgroundSize: 'cover',
-          backgroundPosition: 'bottom left',
-          maskImage: 'radial-gradient(circle at bottom left, black 20%, transparent 80%)',
-          WebkitMaskImage: 'radial-gradient(circle at bottom left, black 20%, transparent 80%)',
-          filter: 'brightness(1.2)'
-        }}
-      ></div>
+    <div className="min-h-screen bg-gradient-to-br from-yellow-100 via-amber-50 to-yellow-100 pt-20 pb-20 relative">
+      {/* Background Elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-yellow-300/40 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/3 right-1/4 w-[28rem] h-[28rem] bg-amber-200/30 rounded-full blur-3xl"></div>
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(218,165,32,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(184,134,11,0.1)_1px,transparent_1px)] bg-[size:48px_48px] opacity-60"></div>
+      </div>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
@@ -211,15 +165,15 @@ export default function About() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="text-5xl md:text-6xl font-bold text-white mb-6"
+            className="text-5xl md:text-6xl font-bold text-gray-900 mb-6"
           >
-            Pathway to the <span className="bg-gradient-to-r from-amber-600 to-red-800 text-transparent bg-clip-text font-bold">Private</span>
+            Pathway to the <span className="bg-gradient-to-r from-yellow-400 via-amber-500 text-white text-transparent bg-clip-text font-bold drop-shadow-lg">Private</span>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="text-xl text-gray-200 max-w-4xl mx-auto leading-relaxed"
+            className="text-lg md:text-xl text-gray-700 mb-8 max-w-3xl leading-relaxed"
           >
             Earn Your Way Into Private Membership & Training. At our Global Conglomerate, we empower individuals 
             to build stable, secure, and private lives through a clear pathway from public systems to private domains.
@@ -239,21 +193,21 @@ export default function About() {
                 <motion.button
                   key={tab.id}
                   onClick={() => handleSectionClick(tab.id)}
-                  className={`flex flex-col items-center justify-center p-4 rounded-lg transition-all duration-300 ${
+                  className={`flex flex-col items-center justify-center p-4 rounded-xl transition-all duration-300 ${
                     activeSection === tab.id
-                      ? 'bg-gradient-to-br from-amber-900/90 to-red-900/90 border border-amber-800/80 shadow-lg shadow-amber-900/50'
-                      : 'bg-gray-800/60 border border-gray-700 hover:border-amber-500/50 hover:bg-gray-700/60'
+                      ? 'bg-gradient-to-br from-yellow-600/90 via-amber-700/90 text-white/90 border-2 border-yellow-400 shadow-lg shadow-yellow-900/50'
+                      : 'bg-white/80 border-2 border-yellow-200 hover:border-yellow-300 hover:bg-yellow-50/90'
                   }`}
                   whileHover={{ y: -3, scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                 >
                   <div className={`text-2xl mb-2 ${
-                    activeSection === tab.id ? 'text-amber-300' : 'text-gray-300'
+                    activeSection === tab.id ? 'text-white' : 'text-gray-800'
                   }`}>
                     <i className={tab.icon}></i>
                   </div>
                   <span className={`text-sm font-medium text-center ${
-                    activeSection === tab.id ? 'text-white' : 'text-gray-300'
+                    activeSection === tab.id ? 'text-white font-semibold' : 'text-gray-800'
                   }`}>
                     {tab.label}
                   </span>
@@ -281,8 +235,8 @@ export default function About() {
                 className="mb-16"
               >
                 <div className="text-center mb-12">
-                  <h2 className="text-4xl font-bold text-white mb-4">The Clear Pathway</h2>
-                  <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+                  <h2 className="text-4xl font-bold text-gray-900 mb-4">The Clear Pathway</h2>
+                  <p className="text-lg text-gray-700 max-w-3xl mx-auto">
                     A structured journey from public participation to private mastery, ensuring 
                     confidence and competence at every step.
                   </p>
@@ -296,26 +250,39 @@ export default function About() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.1 + index * 0.1 }}
                       whileHover={{ scale: 1.02, y: -5 }}
-                      className="bg-transparent rounded-2xl p-6 border border-amber-500/10 hover:border-amber-500/20 transition-all duration-300 group"
+                      className="bg-white/80 rounded-2xl p-6 border-2 border-yellow-200 hover:border-yellow-300 transition-all duration-300 group backdrop-blur-sm shadow-md hover:shadow-lg"
                     >
                       <div className="flex items-start space-x-4">
-                        <div className="text-3xl">{step.icon}</div>
+                        <div className={`text-3xl ${
+                          index === 0 ? 'text-yellow-600' : 
+                          index === 1 ? 'text-amber-600' : 
+                          index === 2 ? 'text-yellow-500' : 'text-olive-600'
+                        }`}>
+                          <i className={`fa-solid fa-${index === 0 ? 'hammer' : index === 1 ? 'graduation-cap' : index === 2 ? 'book-open' : 'arrow-up'}`}></i>
+                        </div>
                         <div className="flex-1">
                           <div className="flex items-center space-x-2 mb-2">
-                            <span className="text-amber-400/70 font-bold text-lg">Step {step.step}</span>
-                            <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
-                            <h3 className="text-xl font-bold text-white">{step.title}</h3>
+                            <span className={`font-bold text-lg ${
+                              index === 0 ? 'text-yellow-600' : 
+                              index === 1 ? 'text-amber-600' : 
+                              index === 2 ? 'text-yellow-500' : 'text-olive-600'
+                            }`}>Step {step.step}</span>
+                            <div className={`w-2 h-2 rounded-full ${
+                              index === 0 ? 'bg-yellow-600' : 
+                              index === 1 ? 'bg-amber-600' : 
+                              index === 2 ? 'bg-yellow-500' : 'bg-olive-600'
+                            }`}></div>
+                            <h3 className="text-xl font-bold text-gray-800">{step.title}</h3>
                           </div>
-                          <p className="text-gray-300 mb-3">{step.description}</p>
-                          <div className="bg-transparent rounded-lg p-3 border border-transparent">
-                            <p className="text-amber-200/80 text-sm font-medium">Outcome: {step.outcome}</p>
+                          <p className="text-gray-700 mb-3">{step.description}</p>
+                          <div className="bg-yellow-50 rounded-lg p-3 border border-yellow-200">
+                            <p className="text-gray-800 text-sm font-medium">Outcome: {step.outcome}</p>
                           </div>
                         </div>
                       </div>
                     </motion.div>
                   ))}
                 </div>
-
               </motion.section>
             )}
 
@@ -330,8 +297,8 @@ export default function About() {
                 className="mb-16"
               >
                 <div className="text-center mb-12">
-                  <h2 className="text-4xl font-bold text-white mb-4">How The System Works</h2>
-                  <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+                  <h2 className="text-4xl font-bold text-gray-900 mb-4">How The System Works</h2>
+                  <p className="text-lg text-gray-700 max-w-3xl mx-auto">
                     A credit-based ecosystem that rewards contribution with knowledge and private access.
                   </p>
                 </div>
@@ -340,10 +307,13 @@ export default function About() {
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-transparent rounded-2xl p-6 border border-amber-500/10 hover:border-amber-500/20 transition-all duration-300 text-center"
+                    className="bg-white/80 rounded-2xl p-6 border-2 border-yellow-200 hover:border-yellow-300 transition-all duration-300 text-center shadow-md hover:shadow-lg"
                   >
-                    <h3 className="text-xl font-bold text-white mb-3">Work & Contribute</h3>
-                    <p className="text-gray-300">
+                    <div className="text-4xl text-gray-800 mb-4">
+                      <i className="fa-solid fa-hammer"></i>
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-800 mb-3">Work & Contribute</h3>
+                    <p className="text-gray-700">
                       Complete meaningful tasks and projects to build your Private Credits pool
                     </p>
                   </motion.div>
@@ -352,10 +322,13 @@ export default function About() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 }}
-                    className="bg-transparent rounded-2xl p-6 border border-amber-500/10 hover:border-amber-500/20 transition-all duration-300 text-center"
+                    className="bg-white/80 rounded-2xl p-6 border-2 border-amber-200 hover:border-amber-300 transition-all duration-300 text-center shadow-md hover:shadow-lg"
                   >
-                    <h3 className="text-xl font-bold text-white mb-3">Earn Training Access</h3>
-                    <p className="text-gray-300">
+                    <div className="text-4xl text-gray-800 mb-4">
+                      <i className="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-800 mb-3">Earn Training Access</h3>
+                    <p className="text-gray-700">
                       Use accumulated credits to enroll in Creditor Academy's private programs
                     </p>
                   </motion.div>
@@ -364,10 +337,13 @@ export default function About() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.4 }}
-                    className="bg-transparent rounded-2xl p-6 border border-amber-500/10 hover:border-amber-500/20 transition-all duration-300 text-center"
+                    className="bg-white/80 rounded-2xl p-6 border-2 border-emerald-200 hover:border-emerald-300 transition-all duration-300 text-center shadow-md hover:shadow-lg"
                   >
-                    <h3 className="text-xl font-bold text-white mb-3">Advance Confidently</h3>
-                    <p className="text-gray-300">
+                    <div className="text-4xl text-gray-800 mb-4">
+                      <i className="fa-solid fa-chart-line"></i>
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-800 mb-3 drop-shadow-md">Advance Confidently</h3>
+                    <p className="text-gray-700 font-medium bg-emerald-50 p-2 rounded-lg border border-emerald-100">
                       Progress through training without financial burden, fully prepared for private operations
                     </p>
                   </motion.div>
@@ -386,8 +362,8 @@ export default function About() {
                 className="mb-16"
               >
                 <div className="text-center mb-12">
-                  <h2 className="text-4xl font-bold text-white mb-4">Training System</h2>
-                  <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+                  <h2 className="text-4xl font-bold text-gray-900 mb-4">Training System</h2>
+                  <p className="text-lg text-gray-700 max-w-3xl mx-auto">
                     Structured learning paths designed to build competence and confidence in private operations.
                   </p>
                 </div>
@@ -400,18 +376,22 @@ export default function About() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.2 + index * 0.1 }}
                       whileHover={{ scale: 1.02 }}
-                      className="bg-gray-900/20 backdrop-blur-sm rounded-2xl p-6 border border-amber-900/20 hover:border-amber-600/30 transition-all duration-300"
+                      className={`bg-white/90 rounded-2xl p-6 border-2 transition-all duration-300 group ${
+                        index === 0 ? 'border-yellow-200' : 'border-amber-200'
+                      } shadow-sm hover:shadow-md`}
                     >
                       <div className="mb-4">
-                        <h3 className="text-2xl font-bold text-white">{module.module}</h3>
+                        <h3 className="text-2xl font-bold text-gray-800">{module.module}</h3>
                       </div>
                       
                       <div className="mb-4">
-                        <h4 className="text-amber-400 font-semibold mb-2">Courses Included:</h4>
+                        <h4 className={`font-semibold mb-2 ${
+                          index === 0 ? 'text-gray-800' : 'text-gray-800'
+                        }`}>Courses Included:</h4>
                         <ul className="space-y-1">
                           {module.courses.map((course, idx) => (
-                            <li key={idx} className="text-gray-300 flex items-center space-x-2">
-                              <span className="text-amber-500">•</span>
+                            <li key={idx} className="text-gray-700 flex items-center space-x-2">
+                              <span className={`${index === 0 ? 'text-gray-800' : 'text-gray-800'}`}>•</span>
                               <span>{course}</span>
                             </li>
                           ))}
@@ -419,13 +399,19 @@ export default function About() {
                       </div>
 
                       <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div className="bg-amber-900/20 rounded-lg p-3 text-center">
-                          <p className="text-amber-200 font-semibold">Duration</p>
-                          <p className="text-white">{module.duration}</p>
+                        <div className={`rounded-lg p-3 text-center ${
+                          index === 0 
+                            ? 'bg-yellow-100 border border-yellow-200' 
+                            : 'bg-amber-100 border border-amber-200'
+                        }`}>
+                          <p className={`font-semibold ${
+                            index === 0 ? 'text-gray-800' : 'text-gray-800'
+                          }`}>Duration</p>
+                          <p className="text-gray-700">{module.duration}</p>
                         </div>
-                        <div className="bg-red-900/20 rounded-lg p-3 text-center">
-                          <p className="text-red-200 font-semibold">Credits Required</p>
-                          <p className="text-white">{module.credits}</p>
+                        <div className="bg-yellow-50 rounded-lg p-3 text-center border border-yellow-200">
+                          <p className="text-gray-800 font-semibold">Credits Required</p>
+                          <p className="text-gray-700">{module.credits}</p>
                         </div>
                       </div>
                     </motion.div>
@@ -445,8 +431,8 @@ export default function About() {
                 className="mb-16"
               >
                 <div className="text-center mb-12">
-                  <h2 className="text-4xl font-bold text-white mb-4">Your Transformation</h2>
-                  <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+                  <h2 className="text-4xl font-bold text-black mb-4">Your Transformation</h2>
+                  <p className="text-xl text-black max-w-3xl mx-auto">
                     The comprehensive benefits of completing your journey through our private pathway system.
                   </p>
                 </div>
@@ -459,13 +445,18 @@ export default function About() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.1 + index * 0.1 }}
                       whileHover={{ scale: 1.02, y: -5 }}
-                      className="bg-transparent rounded-2xl p-6 border border-amber-500/10 hover:border-amber-500/20 transition-all duration-300 group"
+                      className="bg-white rounded-2xl p-6 border-2 border-yellow-200 transition-all duration-300 group shadow-md hover:shadow-lg"
                     >
-                      <div className="text-4xl mb-4 text-center group-hover:scale-110 transition-transform duration-300">
-                        {benefit.icon}
+                      <div className="text-4xl mb-4 text-center group-hover:scale-110 transition-transform duration-300 text-black">
+                        <i className={`fa-solid fa-${
+                          index === 0 ? 'brain' :
+                          index === 1 ? 'user-shield' :
+                          index === 2 ? 'bolt' :
+                          'check-double'
+                        }`}></i>
                       </div>
-                      <h3 className="text-xl font-bold text-white text-center mb-3">{benefit.title}</h3>
-                      <p className="text-gray-300 text-center leading-relaxed">{benefit.description}</p>
+                      <h3 className="text-xl font-bold text-black text-center mb-3">{benefit.title}</h3>
+                      <p className="text-black text-center leading-relaxed">{benefit.description}</p>
                     </motion.div>
                   ))}
                 </div>
@@ -478,11 +469,23 @@ export default function About() {
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: 0.5 + index * 0.1 }}
-                      className="bg-transparent rounded-xl p-4 text-center border border-amber-700/30"
+                      className={`bg-gradient-to-b from-yellow-100 to-amber-50 rounded-xl p-4 text-center border-2 ${
+                        index === 0 ? 'border-yellow-300' :
+                        index === 1 ? 'border-amber-300' :
+                        index === 2 ? 'border-olive-300' :
+                        'border-yellow-300'
+                      }`}
                     >
-                      <div className="text-2xl mb-2">{outcome.icon}</div>
-                      <h4 className="text-lg font-bold text-white mb-2">{outcome.metric}</h4>
-                      <p className="text-gray-300 text-sm">{outcome.description}</p>
+                      <div className={`text-2xl mb-2 ${
+                        index === 0 ? 'text-black' :
+                        index === 1 ? 'text-black' :
+                        index === 2 ? 'text-black' :
+                        'text-black'
+                      }`}>
+                        <i className={outcome.icon}></i>
+                      </div>
+                      <h4 className="text-lg font-bold text-black mb-2">{outcome.metric}</h4>
+                      <p className="text-black text-sm">{outcome.description}</p>
                     </motion.div>
                   ))}
                 </div>
@@ -500,16 +503,16 @@ export default function About() {
                 className="mb-16"
               >
                 <div className="text-center mb-12">
-                  <h2 className="text-4xl font-bold text-white mb-4">Private Academy</h2>
-                  <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+                  <h2 className="text-4xl font-bold text-black mb-4">Private Academy</h2>
+                  <p className="text-xl text-black max-w-3xl mx-auto">
                     Your gateway to private domain mastery. Learn the principles, structure, and operational 
                     knowledge required for confident private operations.
                   </p>
                 </div>
 
-                <div className="bg-transparent rounded-3xl p-8 border border-amber-600/50 mb-8">
-                  <h3 className="text-2xl font-bold text-white text-center mb-6">Academy Mission</h3>
-                  <p className="text-gray-200 text-lg text-center leading-relaxed">
+                <div className="bg-white rounded-3xl p-8 border-2 border-yellow-200 mb-8 shadow-md">
+                  <h3 className="text-2xl font-bold text-black text-center mb-6">Academy Mission</h3>
+                  <p className="text-gray-800 text-lg text-center leading-relaxed">
                     To create a workforce and community of individuals who are knowledgeable, self-reliant, 
                     empowered, and prepared to operate fully in the private domain. This pathway ensures 
                     lifestyle stability, financial confidence, and long-term growth as you transition into 
@@ -521,29 +524,29 @@ export default function About() {
                   <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    className="bg-transparent rounded-2xl p-6 border border-amber-900/50"
+                    className="bg-white rounded-2xl p-6 border-2 border-yellow-200"
                   >
-                    <h4 className="text-xl font-bold text-amber-400 mb-4">What You'll Master</h4>
+                    <h4 className="text-xl font-bold text-black mb-4">What You'll Master</h4>
                     <ul className="space-y-3">
-                      <li className="flex items-center space-x-3 text-gray-300">
-                        <span className="text-amber-500">✓</span>
-                        <span>Private contract principles and execution</span>
+                      <li className="flex items-start space-x-3">
+                        <span className="text-black mt-1">✓</span>
+                        <span className="text-gray-800">Private contract principles and execution</span>
                       </li>
-                      <li className="flex items-center space-x-3 text-gray-300">
-                        <span className="text-amber-500">✓</span>
-                        <span>Sovereign operations and structures</span>
+                      <li className="flex items-start space-x-3">
+                        <span className="text-black mt-1">✓</span>
+                        <span className="text-gray-800">Sovereign operations and structures</span>
                       </li>
-                      <li className="flex items-center space-x-3 text-gray-300">
-                        <span className="text-amber-500">✓</span>
-                        <span>PMA (Private Membership Association) fundamentals</span>
+                      <li className="flex items-start space-x-3">
+                        <span className="text-black mt-1">✓</span>
+                        <span className="text-gray-800">PMA (Private Membership Association) fundamentals</span>
                       </li>
-                      <li className="flex items-center space-x-3 text-gray-300">
-                        <span className="text-amber-500">✓</span>
-                        <span>Trust establishment and management</span>
+                      <li className="flex items-start space-x-3">
+                        <span className="text-black mt-1">✓</span>
+                        <span className="text-gray-800">Trust establishment and management</span>
                       </li>
-                      <li className="flex items-center space-x-3 text-gray-300">
-                        <span className="text-amber-500">✓</span>
-                        <span>Complete private operational systems</span>
+                      <li className="flex items-start space-x-3">
+                        <span className="text-black mt-1">✓</span>
+                        <span className="text-gray-800">Complete private operational systems</span>
                       </li>
                     </ul>
                   </motion.div>
@@ -551,15 +554,15 @@ export default function About() {
                   <motion.div
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    className="bg-transparent rounded-2xl p-6 border border-amber-900/50"
+                    className="bg-white rounded-2xl p-6 border-2 border-amber-200"
                   >
-                    <h4 className="text-xl font-bold text-amber-400 mb-4">The Result</h4>
-                    <p className="text-gray-300 mb-4">
+                    <h4 className="text-xl font-bold text-black mb-4">The Result</h4>
+                    <p className="text-gray-800 mb-6 leading-relaxed">
                       Graduates emerge with the confidence, knowledge, and practical skills to operate 
                       successfully in private domains, fully prepared for long-term stability and growth.
                     </p>
-                    <div className="bg-transparent rounded-lg p-4 border border-amber-800/50">
-                      <p className="text-amber-200 font-semibold text-center">
+                    <div className="bg-yellow-50 rounded-lg p-4 border border-yellow-200">
+                      <p className="text-gray-800 font-medium text-center italic">
                         "From public participant to private professional — your journey to empowerment starts here."
                       </p>
                     </div>
@@ -567,39 +570,39 @@ export default function About() {
                 </div>
               </motion.section>
             )}
+
+            {/* CTA Section */}
+            <motion.section
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+              className="text-center mt-12"
+            >
+              <div className="bg-gradient-to-r from-yellow-100 to-amber-100 rounded-3xl p-12 border-2 border-yellow-300">
+                <h2 className="text-3xl font-bold text-black mb-4">Ready to Begin Your Private Journey?</h2>
+                <p className="text-black text-lg mb-8 max-w-2xl mx-auto">
+                  Join the pathway to private membership and transform your future through earned knowledge and access.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-8 py-4 bg-gradient-to-r from-yellow-500 via-amber-500 to-yellow-600 text-white rounded-2xl font-bold text-lg hover:from-yellow-400 hover:via-amber-400 hover:to-yellow-500 transition-all shadow-lg shadow-yellow-900/30"
+                  >
+                    Start Earning Credits
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-8 py-4 bg-transparent border-2 border-yellow-400 text-black rounded-2xl font-bold text-lg hover:bg-yellow-50/80 transition-all"
+                  >
+                    Explore Academy
+                  </motion.button>
+                </div>
+              </div>
+            </motion.section>
           </AnimatePresence>
         </div>
-
-        {/* CTA Section */}
-        <motion.section
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
-          className="text-center"
-        >
-          <div className="bg-transparent rounded-3xl p-12">
-            <h2 className="text-3xl font-bold text-white mb-4">Ready to Begin Your Private Journey?</h2>
-            <p className="text-amber-100 text-lg mb-8 max-w-2xl mx-auto">
-              Join the pathway to private membership and transform your future through earned knowledge and access.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-white text-amber-700 rounded-2xl font-bold text-lg hover:bg-amber-50 transition-colors shadow-lg"
-              >
-                Start Earning Credits
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-transparent border-2 border-white text-white rounded-2xl font-bold text-lg hover:bg-white/10 transition-colors"
-              >
-                Explore Academy
-              </motion.button>
-            </div>
-          </div>
-        </motion.section>
       </div>
     </div>
   );
