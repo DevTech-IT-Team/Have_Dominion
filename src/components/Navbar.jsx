@@ -43,7 +43,7 @@ export default function Navbar() {
 
   return (
     <nav className={`sticky top-0 z-50 bg-transparent transition-all duration-300 ${
-      isScrolled ? 'py-2 backdrop-blur-md bg-white/30' : 'py-0'
+      isScrolled ? 'py-2 backdrop-blur-md bg-blue-50/80' : 'py-0'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
@@ -57,10 +57,10 @@ export default function Navbar() {
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-xl font-bold bg-gradient-to-r from-amber-600 via-orange-500 to-amber-700 bg-clip-text text-transparent tracking-tight">
+              <span className="text-xl font-bold text-blue-950 tracking-tight">
                 HAVE DOMINION
               </span>
-              <span className="text-xs text-amber-600/70 tracking-wider">EXCELLENCE & DOMINION</span>
+              <span className="text-xs text-blue-900/90 tracking-wider">EXCELLENCE & DOMINION</span>
             </div>
           </Link>
 
@@ -71,11 +71,11 @@ export default function Navbar() {
                 key={link.name}
                 to={link.path} 
                 onClick={scrollToTop}
-                className="relative text-amber-800/90 hover:text-orange-600 transition-all duration-300 font-semibold tracking-wide group"
+                className="relative text-blue-800/90 hover:text-blue-600 transition-all duration-300 font-semibold tracking-wide group"
               >
                 {link.name}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow-400 via-orange-400 to-amber-500 transition-all duration-300 group-hover:w-full"></span>
-                <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-amber-200/50"></span>
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 transition-all duration-300 group-hover:w-full"></span>
+                <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-blue-200/50"></span>
               </Link>
             ))}
           </div>
@@ -84,19 +84,19 @@ export default function Navbar() {
           {user ? (
             <div className="hidden md:flex items-center space-x-4">
               <div className="flex items-center group relative">
-                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-amber-500 via-yellow-400 to-orange-400 text-white font-bold flex items-center justify-center mr-3 border-2 border-amber-300 shadow-lg group-hover:border-amber-400 group-hover:shadow-amber-300/30 transition-all duration-300">
+                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 via-blue-400 to-blue-600 text-white font-bold flex items-center justify-center mr-3 border-2 border-blue-300 shadow-lg group-hover:border-blue-400 group-hover:shadow-blue-300/30 transition-all duration-300">
                   {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-sm font-medium text-amber-900">
+                  <span className="text-sm font-medium text-blue-900">
                     {user.name || user.email}
                   </span>
-                  <span className="text-xs text-amber-600/70">Welcome back!</span>
+                  <span className="text-xs text-blue-600/70">Welcome back!</span>
                 </div>
-                <div className="absolute top-full right-0 mt-3 w-48 bg-gradient-to-b from-white to-amber-50 backdrop-blur-lg rounded-xl shadow-2xl py-2 hidden group-hover:block border border-amber-200/50 shadow-amber-100/30">
+                <div className="absolute top-full right-0 mt-3 w-48 bg-gradient-to-b from-white to-blue-50 backdrop-blur-lg rounded-xl shadow-2xl py-2 hidden group-hover:block border border-blue-200/50 shadow-blue-100/30">
                   <button
                     onClick={handleLogout}
-                    className="w-full text-left px-4 py-2.5 text-sm text-amber-800 hover:bg-gradient-to-r hover:from-yellow-50 hover:to-orange-50 hover:text-orange-700 flex items-center transition-colors duration-200 rounded-lg mx-1"
+                    className="w-full text-left px-4 py-2.5 text-sm text-blue-800 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-700 flex items-center transition-colors duration-200 rounded-lg mx-1"
                   >
                     <LogOut className="h-4 w-4 mr-2" />
                     Sign Out
@@ -109,17 +109,17 @@ export default function Navbar() {
               <Link 
                 to="/login" 
                 onClick={scrollToTop}
-                className="px-5 py-2 text-sm font-semibold text-amber-700 bg-gradient-to-r from-amber-100 to-orange-50 hover:from-amber-200 hover:to-orange-100 rounded-xl transition-all duration-300 shadow-md hover:shadow-amber-300/30 hover:scale-105 border border-amber-200"
+                className="px-5 py-2 text-sm font-semibold text-blue-700 bg-gradient-to-r from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 rounded-xl transition-all duration-300 shadow-md hover:shadow-blue-300/30 hover:scale-105 border border-blue-200"
               >
                 Login
               </Link>
               <Link 
                 to="/signup" 
                 onClick={scrollToTop}
-                className="px-6 py-2.5 text-sm font-bold text-white bg-gradient-to-r from-amber-500 via-orange-400 to-yellow-400 hover:from-amber-600 hover:via-orange-500 hover:to-yellow-500 rounded-xl transition-all duration-300 shadow-lg hover:shadow-orange-400/30 hover:scale-105 border border-amber-300 relative overflow-hidden group"
+                className="px-6 py-2.5 text-sm font-bold text-white bg-gradient-to-r from-blue-800 to-blue-900 hover:from-blue-900 hover:to-blue-950 rounded-xl transition-all duration-300 shadow-md hover:shadow-blue-900/30 hover:scale-105 border border-blue-700/50 relative overflow-hidden group"
               >
                 <span className="relative z-10">Sign Up</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-amber-400 via-yellow-400 to-orange-400 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-500 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
               </Link>
             </div>
           )}
@@ -127,7 +127,7 @@ export default function Navbar() {
           {/* Mobile menu button */}
           <button 
             onClick={toggleMenu} 
-            className="md:hidden p-2.5 rounded-xl text-amber-700 hover:text-orange-600 hover:bg-gradient-to-r hover:from-amber-100 hover:to-orange-50 transition-all duration-300 border border-amber-200 shadow-md"
+            className="md:hidden p-2.5 rounded-xl text-blue-700 hover:text-blue-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 transition-all duration-300 border border-blue-200 shadow-md"
             aria-label="Toggle menu"
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -143,7 +143,7 @@ export default function Navbar() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden bg-gradient-to-b from-white to-amber-50 backdrop-blur-lg overflow-hidden border-t border-amber-200/50"
+            className="md:hidden bg-gradient-to-b from-white to-blue-50 backdrop-blur-lg overflow-hidden border-t border-blue-200/50"
           >
             <div className="px-2 pt-3 pb-4 space-y-1 sm:px-3">
               
@@ -156,24 +156,24 @@ export default function Navbar() {
                     scrollToTop()
                     setIsOpen(false)
                   }}
-                  className="block px-4 py-3.5 rounded-lg text-base font-semibold text-amber-800 hover:text-orange-700 hover:bg-gradient-to-r hover:from-amber-50 hover:to-orange-50 transition-all duration-300 mx-1 border border-amber-100 hover:border-amber-300"
+                  className="block px-4 py-3.5 rounded-lg text-base font-semibold text-blue-800 hover:text-blue-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 transition-all duration-300 mx-1 border border-blue-100 hover:border-blue-300"
                 >
                   <span className="flex items-center">
-                    <div className="h-1.5 w-1.5 rounded-full bg-gradient-to-r from-yellow-400 to-orange-400 mr-3 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div className="h-1.5 w-1.5 rounded-full bg-gradient-to-r from-blue-400 to-blue-500 mr-3 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     {link.name}
                   </span>
                 </Link>
               ))}
               
               {user ? (
-                <div className="pt-3 border-t border-amber-200/50 mt-2">
-                  <div className="flex items-center px-4 py-3 bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl mx-1 border border-amber-100">
-                    <div className="h-12 w-12 rounded-full bg-gradient-to-br from-amber-500 via-yellow-400 to-orange-400 text-white flex items-center justify-center font-bold border-2 border-amber-300 shadow-lg">
+                <div className="pt-3 border-t border-blue-200/50 mt-2">
+                  <div className="flex items-center px-4 py-3 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl mx-1 border border-blue-100">
+                    <div className="h-12 w-12 rounded-full bg-gradient-to-br from-blue-500 via-blue-400 to-blue-600 text-white flex items-center justify-center font-bold border-2 border-blue-300 shadow-lg">
                       {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
                     </div>
                     <div className="ml-3">
-                      <div className="text-base font-bold text-amber-900">{user.name || 'User'}</div>
-                      <div className="text-sm text-amber-700/80">{user.email}</div>
+                      <div className="text-base font-bold text-blue-900">{user.name || 'User'}</div>
+                      <div className="text-sm text-blue-700/80">{user.email}</div>
                     </div>
                   </div>
                   <div className="mt-3 px-2">
@@ -183,7 +183,7 @@ export default function Navbar() {
                         setIsOpen(false)
                         scrollToTop()
                       }}
-                      className="w-full flex items-center justify-center px-4 py-3 text-sm font-bold text-white bg-gradient-to-r from-amber-500 via-orange-400 to-yellow-400 hover:from-amber-600 hover:via-orange-500 hover:to-yellow-500 rounded-lg transition-all duration-300 shadow-lg hover:shadow-orange-400/30"
+                      className="w-full flex items-center justify-center px-4 py-3 text-sm font-bold text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 rounded-lg transition-all duration-300 shadow-md hover:shadow-blue-500/30 border border-blue-400"
                     >
                       <LogOut className="h-4 w-4 mr-2" />
                       Sign Out
@@ -199,7 +199,7 @@ export default function Navbar() {
                         scrollToTop()
                         setIsOpen(false)
                       }}
-                      className="block w-full px-4 py-3 text-center text-sm font-semibold text-amber-700 bg-gradient-to-r from-amber-100 to-orange-50 hover:from-amber-200 hover:to-orange-100 rounded-lg transition-all duration-300 shadow-md border border-amber-200"
+                      className="block w-full px-4 py-3 text-center text-sm font-semibold text-blue-700 bg-gradient-to-r from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 rounded-lg transition-all duration-300 shadow-md border border-blue-200"
                     >
                       Login
                     </Link>
@@ -209,10 +209,10 @@ export default function Navbar() {
                         scrollToTop()
                         setIsOpen(false)
                       }}
-                      className="block w-full px-4 py-3 text-center text-sm font-bold text-white bg-gradient-to-r from-amber-500 via-orange-400 to-yellow-400 hover:from-amber-600 hover:via-orange-500 hover:to-yellow-500 rounded-lg transition-all duration-300 shadow-lg border border-amber-300 relative overflow-hidden group"
+                      className="block w-full px-4 py-3 text-center text-sm font-bold text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 rounded-lg transition-all duration-300 shadow-lg border border-blue-400 relative overflow-hidden group"
                     >
                       <span className="relative z-10">Sign Up</span>
-                      <div className="absolute inset-0 bg-gradient-to-r from-amber-400 via-yellow-400 to-orange-400 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-500 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
                     </Link>
                   </div>
                 </div>
