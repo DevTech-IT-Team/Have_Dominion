@@ -169,15 +169,17 @@ export default function About() {
           >
             Pathway to the <span className="bg-gradient-to-r from-yellow-400 via-amber-500 text-white text-transparent bg-clip-text font-bold drop-shadow-lg">Private</span>
           </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="text-lg md:text-xl text-gray-700 mb-8 max-w-3xl leading-relaxed"
-          >
-            Earn Your Way Into Private Membership & Training. At our Global Conglomerate, we empower individuals 
-            to build stable, secure, and private lives through a clear pathway from public systems to private domains.
-          </motion.p>
+          <div className="w-full flex justify-center">
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="text-lg md:text-xl text-gray-700 mb-8 max-w-3xl leading-relaxed text-center w-full"
+            >
+              Earn Your Way Into Private Membership & Training. At our Global Conglomerate, we empower individuals 
+              to build stable, secure, and private lives through a clear pathway from public systems to private domains.
+            </motion.p>
+          </div>
         </motion.section>
 
         {/* Navigation Tabs */}
