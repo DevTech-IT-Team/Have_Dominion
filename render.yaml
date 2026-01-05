@@ -30,8 +30,7 @@ services:
     name: auth-mongodb
     env: docker
     plan: free
-    repo: https://github.com/render-examples/mongodb
-    dockerContext: ./backend
+    dockerfilePath: ./backend/Dockerfile.mongo
     envVars:
       - key: MONGO_INITDB_ROOT_USERNAME
         value: admin
