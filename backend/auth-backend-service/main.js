@@ -19,8 +19,9 @@ const app = express();
 app.use(helmet());
 
 app.use(cors({
-  origin: "*",
+  origin: ["https://universal-helpers-j1p7-git-main-sakshi-anands-projects.vercel.app"],
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }))
 app.use(morgan('combined', { stream: { write: (msg) => logger.info(msg.trim()) } }));
 app.use(express.json());  
