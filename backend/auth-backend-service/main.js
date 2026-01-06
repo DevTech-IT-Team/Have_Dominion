@@ -19,7 +19,7 @@ const app = express();
 app.use(helmet());
 
 app.use(cors({
-  origin: ["https://universal-helpers-j1p7-git-main-sakshi-anands-projects.vercel.app"],
+  origin: ["https://universal-helpers-j1p7-git-main-sakshi-anands-projects.vercel.app", "https://universal-helpers-j1p7.vercel.app"],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }))
