@@ -72,4 +72,43 @@ router.post('/admin/login', async (req, res, next) => {
   }
 });
 
+// Validate Session
+router.get('/validate-session', async (req, res, next) => {
+  try {
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        message: 'No token provided',
+      });
+    }
+
+    const result = await authService.validateSession(token);
+    
+    res.status(200).json({
+      success: true,
+      data: { user: result },
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Logout
+router.post('/logout', async (req, res, next) => {
+  try {
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    if (token) {
+      await authService.logout(token);
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Logout successful',
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;

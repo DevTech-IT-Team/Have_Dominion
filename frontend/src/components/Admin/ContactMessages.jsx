@@ -28,22 +28,13 @@ const ContactMessages = () => {
         params.status = statusFilter;
       }
 
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL || 'http://localhost:8080'}/api/v1/contact?${new URLSearchParams(params)}`,
-        {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          },
-        }
-      );
+      const response = await adminService.getContacts(params);
       
-      const result = await response.json();
-      
-      if (result.success) {
-        setContacts(result.data.contacts);
-        setTotalPages(result.data.pagination.pages);
+      if (response.success) {
+        setContacts(response.data.contacts);
+        setTotalPages(response.data.pagination.pages);
       } else {
-        setError(result.message || 'Failed to fetch contacts');
+        setError(response.message || 'Failed to fetch contacts');
       }
     } catch (err) {
       setError(err.message || 'Error fetching contacts');
@@ -54,19 +45,7 @@ const ContactMessages = () => {
 
   const updateContactStatus = async (contactId, status) => {
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL || 'http://localhost:8080'}/api/v1/contact/${contactId}/status`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          },
-          body: JSON.stringify({ status }),
-        }
-      );
-      
-      const result = await response.json();
+      const result = await adminService.updateContactStatus(contactId, status);
       
       if (result.success) {
         fetchContacts();
@@ -87,17 +66,7 @@ const ContactMessages = () => {
     }
 
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL || 'http://localhost:8080'}/api/v1/contact/${contactId}`,
-        {
-          method: 'DELETE',
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          },
-        }
-      );
-      
-      const result = await response.json();
+      const result = await adminService.deleteContact(contactId);
       
       if (result.success) {
         fetchContacts();

@@ -1,5 +1,5 @@
 const User = require('../../database/models/User');
-const { generateToken } = require('../../auth/jwt');
+const { generateToken, verifyToken } = require('../../auth/jwt');
 const { AppError } = require('../../common/error-handler');
 const { logger } = require('../../common/logger');
 
@@ -164,6 +164,40 @@ class AuthService {
       if (error instanceof AppError) throw error;
       logger.error('Admin login error', { error: error.message });
       throw new AppError('Login failed', 500, 'LOGIN_ERROR');
+    }
+  }
+
+  async validateSession(token) {
+    try {
+      const decoded = verifyToken(token);
+      if (!decoded || !decoded.id) {
+        throw new AppError('Invalid token', 401, 'INVALID_TOKEN');
+      }
+
+      const user = await User.findById(decoded.id);
+      if (!user || !user.isActive) {
+        throw new AppError('User not found or inactive', 401, 'USER_INACTIVE');
+      }
+
+      return user.toJSON();
+    } catch (error) {
+      if (error instanceof AppError) throw error;
+      logger.error('Session validation error', { error: error.message });
+      throw new AppError('Invalid session', 401, 'INVALID_SESSION');
+    }
+  }
+
+  async logout(token) {
+    try {
+      const decoded = verifyToken(token);
+      if (decoded && decoded.id) {
+        const user = await User.findById(decoded.id);
+        if (user) {
+          logger.info('User logged out', { email: user.email });
+        }
+      }
+    } catch (error) {
+      logger.error('Logout error', { error: error.message });
     }
   }
 }

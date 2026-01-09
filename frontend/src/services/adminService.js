@@ -1,5 +1,5 @@
 // Align base URL with axios client default to avoid mixed-content / wrong host errors
-const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'https://universal-helpers-1.onrender.com/api/v1').replace(/\/$/, '');
+const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1').replace(/\/$/, '');
 
 // Get auth token from localStorage or sessionStorage
 const getAuthToken = () => {
@@ -103,6 +103,91 @@ export const adminService = {
   async activateUser(userId) {
     const response = await fetch(`${API_BASE}/admin/users/${userId}/activate`, {
       method: 'PATCH',
+      headers: getAuthHeaders(),
+    });
+    
+    return handleResponse(response);
+  },
+
+  // Get all contacts
+  async getContacts(params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    const response = await fetch(`${API_BASE}/contact${queryString ? '?' + queryString : ''}`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    
+    return handleResponse(response);
+  },
+
+  // Update contact status
+  async updateContactStatus(contactId, status) {
+    const response = await fetch(`${API_BASE}/contact/${contactId}/status`, {
+      method: 'PATCH',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ status }),
+    });
+    
+    return handleResponse(response);
+  },
+
+  // Delete contact
+  async deleteContact(contactId) {
+    const response = await fetch(`${API_BASE}/contact/${contactId}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+    
+    return handleResponse(response);
+  },
+
+  // Get all tradelines
+  async getTradelines(params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    const response = await fetch(`${API_BASE}/tradeline${queryString ? '?' + queryString : ''}`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    
+    return handleResponse(response);
+  },
+
+  // Get tradeline by ID
+  async getTradelineById(tradelineId) {
+    const response = await fetch(`${API_BASE}/tradeline/${tradelineId}`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    
+    return handleResponse(response);
+  },
+
+  // Create tradeline
+  async createTradeline(tradelineData) {
+    const response = await fetch(`${API_BASE}/tradeline`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(tradelineData),
+    });
+    
+    return handleResponse(response);
+  },
+
+  // Update tradeline
+  async updateTradeline(tradelineId, tradelineData) {
+    const response = await fetch(`${API_BASE}/tradeline/${tradelineId}`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(tradelineData),
+    });
+    
+    return handleResponse(response);
+  },
+
+  // Delete tradeline
+  async deleteTradeline(tradelineId) {
+    const response = await fetch(`${API_BASE}/tradeline/${tradelineId}`, {
+      method: 'DELETE',
       headers: getAuthHeaders(),
     });
     

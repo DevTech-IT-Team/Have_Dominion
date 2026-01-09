@@ -5,21 +5,29 @@ const mongoose = require('mongoose');
 const Contact = require('../../database/models/Contact');
 const { logger } = require('../../common/logger');
 
-// Check if MongoDB is connected
-const isMongoConnected = mongoose.connection.readyState === 1;
-
-// Use appropriate service based on database connection
-const contactService = isMongoConnected 
-  ? require('../services/contact.service')
-  : require('../services/contact-memory.service');
+// Always use MongoDB service since connection is working
+const contactService = require('../services/contact.service');
 
 // Public route - submit contact form
 router.post('/', optionalAuthMiddleware(), async (req, res, next) => {
   try {
     const { name, email, service, message } = req.body;
 
+    logger.info('Contact form submission received', { 
+      name, 
+      email, 
+      service, 
+      messageLength: message?.length 
+    });
+
     // Basic validation
     if (!name || !email || !service || !message) {
+      logger.warn('Contact form validation failed', { 
+        name: !!name, 
+        email: !!email, 
+        service: !!service, 
+        message: !!message 
+      });
       return res.status(400).json({
         success: false,
         message: 'All fields are required: name, email, service, message'
@@ -35,7 +43,8 @@ router.post('/', optionalAuthMiddleware(), async (req, res, next) => {
 
     logger.info('Contact form submitted successfully', { 
       contactId: contact._id, 
-      email: contact.email 
+      email: contact.email,
+      status: contact.status 
     });
 
     res.status(201).json({

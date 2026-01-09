@@ -19,21 +19,20 @@ export const AuthProvider = ({ children }) => {
 
   // Check for saved user session on initial load
   useEffect(() => {
-    const checkAuth = () => {
-      // First check sessionStorage (for non-remembered logins)
-      const sessionUser = sessionStorage.getItem('user');
-      if (sessionUser) {
-        setUser(normalizeUser(JSON.parse(sessionUser)));
+    const checkAuth = async () => {
+      try {
+        // Try to validate current session with server
+        const response = await api.get('/auth/validate-session');
+        if (response.data.success && response.data.user) {
+          setUser(normalizeUser(response.data.user));
+        }
+      } catch (error) {
+        // No valid session, clear any local data
+        localStorage.removeItem('user');
+        sessionStorage.removeItem('user');
+      } finally {
         setLoading(false);
-        return;
       }
-
-      // Then check localStorage (for remembered logins)
-      const localUser = localStorage.getItem('user');
-      if (localUser) {
-        setUser(normalizeUser(JSON.parse(localUser)));
-      }
-      setLoading(false);
     };
 
     checkAuth();
@@ -92,9 +91,13 @@ export const AuthProvider = ({ children }) => {
       // Set user in state
       setUser(userData);
       
-      // Store user data based on rememberMe preference
-      const storage = rememberMe ? localStorage : sessionStorage;
-      storage.setItem('user', JSON.stringify(userData));
+      // Store user data in sessionStorage only (temporary)
+      if (!rememberMe) {
+        sessionStorage.setItem('user', JSON.stringify(userData));
+      }
+      
+      // Set token in API headers
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       
       // Redirect based on role
       navigate(redirectUrl, { replace: true });
@@ -107,10 +110,18 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('user');
-    sessionStorage.removeItem('user');
+  const logout = async () => {
+    try {
+      // Call server logout endpoint to clear session
+      await api.post('/auth/logout');
+    } catch (error) {
+      // Continue with local logout even if server call fails
+    } finally {
+      setUser(null);
+      localStorage.removeItem('user');
+      sessionStorage.removeItem('user');
+      delete api.defaults.headers.common['Authorization'];
+    }
   };
 
   const value = {

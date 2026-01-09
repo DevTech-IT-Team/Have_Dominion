@@ -13,6 +13,7 @@ const authRoutes = require("../internal/api/routes/auth.routes");
 const userRoutes = require("../internal/api/routes/user.routes");
 const adminRoutes = require("../internal/api/routes/admin.routes");
 const contactRoutes = require("../internal/api/routes/contact.routes");
+const tradelineRoutes = require("../internal/api/routes/tradeline.routes");
 
 const app = express();
 
@@ -100,6 +101,7 @@ app.use(`${apiPrefix}/auth`, authRoutes);
 app.use(`${apiPrefix}/users`, userRoutes);
 app.use(`${apiPrefix}/admin`, adminRoutes);
 app.use(`${apiPrefix}/contact`, contactRoutes);
+app.use(`${apiPrefix}/tradeline`, tradelineRoutes);
 
 /* ======================
    ERROR HANDLING
