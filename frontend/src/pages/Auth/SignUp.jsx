@@ -132,7 +132,7 @@ function Signup() {
             </div>
             <ToastContainer />
         </div>
-    )
+    );
 }
 
 export default Signup

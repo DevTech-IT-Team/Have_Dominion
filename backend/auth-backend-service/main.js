@@ -29,6 +29,7 @@ const allowedOrigins = process.env.CORS_ORIGINS
       "http://localhost:3000",
       "https://universal-helpers-j1p7-git-main-sakshi-anands-projects.vercel.app",
       "https://universal-helpers-j1p7.vercel.app",
+      "https://universal-helpers-1.onrender.com",
     ];
 
 // CORS configuration
