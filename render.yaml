@@ -44,11 +44,13 @@ services:
   # Frontend Service
   - type: web
     name: auth-frontend
-    env: static
+    env: node
     plan: free
     rootDir: frontend
     buildCommand: npm install && npm run build
-    staticPublishPath: dist
+    startCommand: node server.js
     envVars:
       - key: VITE_API_BASE_URL
         value: https://universal-helpers-1.onrender.com/api/v1
+      - key: PORT
+        value: 3000
