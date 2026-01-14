@@ -106,6 +106,20 @@ class ContactService {
     }
   }
 
+  async getContactsByEmail(email) {
+    try {
+      const contacts = await Contact.find({ email: email.toLowerCase() })
+        .sort({ createdAt: -1 })
+        .exec();
+
+      logger.info('User contacts fetched', { email, count: contacts.length });
+      return contacts;
+    } catch (error) {
+      logger.error('Error fetching contacts by email', { email, error: error.message });
+      throw error;
+    }
+  }
+
   async getContactStatistics() {
     try {
       const stats = await Contact.aggregate([
@@ -127,7 +141,9 @@ class ContactService {
         recent: recentContacts,
         pending: 0,
         read: 0,
-        responded: 0
+        responded: 0,
+        accepted: 0,
+        rejected: 0
       };
 
       stats.forEach(stat => {

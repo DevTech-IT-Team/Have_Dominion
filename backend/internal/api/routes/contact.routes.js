@@ -57,6 +57,36 @@ router.post('/', optionalAuthMiddleware(), async (req, res, next) => {
   }
 });
 
+// Get user's own contacts (authenticated users)
+router.get('/my-requests', authMiddleware(false), async (req, res, next) => {
+  try {
+    const userEmail = req.user?.email;
+    
+    if (!userEmail) {
+      return res.status(401).json({
+        success: false,
+        message: 'User email not found'
+      });
+    }
+
+    const contacts = await contactService.getContactsByEmail(userEmail);
+
+    logger.info('User fetched their contacts', { 
+      userId: req.user?.id, 
+      email: userEmail,
+      count: contacts.length 
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'User contacts fetched successfully',
+      data: contacts
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 // Get all contacts (admin only)
 router.get('/', authMiddleware(true), async (req, res, next) => {
   try {
@@ -114,10 +144,10 @@ router.patch('/:contactId/status', authMiddleware(true), async (req, res, next) 
   try {
     const { status } = req.body;
 
-    if (!['pending', 'read', 'responded'].includes(status)) {
+    if (!['pending', 'read', 'responded', 'accepted', 'rejected'].includes(status)) {
       return res.status(400).json({
         success: false,
-        message: 'Invalid status. Must be one of: pending, read, responded'
+        message: 'Invalid status. Must be one of: pending, read, responded, accepted, rejected'
       });
     }
 
