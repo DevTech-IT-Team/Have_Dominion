@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { 
   Phone, 
   Users, 
@@ -32,9 +32,9 @@ import {
   CreditCard,
   FileCheck,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  X
 } from 'lucide-react'
-import ChatWidget from "../../components/Chat/ChatWidget";
 
 // Counter Component
 const Counter = ({ end, suffix }) => {
@@ -86,6 +86,8 @@ const FAQItem = ({ question, answer }) => {
 const Home = () => {
   const [visibleSections, setVisibleSections] = useState({})
   const sectionRefs = useRef({})
+  const [showTradelinePopup, setShowTradelinePopup] = useState(true)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -119,7 +121,8 @@ const Home = () => {
       bgColor: "bg-gradient-to-br from-blue-50 to-white",
       borderColor: "border-blue-200",
       iconBg: "bg-blue-100 text-blue-600",
-      cta: "Build Your Credit"
+      cta: "Build Your Credit",
+      serviceName: "Credit Tradelines"
     },
     {
       icon: <Shield className="h-8 w-8" />,
@@ -129,7 +132,8 @@ const Home = () => {
       bgColor: "bg-gradient-to-br from-blue-50 to-white",
       borderColor: "border-blue-200",
       iconBg: "bg-blue-100 text-blue-600",
-      cta: "Secure Your Future"
+      cta: "Secure Your Future",
+      serviceName: "Financial Coaching"
     },
     {
       icon: <FileCheck className="h-8 w-8" />,
@@ -139,7 +143,8 @@ const Home = () => {
       bgColor: "bg-gradient-to-br from-blue-50 to-white",
       borderColor: "border-blue-200",
       iconBg: "bg-blue-100 text-blue-600",
-      cta: "Get Licensed"
+      cta: "Get Licensed",
+      serviceName: "Document Management"
     }
   ];
 
@@ -152,7 +157,8 @@ const Home = () => {
       bgColor: "bg-gradient-to-br from-amber-50 to-white",
       borderColor: "border-amber-200",
       iconBg: "bg-amber-100 text-amber-600",
-      cta: "Start CDL Training"
+      cta: "Start CDL Training",
+      serviceName: "General Inquiry"
     },
     {
       icon: <GraduationCap className="h-8 w-8" />,
@@ -162,7 +168,8 @@ const Home = () => {
       bgColor: "bg-gradient-to-br from-amber-50 to-white",
       borderColor: "border-amber-200",
       iconBg: "bg-amber-100 text-amber-600",
-      cta: "Explore Programs"
+      cta: "Explore Programs",
+      serviceName: "General Inquiry"
     }
   ];
 
@@ -235,6 +242,16 @@ const Home = () => {
         .animate-gradient { background-size: 200% 200%; animation: gradient 4s ease infinite; }
         .animate-blue-glow { animation: blue-glow 3s ease-in-out infinite; }
         .animate-golden-glow { animation: golden-glow 3s ease-in-out infinite; }
+        @keyframes fade-in {
+          from { opacity: 0; transform: translateY(20px) scale(0.9); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes pulse-slow {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.8; }
+        }
+        .animate-fade-in { animation: fade-in 0.5s ease-out; }
+        .animate-pulse-slow { animation: pulse-slow 3s ease-in-out infinite; }
         .blue-gradient { background: linear-gradient(135deg, #083b7c, #0950a0, #0c63e7); }
         .golden-gradient { background: linear-gradient(135deg, #f59e0b, #d97706, #b45309); }
       `}</style>
@@ -282,11 +299,11 @@ const Home = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link 
-                  to="/creditor-academy" 
+                  to="/about" 
                   className="relative overflow-hidden group bg-gradient-to-r from-[#083b7c] to-[#0950a0] text-white text-sm font-medium py-2.5 px-6 rounded-full shadow-lg flex items-center justify-center space-x-2 transition-all duration-300 hover:from-[#0950a0] hover:to-[#0c63e7] hover:shadow-blue-500/30 hover:scale-105 animate-blue-glow"
                 >
                   <GraduationCap className="h-4 w-4" />
-                  <span>Start at Creditor Academy</span>
+                  <span>Know More About Us</span>
                 </Link>
                 <Link 
                   to="tel:1-888-997-3744"
@@ -370,9 +387,13 @@ const Home = () => {
                     </div>
                   ))}
                 </div>
-                <button className="w-full bg-gradient-to-r from-blue-700 to-blue-800 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:scale-105 shadow-md hover:shadow-blue-500/30">
+                <Link
+                  to="/contact"
+                  state={{ service: service.serviceName }}
+                  className="w-full bg-gradient-to-r from-blue-700 to-blue-800 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:scale-105 shadow-md hover:shadow-blue-500/30 flex items-center justify-center"
+                >
                   {service.cta}
-                </button>
+                </Link>
               </div>
             ))}
           </div>
@@ -412,9 +433,13 @@ const Home = () => {
                     </div>
                   ))}
                 </div>
-                <button className="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:scale-105 shadow-md hover:shadow-amber-500/30">
+                <Link
+                  to="/contact"
+                  state={{ service: service.serviceName }}
+                  className="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:scale-105 shadow-md hover:shadow-amber-500/30 flex items-center justify-center"
+                >
                   {service.cta}
-                </button>
+                </Link>
               </div>
             ))}
           </div>
@@ -611,7 +636,70 @@ const Home = () => {
         </div>
       </section>
 
-      <ChatWidget />
+      {/* Interactive Tradeline Services Popup */}
+      {showTradelinePopup && (
+        <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 w-[calc(100%-2rem)] sm:w-auto sm:max-w-md animate-fade-in"
+        >
+          <div className="bg-gradient-to-br from-sky-50 via-white to-sky-100 rounded-2xl shadow-2xl border-2 border-sky-200 p-5 sm:p-6 relative overflow-hidden backdrop-blur-sm">
+            {/* Decorative elements */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-sky-200/30 rounded-full -mr-16 -mt-16 blur-2xl"></div>
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-sky-300/20 rounded-full -ml-12 -mb-12 blur-xl"></div>
+            <div className="absolute top-1/2 left-1/2 w-40 h-40 bg-sky-100/40 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl"></div>
+            
+            {/* Close button */}
+            <button
+              onClick={() => setShowTradelinePopup(false)}
+              className="absolute top-2 right-2 sm:top-3 sm:right-3 text-sky-600 hover:text-sky-800 transition-colors p-1.5 rounded-full hover:bg-sky-100 z-20"
+              aria-label="Close popup"
+            >
+              <X className="h-4 w-4 sm:h-5 sm:w-5" />
+            </button>
+
+            {/* Content */}
+            <div className="relative z-10">
+              <div className="flex items-start space-x-3 sm:space-x-4 mb-4">
+                <div className="flex-shrink-0 bg-gradient-to-br from-sky-400 to-sky-600 rounded-xl p-2.5 sm:p-3 shadow-lg animate-pulse-slow">
+                  <CreditCard className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
+                </div>
+                <div className="flex-1 pt-0.5">
+                  <h3 className="text-base sm:text-lg font-bold text-sky-900 mb-1.5 leading-tight">
+                    We Also Offer Tradeline Services!
+                  </h3>
+                  <p className="text-xs sm:text-sm text-sky-700 mb-4 leading-relaxed">
+                    Boost your credit profile with our authorized user tradelines and credit building strategies.
+                  </p>
+                </div>
+              </div>
+
+              {/* Interactive buttons */}
+              <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3">
+                <Link
+                  to="/services"
+                  onClick={() => setShowTradelinePopup(false)}
+                  className="flex-1 bg-gradient-to-r from-sky-500 to-sky-600 text-white font-semibold py-2.5 sm:py-3 px-4 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-sky-500/30 flex items-center justify-center space-x-2 group text-sm sm:text-base"
+                >
+                  <span>View Services</span>
+                  <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+                <Link
+                  to="/contact"
+                  state={{ service: 'Credit Tradelines' }}
+                  onClick={() => setShowTradelinePopup(false)}
+                  className="flex-1 bg-white border-2 border-sky-400 text-sky-700 font-semibold py-2.5 sm:py-3 px-4 rounded-xl transition-all duration-300 hover:scale-105 hover:bg-sky-50 hover:border-sky-500 flex items-center justify-center space-x-2 group text-sm sm:text-base"
+                >
+                  <span>Get Tradelines</span>
+                  <CreditCard className="h-3.5 w-3.5 sm:h-4 sm:w-4 group-hover:scale-110 transition-transform" />
+                </Link>
+              </div>
+
+              {/* Pulsing indicator */}
+              <div className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 w-3 h-3 sm:w-4 sm:h-4 bg-sky-500 rounded-full animate-pulse">
+                <div className="absolute inset-0 bg-sky-400 rounded-full animate-ping"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

@@ -130,7 +130,7 @@ export const AuthProvider = ({ children }) => {
       sessionStorage.removeItem('user');
       localStorage.removeItem('user');
       delete api.defaults.headers.common.Authorization;
-      navigate('/login', { replace: true });
+      navigate('/', { replace: true });
     }
   };
 

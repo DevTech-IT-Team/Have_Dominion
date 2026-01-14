@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 export default function ServiceNeighborhood() {
   const [activeBlock, setActiveBlock] = useState(null);
@@ -282,7 +282,10 @@ export default function ServiceNeighborhood() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 }}
               className={`p-4 rounded-xl border-2 transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-md bg-gradient-to-br from-blue-50 to-blue-100 border-blue-100 hover:border-blue-200 hover:bg-blue-50/90`}
-              onClick={() => alert(`Booking ${building.name} - Contact Have Dominion to get started!`)}
+              onClick={() => {
+                navigate('/contact', { state: { service: selectedCategory.title } });
+                closeCategoryPanel();
+              }}
             >
               <div className="flex items-start justify-between mb-2">
                 <h4 className={`text-gray-800 font-semibold group-hover:text-blue-950 transition-colors text-blue-950`}>
@@ -318,20 +321,17 @@ export default function ServiceNeighborhood() {
 
       {/* Quick Actions */}
       <div className={`p-6 border-t bg-white/70 border-blue-950/20`}>
-        <div className="space-y-2">
-          <button 
-            onClick={() => alert('Contact Have Dominion: info@havedominion.com')}
-            className={`w-full py-3 text-white rounded-xl font-semibold transition-all duration-300 shadow-lg bg-blue-950 hover:bg-blue-900 hover:shadow-blue-950/30 border border-blue-950/30`}
-          >
-            Contact Have Dominion
-          </button>
-          <button 
-            onClick={() => navigate('/contact')}
-            className={`mt-4 w-full py-3 bg-white text-gray-800 rounded-xl font-semibold transition-all duration-300 border-2 border-blue-950/20 hover:border-blue-950/30 hover:bg-blue-50`}
-          >
-            Visit contact page
-          </button>
-        </div>
+        <Link
+          to="/contact"
+          state={{ service: selectedCategory.title }}
+          onClick={closeCategoryPanel}
+          className={`w-full py-3 text-white rounded-xl font-semibold transition-all duration-300 shadow-lg bg-gradient-to-r from-blue-950 to-blue-800 hover:from-blue-900 hover:to-blue-950 hover:shadow-blue-950/30 border border-blue-950/30 flex items-center justify-center space-x-2 group`}
+        >
+          <span>Contact Us About {selectedCategory.title}</span>
+          <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </Link>
       </div>
     </motion.div>
   );

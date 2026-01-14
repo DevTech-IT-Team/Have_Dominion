@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, X, LogOut, Sun } from 'lucide-react';
+import { Menu, X, LogOut, Sun, LayoutDashboard, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import logo from '../assets/logo.png';
@@ -16,7 +16,7 @@ export default function Navbar() {
   
   const handleLogout = () => {
     logout()
-    navigate('/')
+    // logout() already navigates to '/', so we don't need navigate('/') here
     scrollToTop()
   }
 
@@ -118,6 +118,18 @@ export default function Navbar() {
                       transition={{ duration: 0.2 }}
                       className="absolute top-full right-0 mt-3 w-48 bg-gradient-to-b from-white to-blue-50 backdrop-blur-lg rounded-xl shadow-2xl py-2 border border-blue-200/50 shadow-blue-100/30"
                     >
+                      <Link
+                        to={user?.role === 'admin' ? '/admin/dashboard' : '/dashboard'}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setIsDropdownOpen(false)
+                          scrollToTop()
+                        }}
+                        className="w-full text-left px-4 py-2.5 text-sm text-blue-800 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-700 flex items-center transition-colors duration-200 rounded-lg mx-1"
+                      >
+                        <LayoutDashboard className="h-4 w-4 mr-2" />
+                        Dashboard
+                      </Link>
                       <button
                         onClick={(e) => {
                           e.stopPropagation()
@@ -206,7 +218,18 @@ export default function Navbar() {
                       <div className="text-sm text-blue-700/80">{user.email}</div>
                     </div>
                   </div>
-                  <div className="mt-3 px-2">
+                  <div className="mt-3 px-2 space-y-2">
+                    <Link
+                      to={user?.role === 'admin' ? '/admin/dashboard' : '/dashboard'}
+                      onClick={() => {
+                        setIsOpen(false)
+                        scrollToTop()
+                      }}
+                      className="w-full flex items-center justify-center px-4 py-3 text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 rounded-lg transition-all duration-300 shadow-md hover:shadow-blue-500/30 border border-blue-500"
+                    >
+                      <LayoutDashboard className="h-4 w-4 mr-2" />
+                      Go to Dashboard
+                    </Link>
                     <button
                       onClick={() => {
                         handleLogout()

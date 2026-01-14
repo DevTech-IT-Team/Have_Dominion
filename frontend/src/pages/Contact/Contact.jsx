@@ -1,13 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useAuth } from '../../contexts/AuthContext';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function Contact() {
+  const { user } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    service: '',
+    name: user?.name || '',
+    email: user?.email || '',
+    service: location.state?.service || '',
     message: '',
   });
+
+  useEffect(() => {
+    if (location.state?.service) {
+      setFormData(prev => ({ ...prev, service: location.state.service }));
+    }
+  }, [location.state]);
 
   const services = [
     'Private Membership',
@@ -45,8 +56,35 @@ export default function Contact() {
       const result = await response.json();
       
       if (result.success) {
-        alert('Message sent successfully!');
-        setFormData({ name: '', email: '', service: '', message: '' });
+        // Save service request to localStorage if user is logged in
+        if (user && formData.service) {
+          const serviceRequests = JSON.parse(localStorage.getItem(`serviceRequests_${user.email}`) || '[]');
+          const newRequest = {
+            service: formData.service,
+            status: 'pending',
+            date: new Date().toISOString()
+          };
+          
+          // Check if already requested, if so update it
+          const existingIndex = serviceRequests.findIndex(r => r.service === formData.service);
+          if (existingIndex >= 0) {
+            serviceRequests[existingIndex] = newRequest;
+          } else {
+            serviceRequests.push(newRequest);
+          }
+          
+          localStorage.setItem(`serviceRequests_${user.email}`, JSON.stringify(serviceRequests));
+        }
+        
+        alert('Message sent successfully! Your service request has been recorded.');
+        setFormData({ name: user?.name || '', email: user?.email || '', service: '', message: '' });
+        
+        // Redirect to dashboard if user is logged in
+        if (user) {
+          setTimeout(() => {
+            navigate('/dashboard');
+          }, 1500);
+        }
       } else {
         alert(result.message || 'Failed to send message. Please try again.');
       }
