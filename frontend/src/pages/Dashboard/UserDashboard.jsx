@@ -57,16 +57,48 @@ const UserDashboard = () => {
         { name: 'Security Services', icon: Shield }
       ];
 
-      // Get service requests from localStorage
-      const serviceRequests = JSON.parse(localStorage.getItem(`serviceRequests_${user.email}`) || '[]');
+      // Fetch service requests from backend
+      let backendRequests = [];
+      try {
+        const response = await api.get('/contact/my-requests');
+        if (response.data.success) {
+          backendRequests = response.data.data || [];
+        }
+      } catch (err) {
+        console.error('Error fetching service requests from backend:', err);
+        // Continue with localStorage fallback
+      }
+
+      // Get service requests from localStorage as fallback
+      const localServiceRequests = JSON.parse(localStorage.getItem(`serviceRequests_${user.email}`) || '[]');
       const activeServices = JSON.parse(localStorage.getItem(`activeServices_${user.email}`) || '[]');
+
+      // Merge backend and localStorage requests (backend takes priority)
+      const allRequests = [...backendRequests];
+      localServiceRequests.forEach(localReq => {
+        if (!allRequests.find(r => r.service === localReq.service)) {
+          allRequests.push({
+            service: localReq.service,
+            status: localReq.status || 'pending',
+            createdAt: localReq.date,
+            message: ''
+          });
+        }
+      });
 
       // Categorize services
       const categorizedServices = allAvailableServices.map(service => {
-        const request = serviceRequests.find(r => r.service === service.name);
+        const request = allRequests.find(r => r.service === service.name);
         const active = activeServices.find(a => a.service === service.name);
         
-        if (active) {
+        if (request && request.status === 'accepted') {
+          return {
+            ...service,
+            status: 'accepted',
+            requestDate: request.createdAt,
+            category: 'active'
+          };
+        } else if (active) {
           return {
             ...service,
             status: 'active',
@@ -77,7 +109,7 @@ const UserDashboard = () => {
           return {
             ...service,
             status: request.status || 'pending',
-            requestDate: request.date,
+            requestDate: request.createdAt,
             category: 'requested'
           };
         } else {
@@ -186,6 +218,7 @@ const UserDashboard = () => {
   const getServiceStatusColor = (status) => {
     switch (status) {
       case 'active':
+      case 'accepted':
         return 'bg-green-100 text-green-800';
       case 'responded':
         return 'bg-blue-100 text-blue-800';
@@ -193,6 +226,8 @@ const UserDashboard = () => {
         return 'bg-yellow-100 text-yellow-800';
       case 'pending':
         return 'bg-amber-100 text-amber-800';
+      case 'rejected':
+        return 'bg-red-100 text-red-800';
       case 'available':
         return 'bg-gray-100 text-gray-800';
       default:
@@ -204,12 +239,16 @@ const UserDashboard = () => {
     switch (status) {
       case 'active':
         return 'Active';
+      case 'accepted':
+        return 'Accepted';
       case 'responded':
         return 'Responded';
       case 'read':
         return 'Under Review';
       case 'pending':
         return 'Requested';
+      case 'rejected':
+        return 'Rejected';
       case 'available':
         return 'Available';
       default:
@@ -301,6 +340,11 @@ const UserDashboard = () => {
                                     {service.enrolledDate && (
                                       <p className="text-xs text-gray-500 mt-0.5">
                                         Enrolled: {new Date(service.enrolledDate).toLocaleDateString()}
+                                      </p>
+                                    )}
+                                    {service.requestDate && service.status === 'accepted' && (
+                                      <p className="text-xs text-gray-500 mt-0.5">
+                                        Accepted: {new Date(service.requestDate).toLocaleDateString()}
                                       </p>
                                     )}
                                   </div>

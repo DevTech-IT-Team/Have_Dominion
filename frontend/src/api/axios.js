@@ -10,9 +10,22 @@ const api = axios.create({
   },
 });
 
-// Request interceptor for debugging
+// Request interceptor for auth token and debugging
 api.interceptors.request.use(
   (config) => {
+    // Add auth token from localStorage or sessionStorage
+    const user = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (user) {
+      try {
+        const userData = JSON.parse(user);
+        if (userData.token) {
+          config.headers.Authorization = `Bearer ${userData.token}`;
+        }
+      } catch (e) {
+        console.error('Error parsing user data:', e);
+      }
+    }
+
     // Log request in development
     if (import.meta.env.DEV) {
       console.log('API Request:', {
@@ -20,6 +33,7 @@ api.interceptors.request.use(
         url: config.url,
         baseURL: config.baseURL,
         data: config.data,
+        headers: config.headers,
       });
     }
     return config;
@@ -42,7 +56,9 @@ api.interceptors.response.use(
         status: error.response.status,
         statusText: error.response.statusText,
         url: error.config?.url,
-        data: error.response.data,
+        method: error.config?.method,
+        requestData: error.config?.data,
+        responseData: error.response.data,
         fullError: JSON.stringify(error.response.data, null, 2),
       });
     } else if (error.request) {

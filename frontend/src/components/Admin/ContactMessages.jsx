@@ -9,6 +9,8 @@ const ContactMessages = () => {
   const [statusFilter, setStatusFilter] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [updatingStatus, setUpdatingStatus] = useState(false);
+  const [statusError, setStatusError] = useState(null);
 
   useEffect(() => {
     fetchContacts();
@@ -45,18 +47,55 @@ const ContactMessages = () => {
 
   const updateContactStatus = async (contactId, status) => {
     try {
-      const result = await adminService.updateContactStatus(contactId, status);
+      setUpdatingStatus(true);
+      setStatusError(null);
       
-      if (result.success) {
-        fetchContacts();
-        if (selectedContact && selectedContact._id === contactId) {
-          setSelectedContact(result.data);
+      console.log('Updating contact status:', { contactId, status });
+      const result = await adminService.updateContactStatus(contactId, status);
+      console.log('Update result:', result);
+      console.log('Result structure:', { 
+        hasSuccess: !!result?.success, 
+        hasData: !!result?.data,
+        resultKeys: result ? Object.keys(result) : 'null'
+      });
+      
+      if (result && result.success) {
+        const updatedContact = result.data || { ...selectedContact, status };
+        console.log('Updated contact:', updatedContact);
+        
+        // Update the contact in the contacts list immediately
+        setContacts(prevContacts => {
+          const updated = prevContacts.map(contact => 
+            contact._id === contactId || contact._id?.toString() === contactId?.toString()
+              ? updatedContact
+              : contact
+          );
+          console.log('Updated contacts list:', updated);
+          return updated;
+        });
+        
+        // Update the selected contact if it's the one we just updated
+        if (selectedContact && (selectedContact._id === contactId || selectedContact._id?.toString() === contactId?.toString())) {
+          console.log('Updating selected contact from', selectedContact.status, 'to', updatedContact.status);
+          setSelectedContact(updatedContact);
         }
+        
+        setStatusError(null);
       } else {
-        alert(result.message || 'Failed to update status');
+        const errorMsg = result?.message || 'Failed to update status';
+        setStatusError(errorMsg);
+        console.error('Status update failed:', result);
       }
     } catch (err) {
-      alert('Error updating contact status');
+      const errorMsg = err.message || err.response?.data?.message || err.response?.data?.error?.message || 'Error updating contact status';
+      setStatusError(errorMsg);
+      console.error('Error updating contact status:', {
+        message: err.message,
+        response: err.response?.data,
+        fullError: err
+      });
+    } finally {
+      setUpdatingStatus(false);
     }
   };
 
@@ -89,6 +128,10 @@ const ContactMessages = () => {
         return 'bg-blue-100 text-blue-800';
       case 'responded':
         return 'bg-green-100 text-green-800';
+      case 'accepted':
+        return 'bg-emerald-100 text-emerald-800';
+      case 'rejected':
+        return 'bg-red-100 text-red-800';
       default:
         return 'bg-gray-100 text-gray-800';
     }
@@ -134,6 +177,8 @@ const ContactMessages = () => {
             <option value="pending">Pending</option>
             <option value="read">Read</option>
             <option value="responded">Responded</option>
+            <option value="accepted">Accepted</option>
+            <option value="rejected">Rejected</option>
           </select>
         </div>
       </div>
@@ -191,16 +236,86 @@ const ContactMessages = () => {
                     <option value="pending">Pending</option>
                     <option value="read">Read</option>
                     <option value="responded">Responded</option>
+                    <option value="accepted">Accepted</option>
+                    <option value="rejected">Rejected</option>
                   </select>
                   <button
                     onClick={() => deleteContact(selectedContact._id)}
-                    className="text-red-600 hover:text-red-800"
+                    className="text-red-600 hover:text-red-800 p-1"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
                   </button>
                 </div>
+              </div>
+              
+              {/* Error Message Display */}
+              {statusError && (
+                <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-3">
+                  <div className="flex items-center space-x-2">
+                    <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p className="text-sm text-red-800 font-medium">{statusError}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Accept/Reject Action Buttons */}
+              <div className="mb-4 flex gap-3">
+                {selectedContact.status !== 'accepted' && (
+                  <button
+                    onClick={() => updateContactStatus(selectedContact._id, 'accepted')}
+                    disabled={updatingStatus}
+                    className="flex-1 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold py-2.5 px-4 rounded-lg transition-all duration-300 hover:from-green-600 hover:to-green-700 hover:shadow-lg flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {updatingStatus ? (
+                      <>
+                        <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span>Updating...</span>
+                      </>
+                    ) : (
+                      <>
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>Accept Service Request</span>
+                      </>
+                    )}
+                  </button>
+                )}
+                {selectedContact.status !== 'rejected' && (
+                  <button
+                    onClick={() => {
+                      if (window.confirm('Are you sure you want to reject this service request?')) {
+                        updateContactStatus(selectedContact._id, 'rejected');
+                      }
+                    }}
+                    disabled={updatingStatus}
+                    className="flex-1 bg-gradient-to-r from-red-500 to-red-600 text-white font-semibold py-2.5 px-4 rounded-lg transition-all duration-300 hover:from-red-600 hover:to-red-700 hover:shadow-lg flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {updatingStatus ? (
+                      <>
+                        <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span>Updating...</span>
+                      </>
+                    ) : (
+                      <>
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                        <span>Reject Service Request</span>
+                      </>
+                    )}
+                  </button>
+                )}
               </div>
               
               <div className="mb-4">

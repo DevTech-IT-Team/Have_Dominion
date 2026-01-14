@@ -1,3 +1,6 @@
+// Use the shared axios instance for consistency
+import api from '../api/axios';
+
 // Align base URL with axios client default to avoid mixed-content / wrong host errors
 const apiBase = import.meta.env.VITE_API_BASE_URL || "https://have-dominion.onrender.com";
 const API_BASE = `${apiBase}/api/v1`;
@@ -21,26 +24,36 @@ const getAuthHeaders = () => {
   };
 };
 
-// Handle API responses
+// Handle API responses (for both fetch and axios)
 const handleResponse = async (response) => {
-  const contentType = response.headers.get('content-type');
-  let data;
+  // If it's an axios response (has .data property)
+  if (response.data !== undefined) {
+    return response.data;
+  }
   
-  if (contentType && contentType.includes('application/json')) {
-    data = await response.json();
-  } else {
-    const text = await response.text();
-    try {
-      data = JSON.parse(text);
-    } catch {
-      throw new Error(text || `HTTP error! status: ${response.status}`);
+  // If it's a fetch Response object (has .json method)
+  if (typeof response.json === 'function') {
+    const contentType = response.headers.get('content-type');
+    let data;
+    
+    if (contentType && contentType.includes('application/json')) {
+      data = await response.json();
+    } else {
+      const text = await response.text();
+      try {
+        data = JSON.parse(text);
+      } catch {
+        throw new Error(text || `HTTP error! status: ${response.status}`);
+      }
     }
+    
+    if (!response.ok) {
+      throw new Error(data.message || data.error || `HTTP error! status: ${response.status}`);
+    }
+    return data;
   }
   
-  if (!response.ok) {
-    throw new Error(data.message || data.error || `HTTP error! status: ${response.status}`);
-  }
-  return data;
+  return response;
 };
 
 export const adminService = {
@@ -123,13 +136,35 @@ export const adminService = {
 
   // Update contact status
   async updateContactStatus(contactId, status) {
-    const response = await fetch(`${API_BASE}/contact/${contactId}/status`, {
-      method: 'PATCH',
-      headers: getAuthHeaders(),
-      body: JSON.stringify({ status }),
-    });
-    
-    return handleResponse(response);
+    try {
+      // Validate status before sending
+      const validStatuses = ['pending', 'read', 'responded', 'accepted', 'rejected'];
+      if (!status || !validStatuses.includes(status)) {
+        throw new Error(`Invalid status: ${status}. Must be one of: ${validStatuses.join(', ')}`);
+      }
+      
+      console.log('updateContactStatus called with:', { contactId, status, statusType: typeof status });
+      const requestBody = { status: String(status) }; // Ensure it's a string
+      console.log('Request body:', requestBody, 'Stringified:', JSON.stringify(requestBody));
+      
+      const response = await api.patch(`/contact/${contactId}/status`, requestBody);
+      console.log('Update response:', response);
+      return handleResponse(response);
+    } catch (error) {
+      console.error('updateContactStatus error:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+        requestData: error.config?.data,
+        requestBody: error.config?.data ? JSON.parse(error.config.data) : null,
+      });
+      // Extract error message from axios error response
+      const errorMessage = error.response?.data?.message || 
+                          error.response?.data?.error || 
+                          error.message || 
+                          'Failed to update contact status';
+      throw new Error(errorMessage);
+    }
   },
 
   // Delete contact
@@ -198,19 +233,16 @@ export const adminService = {
   // Get statistics
   async getStatistics() {
     try {
-      const response = await fetch(`${API_BASE}/admin/statistics`, {
-        method: 'GET',
-        headers: getAuthHeaders(),
-      });
-      
+      const response = await api.get('/admin/statistics');
       return handleResponse(response);
     } catch (error) {
       console.error('Statistics fetch error:', error);
-      // If it's a network error (ERR_BLOCKED_BY_CLIENT, CORS, etc.), provide helpful message
-      if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
-        throw new Error('Network error: Unable to connect to server. Please check your connection or disable browser extensions that might be blocking requests.');
-      }
-      throw error;
+      // Extract error message from axios error response
+      const errorMessage = error.response?.data?.message || 
+                          error.response?.data?.error || 
+                          error.message || 
+                          'Failed to fetch statistics';
+      throw new Error(errorMessage);
     }
   }
 };
