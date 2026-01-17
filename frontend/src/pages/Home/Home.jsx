@@ -566,44 +566,73 @@ const Home = () => {
 
       {/* Creditor Academy Section - Split Theme */}
       <section className="py-20 lg:py-28 bg-gradient-to-b from-white to-blue-50 relative overflow-hidden">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              Creditor Academy
-            </h2>
-            <div className="w-full max-w-4xl h-1.5 bg-gradient-to-r from-blue-500 via-gray-300 to-amber-500 mx-auto mb-8 rounded-full"></div>
-            <p className="text-xl text-gray-700 max-w-3xl mx-auto">
-              Your pathway to financial mastery and private sector success.
-            </p>
-          </div>
+      <div className="container mx-auto px-4">
+        
+        {/* Section Header */}
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            Financial Education & Training Programs
+          </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {creditorAcademy.map((level, index) => (
-              <div key={index} className={`rounded-2xl p-8 bg-gradient-to-br ${level.gradient} border-2 ${
-                level.theme === 'blue' ? 'border-blue-300' : 'border-amber-300'
-              } backdrop-blur-sm transition-all duration-500 hover:-translate-y-2 shadow-lg hover:shadow-xl`}>
-                <h3 className="text-2xl font-bold text-white mb-4">{level.level}</h3>
-                <p className="text-white/90 mb-6">{level.description}</p>
-                <div className="space-y-3">
-                  {level.features.map((feature, featureIndex) => (
-                    <div key={featureIndex} className="flex items-center space-x-3 text-white">
-                      <CheckCircle className="h-5 w-5 text-white flex-shrink-0" />
-                      <span>{feature}</span>
-                    </div>
-                  ))}
-                </div>
-                <button className={`w-full bg-white font-semibold py-3 rounded-xl mt-6 transition-all duration-300 hover:scale-105 shadow-md hover:shadow-${
-                  level.theme === 'blue' ? 'blue' : 'amber'
-                }-200 ${
-                  level.theme === 'blue' ? 'text-blue-700 hover:bg-blue-50' : 'text-amber-700 hover:bg-amber-50'
-                }`}>
-                  {index === 0 ? 'Start Basic Training' : 'Enroll in Premium'}
-                </button>
-              </div>
-            ))}
-          </div>
+          <div className="w-full max-w-4xl h-1.5 bg-gradient-to-r from-blue-500 via-gray-300 to-amber-500 mx-auto mb-8 rounded-full"></div>
+
+          <p className="text-xl text-gray-700 max-w-3xl mx-auto">
+            Your pathway to financial mastery and private sector success.
+          </p>
         </div>
-      </section>
+
+        {/* Program Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          {creditorAcademy.map((level, index) => (
+            <div
+              key={index}
+              className={`rounded-2xl p-8 bg-gradient-to-br ${level.gradient} border-2 ${
+                level.theme === "blue"
+                  ? "border-blue-300"
+                  : "border-amber-300"
+              } backdrop-blur-sm transition-all duration-500 hover:-translate-y-2 shadow-lg hover:shadow-xl`}
+            >
+              <h3 className="text-2xl font-bold text-white mb-4">
+                {level.level}
+              </h3>
+
+              <p className="text-white/90 mb-6">
+                {level.description}
+              </p>
+
+              <div className="space-y-3">
+                {level.features.map((feature, featureIndex) => (
+                  <div
+                    key={featureIndex}
+                    className="flex items-center space-x-3 text-white"
+                  >
+                    <CheckCircle className="h-5 w-5 text-white flex-shrink-0" />
+                    <span>{feature}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Navigate to Contact Page */}
+              <button
+                onClick={() =>
+                  navigate(
+                    `/contact?program=${index === 0 ? "basic" : "premium"}`
+                  )
+                }
+                className={`w-full bg-white font-semibold py-3 rounded-xl mt-6 transition-all duration-300 hover:scale-105 shadow-md ${
+                  level.theme === "blue"
+                    ? "text-blue-700 hover:bg-blue-50 hover:shadow-blue-200"
+                    : "text-amber-700 hover:bg-amber-50 hover:shadow-amber-200"
+                }`}
+              >
+                {index === 0 ? "Start Basic Training" : "Enroll in Premium"}
+              </button>
+            </div>
+          ))}
+        </div>
+
+      </div>
+    </section>s
 
       {/* CTA Section - Blue Theme */}
       <section className="py-20 lg:py-28 bg-blue-950 text-white relative overflow-hidden">
@@ -627,10 +656,10 @@ const Home = () => {
                 <span>Call: 1-888-997-3744</span>
                 <span className="absolute inset-0 bg-gradient-to-r from-blue-100 to-blue-200 opacity-0 group-hover:opacity-50 transition-opacity duration-300"></span>
               </Link>
-              <Link to="/creditor-academy" className="relative overflow-hidden group border-2 border-blue-300 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 hover:scale-105 hover:bg-blue-800 flex items-center justify-center space-x-2 hover:shadow-lg hover:shadow-blue-500/20">
+              {/* <Link to="/creditor-academy" className="relative overflow-hidden group border-2 border-blue-300 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 hover:scale-105 hover:bg-blue-800 flex items-center justify-center space-x-2 hover:shadow-lg hover:shadow-blue-500/20">
                 <span>Start Your Journey</span>
                 <span className="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-              </Link>
+              </Link> */}
             </div>
           </div>
         </div>

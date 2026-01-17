@@ -23,7 +23,7 @@ export default function Footer() {
               Empowering individuals through comprehensive education and professional development services.
             </p>
             <div className="flex space-x-4 pt-2">
-              <a href="#" className="text-gray-500 hover:text-blue-600 transition-colors transform hover:scale-110">
+              {/* <a href="#" className="text-gray-500 hover:text-blue-600 transition-colors transform hover:scale-110">
                 <Facebook size={20} />
               </a>
               <a href="#" className="text-gray-500 hover:text-blue-600 transition-colors transform hover:scale-110">
@@ -31,8 +31,8 @@ export default function Footer() {
               </a>
               <a href="#" className="text-gray-500 hover:text-blue-600 transition-colors transform hover:scale-110">
                 <Instagram size={20} />
-              </a>
-              <a href="#" className="text-gray-500 hover:text-blue-600 transition-colors transform hover:scale-110">
+              </a> */}
+              <a href="https://www.linkedin.com/in/lthd3/" className="text-gray-500 hover:text-blue-600 transition-colors transform hover:scale-110">
                 <Linkedin size={20} />
               </a>
             </div>
