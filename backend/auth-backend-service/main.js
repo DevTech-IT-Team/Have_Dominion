@@ -25,12 +25,14 @@ const app = express();
 const allowedOrigins = process.env.CORS_ORIGINS
   ? process.env.CORS_ORIGINS.split(",").map(o => o.trim())
   : [
-      "http://localhost:5173",
-      "http://localhost:3000",
-      "https://have-dominion-1.onrender.com",
-      "https://universal-helpers-j1p7.vercel.app",
-      "https://universal-helpers-1.onrender.com",
-    ];
+    "http://localhost:5173",
+    "https://letthemhavedominion.org",
+    "https://www.letthemhavedominion.org",
+    "http://localhost:3000",
+    "https://have-dominion-1.onrender.com",
+    "https://universal-helpers-j1p7.vercel.app",
+    "https://universal-helpers-1.onrender.com",
+  ];
 
 // CORS configuration
 const corsOptions = {
