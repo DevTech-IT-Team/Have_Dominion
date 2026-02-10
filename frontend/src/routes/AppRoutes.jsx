@@ -19,6 +19,7 @@ import MyServices from '../pages/Dashboard/MyServices';
 import Tradelines from '../pages/Dashboard/Tradelines';
 import AdminDashboard from '../pages/Admin/AdminDashboard';
 import AdminUsers from '../pages/Admin/AdminUsers';
+import TradelinesPage from '../pages/Tradelines/TradelinesPage';
 
 /* =========================
    Route Guards
@@ -127,6 +128,7 @@ export default function AppRoutes() {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/services" element={<Services />} />
+        <Route path="/tradelines" element={<TradelinesPage />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="*" element={<NotFound />} />

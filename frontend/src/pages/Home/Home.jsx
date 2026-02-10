@@ -267,9 +267,10 @@ const Home = () => {
               <span className="font-medium">24/7 Compliance & Support Services</span>
             </div>
             <div className="flex items-center space-x-2">
-              <a href="tel:1-888-997-3744" className="bg-white text-blue-700 font-medium py-1.5 px-3 rounded-full hover:bg-blue-50 transition-all duration-300 flex items-center space-x-1.5 text-sm shadow-md">
+              <a href="tel:(888) 343-4106" className="bg-white text-blue-700 font-medium py-1.5 px-3 rounded-full hover:bg-blue-50 transition-all duration-300 flex items-center space-x-1.5 text-sm shadow-md">
                 <PhoneCall className="h-4 w-4" />
-                <span>Call Now: 1-888-997-3744</span>
+                <span>Call Now: (888) 343-4106
+</span>
               </a>
             </div>
           </div>
@@ -308,11 +309,11 @@ const Home = () => {
                   <span>Know More About Us</span>
                 </Link>
                 <Link
-                  to="tel:1-888-997-3744"
+                  to="tel:(888) 343-4106"
                   className="relative overflow-hidden group border-2 border-amber-500 text-amber-600 text-sm font-medium py-2.5 px-6 rounded-full transition-all duration-300 hover:bg-amber-50 hover:border-amber-600 hover:scale-105 flex items-center justify-center space-x-2"
                 >
                   <Phone className="h-4 w-4" />
-                  <span>Call 1-888-997-3744</span>
+                  <span>Call (888) 343-4106</span>
                 </Link>
               </div>
               <div className="flex items-center space-x-6 text-sm">
@@ -604,7 +605,7 @@ const Home = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/contact" className="relative overflow-hidden group bg-white text-blue-700 font-semibold py-4 px-8 rounded-xl shadow-lg transition-all duration-300 hover:scale-105 flex items-center justify-center space-x-2 hover:shadow-blue-200">
                 <Phone className="h-5 w-5" />
-                <span>Call: 1-888-997-3744</span>
+                <span>Call: (888) 343-4106</span>
                 <span className="absolute inset-0 bg-gradient-to-r from-blue-100 to-blue-200 opacity-0 group-hover:opacity-50 transition-opacity duration-300"></span>
               </Link>
               {/* <Link to="/creditor-academy" className="relative overflow-hidden group border-2 border-blue-300 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 hover:scale-105 hover:bg-blue-800 flex items-center justify-center space-x-2 hover:shadow-lg hover:shadow-blue-500/20">
@@ -662,8 +663,7 @@ const Home = () => {
                   <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link
-                  to="/contact"
-                  state={{ service: 'Credit Tradelines' }}
+                  to="/tradelines"
                   onClick={() => setShowTradelinePopup(false)}
                   className="flex-1 bg-white border-2 border-sky-400 text-sky-700 font-semibold py-2.5 sm:py-3 px-4 rounded-xl transition-all duration-300 hover:scale-105 hover:bg-sky-50 hover:border-sky-500 flex items-center justify-center space-x-2 group text-sm sm:text-base"
                 >

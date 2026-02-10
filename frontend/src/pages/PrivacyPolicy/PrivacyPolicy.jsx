@@ -108,7 +108,7 @@ export default function PrivacyPolicy() {
               </p>
               <ul className="mt-2 space-y-1 text-amber-900">
                 <li>Email: lthd@letthemhavedominion.org</li>
-                <li>Phone: 1-888-997-3744</li>
+                <li>Phone: (888) 343-4106</li>
                 <li>Address: 1700 Seventh Avenue, Suite 2100-2029, Seattle, Washington 98101</li>
               </ul>
             </section>

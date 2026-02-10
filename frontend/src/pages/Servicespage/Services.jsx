@@ -322,12 +322,11 @@ export default function ServiceNeighborhood() {
       {/* Quick Actions */}
       <div className={`p-6 border-t bg-white/70 border-blue-950/20`}>
         <Link
-          to="/contact"
-          state={{ service: selectedCategory.title }}
+          to="/tradelines"
           onClick={closeCategoryPanel}
           className={`w-full py-3 text-white rounded-xl font-semibold transition-all duration-300 shadow-lg bg-gradient-to-r from-blue-950 to-blue-800 hover:from-blue-900 hover:to-blue-950 hover:shadow-blue-950/30 border border-blue-950/30 flex items-center justify-center space-x-2 group`}
         >
-          <span>Contact Us About {selectedCategory.title}</span>
+          <span>View Credit Tradelines</span>
           <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
