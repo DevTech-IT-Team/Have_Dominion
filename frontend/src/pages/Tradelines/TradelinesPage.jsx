@@ -1,27 +1,27 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  CreditCard,
-  Shield,
-  CheckCircle,
-  Star,
-  ShoppingBag,
-  User,
-  Clock,
-  TrendingUp,
-} from 'lucide-react';
 
 const TradelinesPage = () => {
   const [selectedTradeline, setSelectedTradeline] = useState(null);
   const [showSignupModal, setShowSignupModal] = useState(false);
   const navigate = useNavigate();
 
+  // Filter states
+  const [filters, setFilters] = useState({
+    bankName: '',
+    creditLimit: '',
+    availability: '',
+    priceSort: '',
+    processingTime: '',
+    impact: '',
+    ratingSort: ''
+  });
+
   const tradelines = [
     {
       id: 'chase',
       name: 'Chase',
-      logo: '🏦',
       description:
         'Premium Chase tradelines with excellent credit history and high limits',
       features: [
@@ -39,7 +39,6 @@ const TradelinesPage = () => {
     {
       id: 'capital-one',
       name: 'Capital One',
-      logo: '💳',
       description:
         'Strong Capital One accounts with consistent payment records',
       features: [
@@ -57,7 +56,6 @@ const TradelinesPage = () => {
     {
       id: 'bank-of-america',
       name: 'Bank of America',
-      logo: '🏛️',
       description:
         'Established BofA tradelines with proven credit building results',
       features: [
@@ -75,7 +73,6 @@ const TradelinesPage = () => {
     {
       id: 'barclays',
       name: 'Barclays',
-      logo: '🎯',
       description:
         'Premium Barclays tradelines with international credit benefits',
       features: [
@@ -93,7 +90,6 @@ const TradelinesPage = () => {
     {
       id: 'elan',
       name: 'Elan',
-      logo: '⭐',
       description:
         'Reliable Elan Financial Services tradelines with strong performance',
       features: [
@@ -111,7 +107,6 @@ const TradelinesPage = () => {
     {
       id: 'discover',
       name: 'Discover',
-      logo: '🔍',
       description:
         'Popular Discover tradelines with cashback rewards and excellent terms',
       features: [
@@ -127,6 +122,87 @@ const TradelinesPage = () => {
       impact: 'Very Good',
     },
   ];
+
+  // Apply filters and sorting to tradelines
+  const getFilteredAndSortedTradelines = () => {
+    let filtered = [...tradelines];
+
+    // Filter by bank name
+    if (filters.bankName) {
+      filtered = filtered.filter(t => t.id === filters.bankName);
+    }
+
+    // Filter by credit limit
+    if (filters.creditLimit) {
+      const limitMap = {
+        '20000+': 20000,
+        '30000+': 30000,
+        '40000+': 40000,
+        '50000+': 50000
+      };
+      const minLimit = limitMap[filters.creditLimit];
+      filtered = filtered.filter(t => {
+        const limit = parseInt(t.features.find(f => f.includes('$'))?.replace(/[^0-9]/g, '') || '0');
+        return limit >= minLimit;
+      });
+    }
+
+    // Filter by availability
+    if (filters.availability) {
+      filtered = filtered.filter(t => 
+        t.availability.toLowerCase().replace(' ', '-') === filters.availability
+      );
+    }
+
+    // Filter by processing time
+    if (filters.processingTime) {
+      filtered = filtered.filter(t => t.processingTime === filters.processingTime);
+    }
+
+    // Filter by impact
+    if (filters.impact) {
+      filtered = filtered.filter(t => 
+        t.impact.toLowerCase().replace(' ', '-') === filters.impact
+      );
+    }
+
+    // Sort by price
+    if (filters.priceSort === 'price-low-high') {
+      filtered.sort((a, b) => parseInt(a.price.replace(/[^0-9]/g, '')) - parseInt(b.price.replace(/[^0-9]/g, '')));
+    } else if (filters.priceSort === 'price-high-low') {
+      filtered.sort((a, b) => parseInt(b.price.replace(/[^0-9]/g, '')) - parseInt(a.price.replace(/[^0-9]/g, '')));
+    }
+
+    // Sort by rating
+    if (filters.ratingSort === 'rating-high-low') {
+      filtered.sort((a, b) => b.rating - a.rating);
+    } else if (filters.ratingSort === 'rating-low-high') {
+      filtered.sort((a, b) => a.rating - b.rating);
+    }
+
+    return filtered;
+  };
+
+  const handleFilterChange = (filterName, value) => {
+    setFilters(prev => ({
+      ...prev,
+      [filterName]: value
+    }));
+  };
+
+  const resetFilters = () => {
+    setFilters({
+      bankName: '',
+      creditLimit: '',
+      availability: '',
+      priceSort: '',
+      processingTime: '',
+      impact: '',
+      ratingSort: ''
+    });
+  };
+
+  const filteredTradelines = getFilteredAndSortedTradelines();
 
   const handleBuyClick = (tradeline) => {
     setSelectedTradeline(tradeline);
@@ -144,8 +220,7 @@ const TradelinesPage = () => {
       {/* HEADER */}
       <div className="pt-20 pb-14">
         <div className="max-w-6xl mx-auto px-4 text-center">
-          <div className="inline-flex items-center justify-center p-3 bg-blue-100 rounded-full mb-6">
-            <CreditCard className="h-8 w-8 text-blue-600" />
+          <div className="mb-6">
           </div>
 
           <h1 className="text-5xl md:text-6xl font-bold text-blue-950 mb-6">
@@ -158,16 +233,143 @@ const TradelinesPage = () => {
 
           <div className="flex flex-wrap justify-center gap-4 text-sm">
             <div className="flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-full">
-              <Shield className="h-4 w-4" />
               Secure & Verified
             </div>
             <div className="flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-full">
-              <Clock className="h-4 w-4" />
               Fast Processing
             </div>
             <div className="flex items-center gap-2 bg-purple-50 text-purple-700 px-4 py-2 rounded-full">
-              <TrendingUp className="h-4 w-4" />
               Proven Results
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* FILTER/SORT SECTION */}
+      <div className="pb-8">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* Bank Name Filter */}
+              <div className="flex flex-col">
+                <label className="text-sm font-medium text-gray-700 mb-2">Bank Name</label>
+                <select 
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={filters.bankName}
+                  onChange={(e) => handleFilterChange('bankName', e.target.value)}
+                >
+                  <option value="">All Banks</option>
+                  <option value="chase">Chase</option>
+                  <option value="capital-one">Capital One</option>
+                  <option value="bank-of-america">Bank of America</option>
+                  <option value="barclays">Barclays</option>
+                  <option value="elan">Elan</option>
+                  <option value="discover">Discover</option>
+                </select>
+              </div>
+
+              {/* Credit Limit Filter */}
+              <div className="flex flex-col">
+                <label className="text-sm font-medium text-gray-700 mb-2">Credit Limit</label>
+                <select 
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={filters.creditLimit}
+                  onChange={(e) => handleFilterChange('creditLimit', e.target.value)}
+                >
+                  <option value="">All Limits</option>
+                  <option value="20000+">$20,000+</option>
+                  <option value="30000+">$30,000+</option>
+                  <option value="40000+">$40,000+</option>
+                  <option value="50000+">$50,000+</option>
+                </select>
+              </div>
+
+              {/* Availability Filter */}
+              <div className="flex flex-col">
+                <label className="text-sm font-medium text-gray-700 mb-2">Availability</label>
+                <select 
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={filters.availability}
+                  onChange={(e) => handleFilterChange('availability', e.target.value)}
+                >
+                  <option value="">All Status</option>
+                  <option value="in-stock">In Stock</option>
+                  <option value="limited">Limited</option>
+                </select>
+              </div>
+
+              {/* Price Sort */}
+              <div className="flex flex-col">
+                <label className="text-sm font-medium text-gray-700 mb-2">Price</label>
+                <select 
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={filters.priceSort}
+                  onChange={(e) => handleFilterChange('priceSort', e.target.value)}
+                >
+                  <option value="">Default</option>
+                  <option value="price-low-high">Price: Low to High</option>
+                  <option value="price-high-low">Price: High to Low</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Additional Filters Row */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+              {/* Processing Time Filter */}
+              <div className="flex flex-col">
+                <label className="text-sm font-medium text-gray-700 mb-2">Processing Time</label>
+                <select 
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={filters.processingTime}
+                  onChange={(e) => handleFilterChange('processingTime', e.target.value)}
+                >
+                  <option value="">All Times</option>
+                  <option value="24-48 hours">24-48 hours</option>
+                  <option value="48-72 hours">48-72 hours</option>
+                </select>
+              </div>
+
+              {/* Impact Filter */}
+              <div className="flex flex-col">
+                <label className="text-sm font-medium text-gray-700 mb-2">Impact</label>
+                <select 
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={filters.impact}
+                  onChange={(e) => handleFilterChange('impact', e.target.value)}
+                >
+                  <option value="">All Levels</option>
+                  <option value="good">Good</option>
+                  <option value="very-good">Very Good</option>
+                  <option value="excellent">Excellent</option>
+                </select>
+              </div>
+
+              {/* Rating Sort */}
+              <div className="flex flex-col">
+                <label className="text-sm font-medium text-gray-700 mb-2">Rating</label>
+                <select 
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={filters.ratingSort}
+                  onChange={(e) => handleFilterChange('ratingSort', e.target.value)}
+                >
+                  <option value="">Default</option>
+                  <option value="rating-high-low">Rating: High to Low</option>
+                  <option value="rating-low-high">Rating: Low to High</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-between items-center mt-6">
+              <button 
+                onClick={resetFilters}
+                className="px-4 py-2 text-blue-600 hover:text-blue-700 font-medium"
+              >
+                Reset Filters
+              </button>
+              <div className="text-sm text-gray-600">
+                Showing {filteredTradelines.length} of {tradelines.length} tradelines
+              </div>
             </div>
           </div>
         </div>
@@ -177,7 +379,7 @@ const TradelinesPage = () => {
       <div className="pb-20">
         <div className="max-w-6xl mx-auto px-4 space-y-6">
 
-          {tradelines.map((tradeline, index) => (
+          {filteredTradelines.map((tradeline, index) => (
             <motion.div
               key={tradeline.id}
               initial={{ opacity: 0, y: 15 }}
@@ -189,8 +391,6 @@ const TradelinesPage = () => {
 
                 {/* LEFT SIDE */}
                 <div className="flex gap-5 flex-1">
-                  <div className="text-4xl">{tradeline.logo}</div>
-
                   <div className="flex-1">
                     <div className="flex flex-wrap items-center gap-3 mb-2">
                       <h3 className="text-2xl font-bold text-blue-950">
@@ -198,8 +398,7 @@ const TradelinesPage = () => {
                       </h3>
 
                       <span className="flex items-center text-yellow-500 text-sm">
-                        <Star className="h-4 w-4 fill-yellow-400 mr-1" />
-                        {tradeline.rating}
+                        ⭐ {tradeline.rating}
                       </span>
 
                       <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
@@ -214,8 +413,7 @@ const TradelinesPage = () => {
                     <div className="flex flex-wrap gap-4 text-sm text-gray-700">
                       {tradeline.features.map((feature, idx) => (
                         <div key={idx} className="flex items-center gap-1">
-                          <CheckCircle className="h-4 w-4 text-green-500" />
-                          {feature}
+                          ✓ {feature}
                         </div>
                       ))}
                     </div>
@@ -242,7 +440,6 @@ const TradelinesPage = () => {
                     onClick={() => handleBuyClick(tradeline)}
                     className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-6 rounded-lg transition hover:scale-105 flex items-center gap-2"
                   >
-                    <ShoppingBag className="h-5 w-5" />
                     Buy Now
                   </button>
                 </div>
@@ -274,7 +471,7 @@ const TradelinesPage = () => {
               <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
                 <div className="text-center mb-6">
                   <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <User className="h-8 w-8 text-blue-600" />
+                    <span className="text-2xl">👤</span>
                   </div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-2">
                     Sign Up Required
@@ -309,6 +506,16 @@ const TradelinesPage = () => {
           </>
         )}
       </AnimatePresence>
+
+      {/* Fixed Floating Button */}
+      <div className="fixed bottom-8 right-8 z-40">
+        <Link
+          to="/contact"
+          className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold py-4 px-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-2"
+        >
+          Selling Tradelines
+        </Link>
+      </div>
     </div>
   );
 };
