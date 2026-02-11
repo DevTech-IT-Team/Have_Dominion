@@ -12,115 +12,76 @@ const TradelinesPage = () => {
     bankName: '',
     creditLimit: '',
     availability: '',
-    priceSort: '',
-    processingTime: '',
-    impact: '',
-    ratingSort: ''
+    priceSort: ''
   });
 
   const tradelines = [
     {
       id: 'chase',
       name: 'Chase',
-      description:
-        'Premium Chase tradelines with excellent credit history and high limits',
-      features: [
-        '25+ years credit history',
-        '$50,000+ credit limit',
-        'Perfect payment history',
-        'Low utilization',
-      ],
-      price: '$1,500',
-      rating: 4.9,
-      availability: 'In Stock',
-      processingTime: '24-48 hours',
-      impact: 'Excellent',
+      cardId: '11959',
+      creditLimit: '$5,000.00',
+      dateOpened: '2020 Sep',
+      purchaseDeadline: 'Feb 19th',
+      reportingPeriod: 'Mar 2nd - Mar 9th',
+      availability: '1 in stock',
+      price: '$336.00'
     },
     {
       id: 'capital-one',
       name: 'Capital One',
-      description:
-        'Strong Capital One accounts with consistent payment records',
-      features: [
-        '20+ years credit history',
-        '$30,000+ credit limit',
-        'No late payments',
-        'Diverse account types',
-      ],
-      price: '$1,200',
-      rating: 4.8,
-      availability: 'In Stock',
-      processingTime: '24-48 hours',
-      impact: 'Very Good',
+      cardId: '12478',
+      creditLimit: '$7,500.00',
+      dateOpened: '2019 Nov',
+      purchaseDeadline: 'Feb 20th',
+      reportingPeriod: 'Mar 3rd - Mar 10th',
+      availability: '2 in stock',
+      price: '$425.00'
     },
     {
       id: 'bank-of-america',
       name: 'Bank of America',
-      description:
-        'Established BofA tradelines with proven credit building results',
-      features: [
-        '30+ years credit history',
-        '$40,000+ credit limit',
-        'Excellent credit mix',
-        'Stable account',
-      ],
-      price: '$1,350',
-      rating: 4.9,
-      availability: 'Limited',
-      processingTime: '48-72 hours',
-      impact: 'Excellent',
+      cardId: '13156',
+      creditLimit: '$10,000.00',
+      dateOpened: '2018 Jun',
+      purchaseDeadline: 'Feb 21st',
+      reportingPeriod: 'Mar 4th - Mar 11th',
+      availability: '1 in stock',
+      price: '$580.00'
     },
     {
       id: 'barclays',
       name: 'Barclays',
-      description:
-        'Premium Barclays tradelines with international credit benefits',
-      features: [
-        '15+ years credit history',
-        '$25,000+ credit limit',
-        'Global acceptance',
-        'Premium benefits',
-      ],
-      price: '$1,100',
-      rating: 4.7,
-      availability: 'In Stock',
-      processingTime: '24-48 hours',
-      impact: 'Good',
+      cardId: '14289',
+      creditLimit: '$6,000.00',
+      dateOpened: '2020 Mar',
+      purchaseDeadline: 'Feb 22nd',
+      reportingPeriod: 'Mar 5th - Mar 12th',
+      availability: '3 in stock',
+      price: '$395.00'
     },
     {
       id: 'elan',
       name: 'Elan',
-      description:
-        'Reliable Elan Financial Services tradelines with strong performance',
-      features: [
-        '18+ years credit history',
-        '$20,000+ credit limit',
-        'Consistent payments',
-        'Multiple account types',
-      ],
-      price: '$950',
-      rating: 4.6,
-      availability: 'In Stock',
-      processingTime: '24-48 hours',
-      impact: 'Good',
+      cardId: '15847',
+      creditLimit: '$4,500.00',
+      dateOpened: '2021 Jan',
+      purchaseDeadline: 'Feb 23rd',
+      reportingPeriod: 'Mar 6th - Mar 13th',
+      availability: '2 in stock',
+      price: '$285.00'
     },
     {
       id: 'discover',
       name: 'Discover',
-      description:
-        'Popular Discover tradelines with cashback rewards and excellent terms',
-      features: [
-        '22+ years credit history',
-        '$35,000+ credit limit',
-        'No annual fee',
-        'Cash rewards',
-      ],
-      price: '$1,050',
-      rating: 4.8,
-      availability: 'In Stock',
-      processingTime: '24-48 hours',
-      impact: 'Very Good',
-    },
+      cardId: '16325',
+      creditLimit: '$8,000.00',
+      dateOpened: '2019 Aug',
+      purchaseDeadline: 'Feb 24th',
+      reportingPeriod: 'Mar 7th - Mar 14th',
+      availability: '1 in stock',
+      price: '$475.00'
+    }
   ];
 
   // Apply filters and sorting to tradelines
@@ -135,14 +96,12 @@ const TradelinesPage = () => {
     // Filter by credit limit
     if (filters.creditLimit) {
       const limitMap = {
-        '20000+': 20000,
-        '30000+': 30000,
-        '40000+': 40000,
-        '50000+': 50000
+        '5000': 5000,
+        '10000': 10000
       };
       const minLimit = limitMap[filters.creditLimit];
       filtered = filtered.filter(t => {
-        const limit = parseInt(t.features.find(f => f.includes('$'))?.replace(/[^0-9]/g, '') || '0');
+        const limit = parseInt(t.creditLimit.replace(/[^0-9]/g, '') || '0');
         return limit >= minLimit;
       });
     }
@@ -150,19 +109,8 @@ const TradelinesPage = () => {
     // Filter by availability
     if (filters.availability) {
       filtered = filtered.filter(t => 
-        t.availability.toLowerCase().replace(' ', '-') === filters.availability
-      );
-    }
-
-    // Filter by processing time
-    if (filters.processingTime) {
-      filtered = filtered.filter(t => t.processingTime === filters.processingTime);
-    }
-
-    // Filter by impact
-    if (filters.impact) {
-      filtered = filtered.filter(t => 
-        t.impact.toLowerCase().replace(' ', '-') === filters.impact
+        t.availability.toLowerCase().includes('in stock') && filters.availability === 'in-stock' ||
+        t.availability.toLowerCase().includes('limited') && filters.availability === 'limited'
       );
     }
 
@@ -171,13 +119,6 @@ const TradelinesPage = () => {
       filtered.sort((a, b) => parseInt(a.price.replace(/[^0-9]/g, '')) - parseInt(b.price.replace(/[^0-9]/g, '')));
     } else if (filters.priceSort === 'price-high-low') {
       filtered.sort((a, b) => parseInt(b.price.replace(/[^0-9]/g, '')) - parseInt(a.price.replace(/[^0-9]/g, '')));
-    }
-
-    // Sort by rating
-    if (filters.ratingSort === 'rating-high-low') {
-      filtered.sort((a, b) => b.rating - a.rating);
-    } else if (filters.ratingSort === 'rating-low-high') {
-      filtered.sort((a, b) => a.rating - b.rating);
     }
 
     return filtered;
@@ -195,10 +136,7 @@ const TradelinesPage = () => {
       bankName: '',
       creditLimit: '',
       availability: '',
-      priceSort: '',
-      processingTime: '',
-      impact: '',
-      ratingSort: ''
+      priceSort: ''
     });
   };
 
@@ -277,10 +215,8 @@ const TradelinesPage = () => {
                   onChange={(e) => handleFilterChange('creditLimit', e.target.value)}
                 >
                   <option value="">All Limits</option>
-                  <option value="20000+">$20,000+</option>
-                  <option value="30000+">$30,000+</option>
-                  <option value="40000+">$40,000+</option>
-                  <option value="50000+">$50,000+</option>
+                  <option value="5000">$5,000+</option>
+                  <option value="10000">$10,000+</option>
                 </select>
               </div>
 
@@ -313,52 +249,6 @@ const TradelinesPage = () => {
               </div>
             </div>
 
-            {/* Additional Filters Row */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-              {/* Processing Time Filter */}
-              <div className="flex flex-col">
-                <label className="text-sm font-medium text-gray-700 mb-2">Processing Time</label>
-                <select 
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  value={filters.processingTime}
-                  onChange={(e) => handleFilterChange('processingTime', e.target.value)}
-                >
-                  <option value="">All Times</option>
-                  <option value="24-48 hours">24-48 hours</option>
-                  <option value="48-72 hours">48-72 hours</option>
-                </select>
-              </div>
-
-              {/* Impact Filter */}
-              <div className="flex flex-col">
-                <label className="text-sm font-medium text-gray-700 mb-2">Impact</label>
-                <select 
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  value={filters.impact}
-                  onChange={(e) => handleFilterChange('impact', e.target.value)}
-                >
-                  <option value="">All Levels</option>
-                  <option value="good">Good</option>
-                  <option value="very-good">Very Good</option>
-                  <option value="excellent">Excellent</option>
-                </select>
-              </div>
-
-              {/* Rating Sort */}
-              <div className="flex flex-col">
-                <label className="text-sm font-medium text-gray-700 mb-2">Rating</label>
-                <select 
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  value={filters.ratingSort}
-                  onChange={(e) => handleFilterChange('ratingSort', e.target.value)}
-                >
-                  <option value="">Default</option>
-                  <option value="rating-high-low">Rating: High to Low</option>
-                  <option value="rating-low-high">Rating: Low to High</option>
-                </select>
-              </div>
-            </div>
-
             {/* Action Buttons */}
             <div className="flex justify-between items-center mt-6">
               <button 
@@ -377,77 +267,53 @@ const TradelinesPage = () => {
 
       {/* LIST VIEW */}
       <div className="pb-20">
-        <div className="max-w-6xl mx-auto px-4 space-y-6">
+        <div className="max-w-6xl mx-auto px-4">
+          {/* Table Header */}
+          <div className="bg-gray-50 border border-gray-200 rounded-t-lg p-4">
+            <div className="grid grid-cols-9 gap-4 text-sm font-semibold text-gray-700">
+              <div>Bank Name</div>
+              <div>Card ID</div>
+              <div>Credit Limit</div>
+              <div>Date Opened</div>
+              <div>Purchase Deadline</div>
+              <div>Reporting Period</div>
+              <div>Availability</div>
+              <div>Price</div>
+              <div>Action</div>
+            </div>
+          </div>
 
-          {filteredTradelines.map((tradeline, index) => (
-            <motion.div
-              key={tradeline.id}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.05 }}
-              className="bg-white border border-blue-100 rounded-xl p-6 shadow-sm hover:shadow-md transition"
-            >
-              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-
-                {/* LEFT SIDE */}
-                <div className="flex gap-5 flex-1">
-                  <div className="flex-1">
-                    <div className="flex flex-wrap items-center gap-3 mb-2">
-                      <h3 className="text-2xl font-bold text-blue-950">
-                        {tradeline.name}
-                      </h3>
-
-                      <span className="flex items-center text-yellow-500 text-sm">
-                        ⭐ {tradeline.rating}
-                      </span>
-
-                      <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
-                        {tradeline.availability}
-                      </span>
-                    </div>
-
-                    <p className="text-gray-600 mb-3">
-                      {tradeline.description}
-                    </p>
-
-                    <div className="flex flex-wrap gap-4 text-sm text-gray-700">
-                      {tradeline.features.map((feature, idx) => (
-                        <div key={idx} className="flex items-center gap-1">
-                          ✓ {feature}
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="flex gap-6 mt-4 text-sm text-gray-600">
-                      <span>
-                        <strong>Processing:</strong> {tradeline.processingTime}
-                      </span>
-                      <span>
-                        <strong>Impact:</strong> {tradeline.impact}
-                      </span>
-                    </div>
+          {/* Table Rows */}
+          <div className="bg-white border border-gray-200 border-t-0">
+            {filteredTradelines.map((tradeline, index) => (
+              <motion.div
+                key={tradeline.id}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05 }}
+                className="border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition"
+              >
+                <div className="grid grid-cols-9 gap-4 p-4 items-center">
+                  <div className="font-medium text-blue-950">{tradeline.name}</div>
+                  <div className="text-sm text-gray-600">{tradeline.cardId}</div>
+                  <div className="text-sm text-gray-600">{tradeline.creditLimit}</div>
+                  <div className="text-sm text-gray-600">{tradeline.dateOpened}</div>
+                  <div className="text-sm text-gray-600">{tradeline.purchaseDeadline}</div>
+                  <div className="text-sm text-gray-600">{tradeline.reportingPeriod}</div>
+                  <div className="text-sm text-gray-600">{tradeline.availability}</div>
+                  <div className="font-semibold text-green-600">{tradeline.price}</div>
+                  <div>
+                    <button
+                      onClick={() => handleBuyClick(tradeline)}
+                      className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-4 rounded-md transition hover:scale-105"
+                    >
+                      Add to cart
+                    </button>
                   </div>
                 </div>
-
-                {/* RIGHT SIDE */}
-                <div className="flex flex-col items-start lg:items-end gap-4">
-                  <div className="text-3xl font-bold text-blue-900">
-                    {tradeline.price}
-                  </div>
-                  <div className="text-sm text-gray-500">One-time fee</div>
-
-                  <button
-                    onClick={() => handleBuyClick(tradeline)}
-                    className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-6 rounded-lg transition hover:scale-105 flex items-center gap-2"
-                  >
-                    Buy Now
-                  </button>
-                </div>
-
-              </div>
-            </motion.div>
-          ))}
-
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
 
