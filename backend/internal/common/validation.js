@@ -29,6 +29,15 @@ const schemas = {
     name: Joi.string().min(2).max(100),
     email: Joi.string().email(),
   }),
+
+  forgotPassword: Joi.object({
+    email: Joi.string().email().required(),
+  }),
+
+  resetPassword: Joi.object({
+    token: Joi.string().required(),
+    password: Joi.string().required().min(6).max(100),
+  }),
 };
 
 const validate = (data, schemaName) => {

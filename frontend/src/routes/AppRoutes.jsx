@@ -11,6 +11,8 @@ import NotFound from '../pages/NotFound';
 import Services from '../pages/Servicespage/Services';
 import Login from '../pages/Auth/Login';
 import SignUp from '../pages/Auth/SignUp';
+import ForgotPassword from '../pages/Auth/ForgotPassword';
+import ResetPassword from '../pages/Auth/ResetPassword';
 import PrivacyPolicy from '../pages/PrivacyPolicy/PrivacyPolicy';
 import TermsOfService from '../pages/TermsOfService/TermsOfService';
 import AdminLogin from '../pages/Admin/AdminLogin';
@@ -119,6 +121,8 @@ export default function AppRoutes() {
       <Route element={<PublicRoute />}>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/admin/login" element={<AdminLogin />} />
       </Route>
 

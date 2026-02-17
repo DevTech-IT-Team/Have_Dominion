@@ -153,7 +153,7 @@ const TradelinesPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
 
       {/* HEADER */}
       <div className="pt-20 pb-14">
@@ -161,22 +161,22 @@ const TradelinesPage = () => {
           <div className="mb-6">
           </div>
 
-          <h1 className="text-5xl md:text-6xl font-bold text-blue-950 mb-6">
+          <h1 className="text-5xl md:text-6xl font-bold text-[#0A1F44] mb-6">
             Premium Credit Tradelines
           </h1>
 
-          <p className="text-xl text-blue-900/80 max-w-3xl mx-auto mb-8">
+          <p className="text-xl text-[#0A1F44]/70 max-w-3xl mx-auto mb-8">
             Boost your credit score with authorized user tradelines from trusted financial institutions.
           </p>
 
           <div className="flex flex-wrap justify-center gap-4 text-sm">
-            <div className="flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-full">
+            <div className="flex items-center gap-2 bg-[#C9A227]/10 text-[#C9A227] px-4 py-2 rounded-full border border-[#C9A227]/20">
               Secure & Verified
             </div>
-            <div className="flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-full">
+            <div className="flex items-center gap-2 bg-[#0A1F44]/5 text-[#0A1F44] px-4 py-2 rounded-full border border-[#0A1F44]/10">
               Fast Processing
             </div>
-            <div className="flex items-center gap-2 bg-purple-50 text-purple-700 px-4 py-2 rounded-full">
+            <div className="flex items-center gap-2 bg-[#C9A227]/10 text-[#C9A227] px-4 py-2 rounded-full border border-[#C9A227]/20">
               Proven Results
             </div>
           </div>
@@ -192,7 +192,7 @@ const TradelinesPage = () => {
               <div className="flex flex-col">
                 <label className="text-sm font-medium text-gray-700 mb-2">Bank Name</label>
                 <select 
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0A1F44]/20 focus:border-[#0A1F44]/30"
                   value={filters.bankName}
                   onChange={(e) => handleFilterChange('bankName', e.target.value)}
                 >
@@ -210,7 +210,7 @@ const TradelinesPage = () => {
               <div className="flex flex-col">
                 <label className="text-sm font-medium text-gray-700 mb-2">Credit Limit</label>
                 <select 
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0A1F44]/20 focus:border-[#0A1F44]/30"
                   value={filters.creditLimit}
                   onChange={(e) => handleFilterChange('creditLimit', e.target.value)}
                 >
@@ -224,7 +224,7 @@ const TradelinesPage = () => {
               <div className="flex flex-col">
                 <label className="text-sm font-medium text-gray-700 mb-2">Availability</label>
                 <select 
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0A1F44]/20 focus:border-[#0A1F44]/30"
                   value={filters.availability}
                   onChange={(e) => handleFilterChange('availability', e.target.value)}
                 >
@@ -238,7 +238,7 @@ const TradelinesPage = () => {
               <div className="flex flex-col">
                 <label className="text-sm font-medium text-gray-700 mb-2">Price</label>
                 <select 
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0A1F44]/20 focus:border-[#0A1F44]/30"
                   value={filters.priceSort}
                   onChange={(e) => handleFilterChange('priceSort', e.target.value)}
                 >
@@ -253,7 +253,7 @@ const TradelinesPage = () => {
             <div className="flex justify-between items-center mt-6">
               <button 
                 onClick={resetFilters}
-                className="px-4 py-2 text-blue-600 hover:text-blue-700 font-medium"
+                className="px-4 py-2 text-[#0A1F44] hover:text-[#C9A227] font-medium"
               >
                 Reset Filters
               </button>
@@ -294,18 +294,18 @@ const TradelinesPage = () => {
                 className="border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition"
               >
                 <div className="grid grid-cols-9 gap-4 p-4 items-center">
-                  <div className="font-medium text-blue-950">{tradeline.name}</div>
+                  <div className="font-medium text-[#0A1F44]">{tradeline.name}</div>
                   <div className="text-sm text-gray-600">{tradeline.cardId}</div>
                   <div className="text-sm text-gray-600">{tradeline.creditLimit}</div>
                   <div className="text-sm text-gray-600">{tradeline.dateOpened}</div>
                   <div className="text-sm text-gray-600">{tradeline.purchaseDeadline}</div>
                   <div className="text-sm text-gray-600">{tradeline.reportingPeriod}</div>
                   <div className="text-sm text-gray-600">{tradeline.availability}</div>
-                  <div className="font-semibold text-green-600">{tradeline.price}</div>
+                  <div className="font-semibold text-[#C9A227]">{tradeline.price}</div>
                   <div>
                     <button
                       onClick={() => handleBuyClick(tradeline)}
-                      className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-4 rounded-md transition hover:scale-105"
+                      className="bg-[#0A1F44] hover:bg-[#020816] text-white text-sm font-medium py-2 px-4 rounded-md transition hover:scale-105"
                     >
                       Add to cart
                     </button>
@@ -336,34 +336,34 @@ const TradelinesPage = () => {
             >
               <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
                 <div className="text-center mb-6">
-                  <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-2xl">👤</span>
+                  <div className="w-16 h-16 bg-[#0A1F44] rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span className="text-2xl text-white">👤</span>
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                  <h3 className="text-2xl font-bold text-[#0A1F44] mb-2">
                     Sign Up Required
                   </h3>
-                  <p className="text-gray-600">
+                  <p className="text-[#0A1F44]/60">
                     Create an account to purchase {selectedTradeline?.name}
                   </p>
                 </div>
 
                 <button
                   onClick={handleSignupRedirect}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition"
+                  className="w-full bg-gradient-to-r from-[#0A1F44] to-[#020816] hover:from-[#020816] hover:to-[#0A1F44] text-white font-semibold py-3 rounded-xl transition"
                 >
                   Sign Up Now
                 </button>
 
                 <button
                   onClick={() => setShowSignupModal(false)}
-                  className="w-full mt-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 rounded-xl transition"
+                  className="w-full mt-3 bg-[#0A1F44]/5 hover:bg-[#0A1F44]/10 text-[#0A1F44] font-semibold py-3 rounded-xl transition border border-[#0A1F44]/10"
                 >
                   Cancel
                 </button>
 
                 <div className="mt-6 text-center text-sm">
                   Already have an account?{" "}
-                  <Link to="/login" className="text-blue-600 font-medium">
+                  <Link to="/login" className="text-[#C9A227] font-medium hover:underline">
                     Log In
                   </Link>
                 </div>
@@ -377,7 +377,7 @@ const TradelinesPage = () => {
       <div className="fixed bottom-8 right-8 z-40">
         <Link
           to="/contact"
-          className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold py-4 px-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-2"
+          className="bg-gradient-to-r from-[#C9A227] to-[#E0B84C] hover:from-[#E0B84C] hover:to-[#F5D36B] text-[#020816] font-semibold py-4 px-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-2"
         >
           Selling Tradelines
         </Link>

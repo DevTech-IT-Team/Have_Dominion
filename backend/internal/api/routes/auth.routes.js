@@ -1,8 +1,23 @@
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const router = express.Router();
 const { validate } = require('../../common/validation');
 const authService = require('../services/auth.service');
 const { logger } = require('../../common/logger');
+
+// Rate limiter for forgot password - prevent abuse
+const forgotPasswordLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 3, // limit each IP to 3 requests per windowMs
+  message: {
+    success: false,
+    message: 'Too many password reset attempts. Please try again after 15 minutes.',
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  // Skip successful requests from counting toward the limit
+  skipSuccessfulRequests: false,
+});
 
 // User Signup
 router.post('/user/signup', async (req, res, next) => {
@@ -119,6 +134,47 @@ router.post('/logout', async (req, res, next) => {
       message: 'Logout successful',
     });
   } catch (error) {
+    next(error);
+  }
+});
+
+// Forgot Password - with rate limiting
+router.post('/forgot-password', forgotPasswordLimiter, async (req, res, next) => {
+  try {
+    const { email } = validate(req.body, 'forgotPassword');
+    const result = await authService.forgotPassword(email);
+
+    logger.info('Forgot password request processed', { email });
+    res.status(200).json({
+      success: true,
+      message: result.message,
+    });
+  } catch (error) {
+    logger.error('Forgot password error in route', { 
+      error: error.message, 
+      statusCode: error.statusCode,
+      email: req.body?.email 
+    });
+    next(error);
+  }
+});
+
+// Reset Password
+router.post('/reset-password', async (req, res, next) => {
+  try {
+    const { token, password } = validate(req.body, 'resetPassword');
+    const result = await authService.resetPassword(token, password);
+
+    logger.info('Password reset successful');
+    res.status(200).json({
+      success: true,
+      message: result.message,
+    });
+  } catch (error) {
+    logger.error('Reset password error in route', { 
+      error: error.message, 
+      statusCode: error.statusCode,
+    });
     next(error);
   }
 });

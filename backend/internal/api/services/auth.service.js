@@ -2,6 +2,7 @@ const User = require('../../database/models/User');
 const { generateToken, verifyToken } = require('../../auth/jwt');
 const { AppError } = require('../../common/error-handler');
 const { logger } = require('../../common/logger');
+const emailService = require('../../common/email.service');
 
 class AuthService {
   async signupUser(name, email, password) {
@@ -204,6 +205,84 @@ class AuthService {
       }
     } catch (error) {
       logger.error('Logout error', { error: error.message });
+    }
+  }
+
+  async forgotPassword(email) {
+    try {
+      const user = await User.findOne({ email });
+      
+      // Always return success even if user not found (security best practice)
+      if (!user) {
+        logger.info('Password reset requested for non-existent email', { email });
+        return {
+          success: true,
+          message: 'If an account exists with this email, a password reset link has been sent.',
+        };
+      }
+
+      // Generate reset token
+      const resetToken = user.generatePasswordResetToken();
+      await user.save();
+
+      // Send email
+      const emailSent = await emailService.sendPasswordResetEmail(
+        email,
+        resetToken,
+        user.name
+      );
+
+      if (!emailSent) {
+        logger.warn('Failed to send password reset email', { email });
+        // Still return success to prevent email enumeration
+      } else {
+        logger.info('Password reset email sent', { email });
+      }
+
+      return {
+        success: true,
+        message: 'If an account exists with this email, a password reset link has been sent.',
+      };
+    } catch (error) {
+      if (error instanceof AppError) throw error;
+      logger.error('Forgot password error', { error: error.message, email });
+      throw new AppError('Failed to process password reset request', 500, 'FORGOT_PASSWORD_ERROR');
+    }
+  }
+
+  async resetPassword(token, newPassword) {
+    try {
+      // Find user by token (need to hash token for lookup)
+      const crypto = require('crypto');
+      const hashedToken = crypto
+        .createHash('sha256')
+        .update(token)
+        .digest('hex');
+
+      const user = await User.findOne({
+        resetPasswordToken: hashedToken,
+        resetPasswordExpires: { $gt: Date.now() },
+      });
+
+      if (!user) {
+        throw new AppError('Invalid or expired reset token', 400, 'INVALID_RESET_TOKEN');
+      }
+
+      // Update password
+      user.password = newPassword;
+      user.clearPasswordResetToken();
+      await user.save();
+
+      logger.info('Password reset successful', { email: user.email });
+
+      return {
+        success: true,
+        message: 'Password has been reset successfully. Please log in with your new password.',
+      };
+    } catch (error) {
+      if (error instanceof AppError) throw error;
+      logger.error('Reset password error', { error: error.message });
+      throw new AppError('Failed to reset password', 500, 'RESET_PASSWORD_ERROR');
     }
   }
 }

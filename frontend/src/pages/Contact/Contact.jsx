@@ -90,13 +90,13 @@ export default function Contact() {
   };
 
   return (
-    <div className="min-h-screen pt-20 pb-20 bg-gradient-to-br from-blue-50 via-sky-50 to-amber-50">
+    <div className="min-h-screen pt-20 pb-20 bg-gradient-to-br from-gray-50 via-white to-gray-50">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl p-8 border border-blue-100"
+          className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl p-8 border border-[#0A1F44]/10"
         >
           {/* Header Section */}
           <div className="text-center mb-10">
@@ -104,7 +104,7 @@ export default function Contact() {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, type: "spring" }}
-              className="w-16 h-16 bg-blue-700 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg"
+              className="w-16 h-16 bg-[#0A1F44] rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg"
             >
               <svg 
                 className="w-8 h-8 text-white" 
@@ -121,10 +121,10 @@ export default function Contact() {
                 />
               </svg>
             </motion.div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-700 to-amber-700 bg-clip-text text-transparent mb-4">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-[#0A1F44] to-[#C9A227] bg-clip-text text-transparent mb-4">
               Get in Touch
             </h1>
-            <p className="text-gray-600 text-lg">
+            <p className="text-[#0A1F44]/60 text-lg">
               Have a question or want to work together? Send us a message!
             </p>
           </div>
@@ -136,10 +136,10 @@ export default function Contact() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 }}
             >
-              <label className="block text-gray-700 mb-3 font-medium">
+              <label className="block text-[#0A1F44] mb-3 font-medium">
                 <div className="flex items-center gap-2">
                   <svg 
-                    className="w-5 h-5 text-amber-600" 
+                    className="w-5 h-5 text-[#C9A227]" 
                     fill="none" 
                     stroke="currentColor" 
                     viewBox="0 0 24 24" 
@@ -161,9 +161,9 @@ export default function Contact() {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full px-6 py-4 rounded-xl bg-white text-gray-800 border-2 border-blue-100 
-                         focus:outline-none focus:border-amber-400 focus:ring-4 focus:ring-amber-100 
-                         transition-all duration-300 placeholder:text-gray-400 shadow-sm"
+                className="w-full px-6 py-4 rounded-xl bg-white text-[#0A1F44] border-2 border-[#0A1F44]/10 
+                         focus:outline-none focus:border-[#C9A227] focus:ring-4 focus:ring-[#C9A227]/10 
+                         transition-all duration-300 placeholder:text-[#0A1F44]/40 shadow-sm"
                 placeholder="Enter your name"
               />
             </motion.div>
@@ -174,10 +174,10 @@ export default function Contact() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4 }}
             >
-              <label className="block text-gray-700 mb-3 font-medium">
+              <label className="block text-[#0A1F44] mb-3 font-medium">
                 <div className="flex items-center gap-2">
                   <svg 
-                    className="w-5 h-5 text-amber-600" 
+                    className="w-5 h-5 text-[#C9A227]" 
                     fill="none" 
                     stroke="currentColor" 
                     viewBox="0 0 24 24" 
@@ -199,9 +199,9 @@ export default function Contact() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full px-6 py-4 rounded-xl bg-white text-gray-800 border-2 border-blue-100 
-                         focus:outline-none focus:border-amber-400 focus:ring-4 focus:ring-amber-100 
-                         transition-all duration-300 placeholder:text-gray-400 shadow-sm"
+                className="w-full px-6 py-4 rounded-xl bg-white text-[#0A1F44] border-2 border-[#0A1F44]/10 
+                         focus:outline-none focus:border-[#C9A227] focus:ring-4 focus:ring-[#C9A227]/10 
+                         transition-all duration-300 placeholder:text-[#0A1F44]/40 shadow-sm"
                 placeholder="Enter your email address"
               />
             </motion.div>
@@ -212,10 +212,10 @@ export default function Contact() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.45 }}
             >
-              <label className="block text-gray-700 mb-3 font-medium">
+              <label className="block text-[#0A1F44] mb-3 font-medium">
                 <div className="flex items-center gap-2">
                   <svg 
-                    className="w-5 h-5 text-amber-600" 
+                    className="w-5 h-5 text-[#C9A227]" 
                     fill="none" 
                     stroke="currentColor" 
                     viewBox="0 0 24 24" 
@@ -236,9 +236,9 @@ export default function Contact() {
                 value={formData.service}
                 onChange={handleChange}
                 required
-                className="w-full px-6 py-4 rounded-xl bg-white text-gray-800 border-2 border-blue-100 
-                         focus:outline-none focus:border-amber-400 focus:ring-4 focus:ring-amber-100 
-                         transition-all duration-300 placeholder:text-gray-400 shadow-sm"
+                className="w-full px-6 py-4 rounded-xl bg-white text-[#0A1F44] border-2 border-[#0A1F44]/10 
+                         focus:outline-none focus:border-[#C9A227] focus:ring-4 focus:ring-[#C9A227]/10 
+                         transition-all duration-300 placeholder:text-[#0A1F44]/40 shadow-sm"
               >
                 <option value="">Select a service</option>
                 {services.map((service, index) => (
@@ -255,10 +255,10 @@ export default function Contact() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.5 }}
             >
-              <label className="block text-gray-700 mb-3 font-medium">
+              <label className="block text-[#0A1F44] mb-3 font-medium">
                 <div className="flex items-center gap-2">
                   <svg 
-                    className="w-5 h-5 text-amber-600" 
+                    className="w-5 h-5 text-[#C9A227]" 
                     fill="none" 
                     stroke="currentColor" 
                     viewBox="0 0 24 24" 
@@ -280,9 +280,9 @@ export default function Contact() {
                 onChange={handleChange}
                 required
                 rows="5"
-                className="w-full px-6 py-4 rounded-xl bg-white text-gray-800 border-2 border-blue-100 
-                         focus:outline-none focus:border-amber-400 focus:ring-4 focus:ring-amber-100 
-                         transition-all duration-300 placeholder:text-gray-400 shadow-sm resize-none"
+                className="w-full px-6 py-4 rounded-xl bg-white text-[#0A1F44] border-2 border-[#0A1F44]/10 
+                         focus:outline-none focus:border-[#C9A227] focus:ring-4 focus:ring-[#C9A227]/10 
+                         transition-all duration-300 placeholder:text-[#0A1F44]/40 shadow-sm resize-none"
                 placeholder="Write your message here..."
               />
             </motion.div>
@@ -296,8 +296,8 @@ export default function Contact() {
               <button
                 type="submit"
                 className="w-full py-4 text-lg font-semibold text-white rounded-xl transition-all duration-500
-                         bg-blue-950 hover:bg-blue-900
-                         focus:outline-none focus:ring-4 focus:ring-amber-300 focus:ring-offset-2
+                         bg-gradient-to-r from-[#0A1F44] to-[#020816] hover:from-[#020816] hover:to-[#0A1F44]
+                         focus:outline-none focus:ring-4 focus:ring-[#C9A227]/30 focus:ring-offset-2
                          transform hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl 
                          flex items-center justify-center gap-3 group"
               >
@@ -325,7 +325,7 @@ export default function Contact() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="mt-8 text-center text-gray-500 text-sm"
+            className="mt-8 text-center text-[#0A1F44]/50 text-sm"
           >
             We typically respond within 24 hours
           </motion.p>

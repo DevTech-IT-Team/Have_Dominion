@@ -127,6 +127,15 @@ function Login() {
                             <span>Sign In</span>
                         )}
                     </button>
+
+                    <div className="flex justify-between items-center">
+                        <Link 
+                            to="/forgot-password" 
+                            className='text-sm text-blue-950 hover:text-blue-900 transition-colors duration-200'
+                        >
+                            Forgot Password?
+                        </Link>
+                    </div>
                 </form>
                 
                 <div className='mt-6 text-center'>
