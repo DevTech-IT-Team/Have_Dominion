@@ -9,7 +9,7 @@ export default function Lessons() {
   ]
 
   return (
-    <div className="min-h-screen pt-20 pb-20 shiny-bg">
+    <div className="min-h-screen pt-20 pb-20 bg-gradient-to-br from-obsidian via-midnight-900 to-obsidian">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
@@ -26,11 +26,11 @@ export default function Lessons() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               whileHover={{ scale: 1.05 }}
-              className="bg-slate-800 p-8 rounded-lg shadow-lg border border-slate-700"
+              className="bg-midnight-800/80 backdrop-blur-sm p-8 rounded-2xl shadow-xl border border-electric/20 hover:border-electric/40 transition-all"
             >
               <h3 className="text-2xl font-bold text-white mb-2">{lesson.title}</h3>
               <p className="text-gray-400 mb-4">By {lesson.instructor}</p>
-              <span className="inline-block bg-blue-600 text-white px-3 py-1 rounded-full text-sm">
+              <span className="inline-block bg-electric text-obsidian font-semibold px-3 py-1 rounded-full text-sm">
                 {lesson.level}
               </span>
             </motion.div>

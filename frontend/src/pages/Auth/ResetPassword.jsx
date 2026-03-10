@@ -80,21 +80,21 @@ function ResetPassword() {
 
     if (isSuccess) {
         return (
-            <div className='min-h-screen bg-gradient-to-br from-blue-50 to-white flex items-center justify-center px-4'>
-                <div className='max-w-md w-full bg-white rounded-2xl shadow-xl border border-blue-100 p-8'>
+            <div className='min-h-screen bg-gradient-to-br from-obsidian to-midnight-900 flex items-center justify-center px-4'>
+                <div className='max-w-md w-full bg-midnight-800/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-electric/20 p-8'>
                     <div className='text-center mb-8'>
                         <div className="flex justify-center mb-4">
-                            <CheckCircle className="h-16 w-16 text-green-500" />
+                            <CheckCircle className="h-16 w-16 text-electric" />
                         </div>
-                        <h1 className='text-3xl font-bold text-blue-950 mb-2'>Password Reset Successful</h1>
-                        <p className='text-gray-600'>
+                        <h1 className='text-3xl font-bold text-white mb-2'>Password Reset Successful</h1>
+                        <p className='text-gray-400'>
                             Your password has been reset successfully. You will be redirected to the login page shortly.
                         </p>
                     </div>
                     
                     <Link 
                         to="/login"
-                        className='w-full bg-blue-950 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-900 transition-all duration-200 flex items-center justify-center space-x-2'
+                        className='w-full bg-electric hover:bg-electric-dark text-obsidian font-bold py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center space-x-2'
                     >
                         <span>Go to Login</span>
                     </Link>
@@ -105,19 +105,19 @@ function ResetPassword() {
     }
 
     return (
-        <div className='min-h-screen bg-gradient-to-br from-blue-50 to-white flex items-center justify-center px-4'>
-            <div className='max-w-md w-full bg-white rounded-2xl shadow-xl border border-blue-100 p-8'>
+        <div className='min-h-screen bg-gradient-to-br from-obsidian to-midnight-900 flex items-center justify-center px-4'>
+            <div className='max-w-md w-full bg-midnight-800/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-electric/20 p-8'>
                 <div className='text-center mb-8'>
                     <div className="flex justify-center mb-4">
-                        <Lock className="h-12 w-12 text-blue-950" />
+                        <Lock className="h-12 w-12 text-electric" />
                     </div>
-                    <h1 className='text-3xl font-bold text-blue-950 mb-2'>Set New Password</h1>
-                    <p className='text-gray-600'>Enter your new password below.</p>
+                    <h1 className='text-3xl font-bold text-white mb-2'>Set New Password</h1>
+                    <p className='text-gray-400'>Enter your new password below.</p>
                 </div>
                 
                 <form onSubmit={handleSubmit} className='space-y-6'>
                     <div>
-                        <label htmlFor='password' className='block text-sm font-medium text-blue-950 mb-2'>
+                        <label htmlFor='password' className='block text-sm font-medium text-gray-300 mb-2'>
                             New Password
                         </label>
                         <div className="relative">
@@ -128,14 +128,14 @@ function ResetPassword() {
                                 placeholder='Enter new password...'
                                 value={formData.password}
                                 autoComplete='new-password'
-                                className='w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-950 focus:border-transparent outline-none transition-all duration-200 text-black'
+                                className='w-full px-4 py-3 pr-12 border border-gray-600 rounded-lg focus:ring-2 focus:ring-electric focus:border-transparent outline-none transition-all duration-200 bg-midnight-900/50 text-white placeholder-gray-500'
                                 required
                                 autoFocus
                             />
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-electric focus:outline-none"
                             >
                                 {showPassword ? (
                                     <EyeOff className="h-5 w-5" />
@@ -148,7 +148,7 @@ function ResetPassword() {
                     </div>
                     
                     <div>
-                        <label htmlFor='confirmPassword' className='block text-sm font-medium text-blue-950 mb-2'>
+                        <label htmlFor='confirmPassword' className='block text-sm font-medium text-gray-300 mb-2'>
                             Confirm Password
                         </label>
                         <div className="relative">
@@ -159,13 +159,13 @@ function ResetPassword() {
                                 placeholder='Confirm new password...'
                                 value={formData.confirmPassword}
                                 autoComplete='new-password'
-                                className='w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-950 focus:border-transparent outline-none transition-all duration-200 text-black'
+                                className='w-full px-4 py-3 pr-12 border border-gray-600 rounded-lg focus:ring-2 focus:ring-electric focus:border-transparent outline-none transition-all duration-200 bg-midnight-900/50 text-white placeholder-gray-500'
                                 required
                             />
                             <button
                                 type="button"
                                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-electric focus:outline-none"
                             >
                                 {showConfirmPassword ? (
                                     <EyeOff className="h-5 w-5" />
@@ -179,11 +179,11 @@ function ResetPassword() {
                     <button 
                         type='submit' 
                         disabled={isLoading || !token}
-                        className='w-full bg-blue-950 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-900 focus:ring-4 focus:ring-blue-950 focus:ring-opacity-25 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center space-x-2'
+                        className='w-full bg-electric hover:bg-electric-dark text-obsidian font-bold py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center space-x-2'
                     >
                         {isLoading ? (
                             <>
-                                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <svg className="animate-spin h-5 w-5 text-obsidian" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
@@ -196,10 +196,10 @@ function ResetPassword() {
                 </form>
                 
                 <div className='mt-6 text-center'>
-                    <span className='text-gray-600'>Remember your password? </span>
+                    <span className='text-gray-400'>Remember your password? </span>
                     <Link 
                         to="/login" 
-                        className='text-blue-950 font-semibold hover:text-blue-900 transition-colors duration-200'
+                        className='text-electric font-semibold hover:text-electric-light transition-colors duration-200'
                     >
                         Sign In
                     </Link>

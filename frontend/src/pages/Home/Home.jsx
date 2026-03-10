@@ -1,21 +1,21 @@
 import { useState } from 'react';
-import EmergencyBanner from '../../components/HomeComponents/EmergencyBanner.jsx';
+import { useAuth } from '../../contexts/AuthContext';
 import HeroSection from '../../components/HomeComponents/HeroSection.jsx';
-import ThreeCorePillars from '../../components/HomeComponents/ThreeCorePillars.jsx';
+import ProblemSolution from '../../components/HomeComponents/ProblemSolution.jsx';
 import HowItWorks from '../../components/HomeComponents/HowItWorks.jsx';
-import ProofWithoutNoise from '../../components/HomeComponents/ProofWithoutNoise.jsx';
-import ServicesSection from '../../components/HomeComponents/ServicesSection.jsx';
-import DocumentManagementSection from '../../components/HomeComponents/DocumentManagementSection.jsx';
-import AcademySection from '../../components/HomeComponents/AcademySection.jsx';
+import MarketplacePreview from '../../components/HomeComponents/MarketplacePreview.jsx';
+import BuyerSellerCards from '../../components/HomeComponents/BuyerSellerCards.jsx';
+import MembershipCard from '../../components/HomeComponents/MembershipCard.jsx';
+import FAQAccordion from '../../components/HomeComponents/FAQAccordion.jsx';
 import CTASection from '../../components/HomeComponents/CTASection.jsx';
-import TradelinePopup from '../../components/HomeComponents/TradelinePopup.jsx';
 
 const Home = () => {
-  const [showTradelinePopup, setShowTradelinePopup] = useState(true);
+  const { user } = useAuth();
 
+  // Show full home page for all users
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-b from-blue-50/50 via-white to-white">
-      {/* Custom styles */}
+    <div className="min-h-screen relative overflow-hidden bg-obsidian">
+      {/* Custom styles with Obsidian, Midnight Navy & Electric theme */}
       <style>{`
         @keyframes float {
           0%, 100% { transform: translateY(0px); }
@@ -26,64 +26,50 @@ const Home = () => {
           50% { background-position: 100% 50%; }
           100% { background-position: 0% 50%; }
         }
-        @keyframes blue-glow {
-          0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
-          50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.5); }
-        }
-        @keyframes golden-glow {
-          0%, 100% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.3); }
-          50% { box-shadow: 0 0 40px rgba(245, 158, 11, 0.5); }
-        }
-        .animate-float { animation: float 6s ease-in-out infinite; }
-        .animate-gradient { background-size: 200% 200%; animation: gradient 4s ease infinite; }
-        .animate-blue-glow { animation: blue-glow 3s ease-in-out infinite; }
-        .animate-golden-glow { animation: golden-glow 3s ease-in-out infinite; }
-        @keyframes fade-in {
-          from { opacity: 0; transform: translateY(20px) scale(0.9); }
-          to { opacity: 1; transform: translateY(0) scale(1); }
+        @keyframes electric-glow {
+          0%, 100% { box-shadow: 0 0 20px rgba(0, 212, 255, 0.5); }
+          50% { box-shadow: 0 0 40px rgba(0, 212, 255, 0.7); }
         }
         @keyframes pulse-slow {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.8; }
         }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        .animate-gradient { background-size: 200% 200%; animation: gradient 4s ease infinite; }
+        .animate-electric-glow { animation: electric-glow 3s ease-in-out infinite; }
+        @keyframes fade-in {
+          from { opacity: 0; transform: translateY(20px) scale(0.9); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
         .animate-fade-in { animation: fade-in 0.5s ease-out; }
         .animate-pulse-slow { animation: pulse-slow 3s ease-in-out infinite; }
-        .blue-gradient { background: linear-gradient(135deg, #083b7c, #0950a0, #0c63e7); }
-        .golden-gradient { background: linear-gradient(135deg, #f59e0b, #d97706, #b45309); }
+        .midnight-gradient { background: linear-gradient(135deg, #0A1628, #061020, #020816); }
+        .electric-gradient { background: linear-gradient(135deg, #00D4FF, #5EE7FF); }
       `}</style>
-
-      {/* Emergency Banner */}
-      <EmergencyBanner />
 
       {/* Hero Section */}
       <HeroSection />
 
-      {/* Three Core Pillars */}
-      <ThreeCorePillars />
+      {/* Problem/Solution Section */}
+      <ProblemSolution />
 
       {/* How It Works */}
       <HowItWorks />
 
-      {/* Proof Without Noise */}
-      <ProofWithoutNoise />
+      {/* Marketplace Preview */}
+      <MarketplacePreview />
 
-      {/* Services Section */}
-      <ServicesSection />
+      {/* Buyer & Seller Cards */}
+      <BuyerSellerCards />
 
-      {/* Document Management Section */}
-      <DocumentManagementSection />
+      {/* Membership Card */}
+      <MembershipCard />
 
-      {/* Academy Section */}
-      <AcademySection />
+      {/* FAQ Accordion */}
+      <FAQAccordion />
 
-      {/* CTA Section */}
+      {/* Final CTA */}
       <CTASection />
-
-      {/* Tradeline Popup */}
-      <TradelinePopup 
-        isOpen={showTradelinePopup} 
-        onClose={() => setShowTradelinePopup(false)} 
-      />
     </div>
   );
 };

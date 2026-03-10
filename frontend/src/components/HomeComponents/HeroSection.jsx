@@ -1,90 +1,111 @@
 import { Link } from 'react-router-dom';
-import { GraduationCap, Phone, ShieldCheck, Award, Lock } from 'lucide-react';
-import { PHONE_NUMBER } from './constants.jsx';
+import { GraduationCap, CreditCard, ShieldCheck, TrendingUp, Zap, ArrowRight, Play } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const HeroSection = () => {
   return (
-    <section id="hero" className="relative bg-gradient-to-br from-white via-gray-50 to-white pt-16 lg:pt-24 pb-24 lg:pb-32 overflow-hidden">
+    <section id="hero" className="relative min-h-screen overflow-hidden">
+      {/* Background Image */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0A1F44]/5 via-transparent to-[#020816]/5">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,_var(--tw-gradient-stops))] from-[#C9A227]/10 via-transparent to-transparent"></div>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_70%,_var(--tw-gradient-stops))] from-[#E0B84C]/5 via-transparent to-transparent"></div>
-        </div>
-        <div className="absolute top-10 left-10 w-2 h-2 bg-[#C9A227] rounded-full animate-pulse"></div>
-        <div className="absolute top-20 right-20 w-1.5 h-1.5 bg-[#E0B84C] rounded-full animate-pulse"></div>
+        <img 
+          src="https://images.unsplash.com/photo-1703411493933-59323ee153bc?q=80&w=906&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          alt="Background"
+          className="w-full h-full object-cover blur-sm"
+        />
       </div>
 
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6">
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight text-[#0A1F44]">
-              Your Next Step
-              <span className="block">
-                <span className="bg-gradient-to-r from-[#C9A227] via-[#E0B84C] to-[#F5D36B] bg-clip-text text-transparent">Defines Your Path.</span>
+      {/* Subtle Grid Overlay */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:60px_60px]"></div>
+      </div>
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-16 lg:pt-24">
+        <div className="flex flex-col items-center justify-center min-h-[calc(100vh-6rem)] max-w-4xl mx-auto">
+          {/* Left Content - Now Centered */}
+          <motion.div 
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="space-y-8 text-center"
+          >
+            {/* Badge */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2 }}
+              className="inline-flex items-center gap-2 bg-white/5 backdrop-blur-sm border border-electric/20 rounded-full px-4 py-2 hover:bg-white/10 transition-colors cursor-pointer group mx-auto"
+            >
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-electric opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-electric"></span>
               </span>
-            </h1>
-            <p className="text-lg text-[#0A1F44]/80 leading-relaxed">
-              Take a look at your options, and decide what&apos;s right for you.
-              We&apos;re here to help you along the way.
-            </p>
+              <span className="text-sm text-electric font-medium">Now Accepting New Members</span>
+              <ArrowRight className="h-3 w-3 text-electric group-hover:translate-x-1 transition-transform" />
+            </motion.div>
 
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Link
-                to="/about"
-                className="relative overflow-hidden group bg-gradient-to-r from-[#0A1F44] to-[#020816] text-white text-sm font-medium py-2.5 px-6 rounded-full shadow-lg flex items-center justify-center space-x-2 transition-all duration-300 hover:shadow-xl hover:scale-105"
+            {/* Main Headline */}
+            <div className="space-y-4">
+              <motion.h1 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight text-center"
               >
-                <GraduationCap className="h-4 w-4" />
-                <span>Know More About Us</span>
-              </Link>
-              <Link
-                to={`tel:${PHONE_NUMBER.replace(/\D/g, '')}`}
-                className="relative overflow-hidden group border-2 border-[#C9A227] text-[#C9A227] text-sm font-medium py-2.5 px-6 rounded-full transition-all duration-300 hover:bg-[#C9A227]/10 hover:border-[#E0B84C] hover:scale-105 flex items-center justify-center space-x-2"
+                <span className="bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-200 bg-clip-text text-transparent">
+                  Your Credit Score Doesn't Define You.
+                </span>
+                <br />
+                <span className="text-amber-100">
+                  Your Next Move Does.
+                </span>
+              </motion.h1>
+              
+              <motion.p 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="text-xl text-white leading-relaxed max-w-2xl text-center mx-auto"
               >
-                <Phone className="h-4 w-4" />
-                <span>Call {PHONE_NUMBER}</span>
+                Join the elite tradeline marketplace where buyers build credit and sellers earn passive income. Premium education meets real results.
+              </motion.p>
+            </div>
+
+            {/* CTA Buttons */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="flex flex-col sm:flex-row gap-4 justify-center"
+            >
+              <button
+                onClick={() => window.location.href = '/tradelines'}
+                className="group relative inline-flex items-center justify-center gap-3 bg-electric hover:bg-electric-light text-obsidian font-bold py-4 px-8 rounded-full shadow-[0_0_40px_-10px_rgba(0,212,255,0.5)] hover:shadow-[0_0_60px_-10px_rgba(0,212,255,0.7)] transition-all duration-300 hover:scale-105"
+              >
+                <CreditCard className="h-5 w-5" />
+                <span>Get Tradelines</span>
+                <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </button>
+              
+              <Link
+                to="/tradelines"
+                className="group inline-flex items-center justify-center gap-3 bg-white/5 backdrop-blur-sm border border-white/10 hover:border-electric/50 text-white font-semibold py-4 px-8 rounded-full hover:bg-white/10 transition-all duration-300"
+              >
+                <CreditCard className="h-5 w-5" />
+                <span>Explore Tradelines</span>
               </Link>
-            </div>
-
-            <div className="flex items-center space-x-6 text-sm">
-              <div className="flex items-center space-x-2 text-[#0A1F44]">
-                <ShieldCheck className="h-4 w-4" />
-                <span>Privacy Focused</span>
-              </div>
-              <div className="flex items-center space-x-2 text-[#C9A227]">
-                <Award className="h-4 w-4" />
-                <span>Professional Training</span>
-              </div>
-              <div className="flex items-center space-x-2 text-[#0A1F44]">
-                <Lock className="h-4 w-4" />
-                <span>Secure Services</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="relative">
-            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-[#0A1F44]/10">
-              <div className="overflow-hidden rounded-2xl w-full h-80 bg-gradient-to-br from-[#0A1F44]/10 to-[#C9A227]/10 relative shadow-lg">
-                <img
-                  src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                  alt="Building a secure future"
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1032&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
-                  }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0A1F44]/30 via-transparent to-transparent"></div>
-                <div className="absolute bottom-6 left-6 right-6">
-                  <div className="text-white text-left">
-                    <div className="text-2xl font-bold mb-2 text-[#F5D36B]">Build Your Private Future</div>
-                    <div className="text-sm text-white/90">Professional Mastery & Financial Independence</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+              
+              <Link
+                to="/lessons"
+                className="group inline-flex items-center justify-center gap-3 bg-white/5 backdrop-blur-sm border border-white/10 hover:border-electric/50 text-white font-semibold py-4 px-8 rounded-full hover:bg-white/10 transition-all duration-300"
+              >
+                <Play className="h-5 w-5" />
+                <span>Watch Demo</span>
+              </Link>
+            </motion.div>
+          </motion.div>
         </div>
       </div>
+
     </section>
   );
 };

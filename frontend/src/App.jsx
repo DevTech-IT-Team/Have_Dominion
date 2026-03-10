@@ -8,7 +8,7 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="min-h-screen bg-basedark text-gray-100">
           <AppRoutes />
         </div>
       </AuthProvider>

@@ -1,386 +1,680 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
+import { CreditCard, CheckCircle, Lock, Star, TrendingUp, Shield, ArrowRight, Info, ChevronRight, Search } from 'lucide-react';
+import { useProfile } from '../../hooks/useProfile';
 
 const TradelinesPage = () => {
-  const [selectedTradeline, setSelectedTradeline] = useState(null);
-  const [showSignupModal, setShowSignupModal] = useState(false);
   const navigate = useNavigate();
-
-  // Filter states
+  const { profile, firstName, lastName, email, phone, dob, address, city, state, zipCode, isComplete } = useProfile();
+  
+  const [step, setStep] = useState('selection');
+  const [selectedTradeline, setSelectedTradeline] = useState(null);
   const [filters, setFilters] = useState({
     bankName: '',
-    creditLimit: '',
-    availability: '',
-    priceSort: ''
+    minCreditLimit: '',
+    maxCreditLimit: '',
+    availability: ''
+  });
+  const [userDetails, setUserDetails] = useState({
+    firstName: firstName || '',
+    lastName: lastName || '',
+    email: email || '',
+    phone: phone || '',
+    ssn: '',
+    dob: dob || '',
+    address: address || '',
+    city: city || '',
+    state: state || '',
+    zipCode: zipCode || ''
   });
 
   const tradelines = [
     {
-      id: 'chase',
-      name: 'Chase',
+      id: 'chase-1',
+      bank: 'Chase',
+      cardName: 'Chase Sapphire Reserve',
       cardId: '11959',
-      creditLimit: '$5,000.00',
+      creditLimit: 15000,
       dateOpened: '2020 Sep',
       purchaseDeadline: 'Feb 19th',
       reportingPeriod: 'Mar 2nd - Mar 9th',
-      availability: '1 in stock',
-      price: '$336.00'
+      availability: 1,
+      price: 450,
+      rating: 4.9,
+      age: '4+ years',
+      perks: ['Travel Rewards', 'Airport Lounge Access']
     },
     {
-      id: 'capital-one',
-      name: 'Capital One',
+      id: 'amex-1',
+      bank: 'American Express',
+      cardName: 'Amex Platinum',
       cardId: '12478',
-      creditLimit: '$7,500.00',
-      dateOpened: '2019 Nov',
+      creditLimit: 25000,
+      dateOpened: '2018 Nov',
       purchaseDeadline: 'Feb 20th',
       reportingPeriod: 'Mar 3rd - Mar 10th',
-      availability: '2 in stock',
-      price: '$425.00'
+      availability: 2,
+      price: 650,
+      rating: 4.8,
+      age: '6+ years',
+      perks: ['Premium Travel', 'Hotel Status']
     },
     {
-      id: 'bank-of-america',
-      name: 'Bank of America',
+      id: 'citi-1',
+      bank: 'Citi',
+      cardName: 'Citi Double Cash',
       cardId: '13156',
-      creditLimit: '$10,000.00',
-      dateOpened: '2018 Jun',
+      creditLimit: 10000,
+      dateOpened: '2019 Jun',
       purchaseDeadline: 'Feb 21st',
       reportingPeriod: 'Mar 4th - Mar 11th',
-      availability: '1 in stock',
-      price: '$580.00'
+      availability: 1,
+      price: 380,
+      rating: 4.7,
+      age: '5+ years',
+      perks: ['2% Cash Back', 'No Annual Fee']
     },
     {
-      id: 'barclays',
-      name: 'Barclays',
+      id: 'discover-1',
+      bank: 'Discover',
+      cardName: 'Discover It',
       cardId: '14289',
-      creditLimit: '$6,000.00',
-      dateOpened: '2020 Mar',
+      creditLimit: 8500,
+      dateOpened: '2021 Mar',
       purchaseDeadline: 'Feb 22nd',
       reportingPeriod: 'Mar 5th - Mar 12th',
-      availability: '3 in stock',
-      price: '$395.00'
+      availability: 3,
+      price: 295,
+      rating: 4.6,
+      age: '3+ years',
+      perks: ['Cash Back Match', 'FICO Score Free']
     },
     {
-      id: 'elan',
-      name: 'Elan',
+      id: 'boa-1',
+      bank: 'Bank of America',
+      cardName: 'BofA Premium Rewards',
       cardId: '15847',
-      creditLimit: '$4,500.00',
-      dateOpened: '2021 Jan',
+      creditLimit: 12000,
+      dateOpened: '2019 Jan',
       purchaseDeadline: 'Feb 23rd',
       reportingPeriod: 'Mar 6th - Mar 13th',
-      availability: '2 in stock',
-      price: '$285.00'
+      availability: 2,
+      price: 420,
+      rating: 4.7,
+      age: '5+ years',
+      perks: ['2x Points', 'Travel Credits']
     },
     {
-      id: 'discover',
-      name: 'Discover',
+      id: 'capone-1',
+      bank: 'Capital One',
+      cardName: 'Venture X',
       cardId: '16325',
-      creditLimit: '$8,000.00',
-      dateOpened: '2019 Aug',
+      creditLimit: 20000,
+      dateOpened: '2020 Aug',
       purchaseDeadline: 'Feb 24th',
       reportingPeriod: 'Mar 7th - Mar 14th',
-      availability: '1 in stock',
-      price: '$475.00'
+      availability: 1,
+      price: 580,
+      rating: 4.8,
+      age: '4+ years',
+      perks: ['2x Miles', 'Airport Lounges']
     }
   ];
 
-  // Apply filters and sorting to tradelines
-  const getFilteredAndSortedTradelines = () => {
-    let filtered = [...tradelines];
-
-    // Filter by bank name
-    if (filters.bankName) {
-      filtered = filtered.filter(t => t.id === filters.bankName);
-    }
-
-    // Filter by credit limit
-    if (filters.creditLimit) {
-      const limitMap = {
-        '5000': 5000,
-        '10000': 10000
-      };
-      const minLimit = limitMap[filters.creditLimit];
-      filtered = filtered.filter(t => {
-        const limit = parseInt(t.creditLimit.replace(/[^0-9]/g, '') || '0');
-        return limit >= minLimit;
-      });
-    }
-
-    // Filter by availability
-    if (filters.availability) {
-      filtered = filtered.filter(t => 
-        t.availability.toLowerCase().includes('in stock') && filters.availability === 'in-stock' ||
-        t.availability.toLowerCase().includes('limited') && filters.availability === 'limited'
-      );
-    }
-
-    // Sort by price
-    if (filters.priceSort === 'price-low-high') {
-      filtered.sort((a, b) => parseInt(a.price.replace(/[^0-9]/g, '')) - parseInt(b.price.replace(/[^0-9]/g, '')));
-    } else if (filters.priceSort === 'price-high-low') {
-      filtered.sort((a, b) => parseInt(b.price.replace(/[^0-9]/g, '')) - parseInt(a.price.replace(/[^0-9]/g, '')));
-    }
-
-    return filtered;
+  const handleSelectTradeline = (tradeline) => {
+    setSelectedTradeline(tradeline);
+    setStep('details');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleFilterChange = (filterName, value) => {
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
     setFilters(prev => ({
       ...prev,
-      [filterName]: value
+      [name]: value
     }));
   };
 
-  const resetFilters = () => {
-    setFilters({
-      bankName: '',
-      creditLimit: '',
-      availability: '',
-      priceSort: ''
+  const filteredTradelines = tradelines.filter(tradeline => {
+    const matchesBank = filters.bankName === '' || tradeline.bank.toLowerCase().includes(filters.bankName.toLowerCase());
+    const matchesMinLimit = filters.minCreditLimit === '' || tradeline.creditLimit >= parseInt(filters.minCreditLimit);
+    const matchesMaxLimit = filters.maxCreditLimit === '' || tradeline.creditLimit <= parseInt(filters.maxCreditLimit);
+    const matchesAvailability = filters.availability === '' || tradeline.availability >= parseInt(filters.availability);
+    
+    return matchesBank && matchesMinLimit && matchesMaxLimit && matchesAvailability;
+  });
+
+  const handleInputChange = (e) => {
+    setUserDetails({
+      ...userDetails,
+      [e.target.name]: e.target.value
     });
   };
 
-  const filteredTradelines = getFilteredAndSortedTradelines();
-
-  const handleBuyClick = (tradeline) => {
-    setSelectedTradeline(tradeline);
-    setShowSignupModal(true);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setStep('confirmation');
   };
 
-  const handleSignupRedirect = () => {
-    setShowSignupModal(false);
-    navigate('/signup');
+  const handleBack = () => {
+    if (step === 'details') {
+      setStep('selection');
+      setSelectedTradeline(null);
+    } else if (step === 'confirmation') {
+      setStep('details');
+    }
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+  // Sync form with profile data when it loads
+  useEffect(() => {
+    if (profile) {
+      setUserDetails(prev => ({
+        ...prev,
+        firstName: firstName || prev.firstName,
+        lastName: lastName || prev.lastName,
+        email: email || prev.email,
+        phone: phone || prev.phone,
+        dob: dob || prev.dob,
+        address: address || prev.address,
+        city: city || prev.city,
+        state: state || prev.state,
+        zipCode: zipCode || prev.zipCode
+      }));
+    }
+  }, [profile, firstName, lastName, email, phone, dob, address, city, state, zipCode]);
 
-      {/* HEADER */}
-      <div className="pt-20 pb-14">
-        <div className="max-w-6xl mx-auto px-4 text-center">
-          <div className="mb-6">
+  const SelectionView = () => (
+    <div className="space-y-8">
+      <div className="text-center mb-12">
+        <h2 className="text-3xl font-bold text-white mb-4">Select Your Tradeline</h2>
+        <p className="text-gray-400 max-w-2xl mx-auto">
+          Choose from our verified premium tradelines. Each tradeline is hand-picked to maximize your credit building potential.
+        </p>
+      </div>
+
+      {/* Filters Section */}
+      <div className="bg-midnight-800/50 backdrop-blur-sm rounded-2xl border border-electric/20 p-6">
+        <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+          <Search className="h-5 w-5 text-electric" />
+          Filter Tradelines
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Bank Name</label>
+            <input
+              type="text"
+              name="bankName"
+              value={filters.bankName}
+              onChange={handleFilterChange}
+              placeholder="Search banks..."
+              className="w-full px-4 py-2 bg-midnight-900 border border-electric/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors"
+            />
           </div>
-
-          <h1 className="text-5xl md:text-6xl font-bold text-[#0A1F44] mb-6">
-            Premium Credit Tradelines
-          </h1>
-
-          <p className="text-xl text-[#0A1F44]/70 max-w-3xl mx-auto mb-8">
-            Boost your credit score with authorized user tradelines from trusted financial institutions.
-          </p>
-
-          <div className="flex flex-wrap justify-center gap-4 text-sm">
-            <div className="flex items-center gap-2 bg-[#C9A227]/10 text-[#C9A227] px-4 py-2 rounded-full border border-[#C9A227]/20">
-              Secure & Verified
-            </div>
-            <div className="flex items-center gap-2 bg-[#0A1F44]/5 text-[#0A1F44] px-4 py-2 rounded-full border border-[#0A1F44]/10">
-              Fast Processing
-            </div>
-            <div className="flex items-center gap-2 bg-[#C9A227]/10 text-[#C9A227] px-4 py-2 rounded-full border border-[#C9A227]/20">
-              Proven Results
-            </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Min Credit Limit</label>
+            <input
+              type="number"
+              name="minCreditLimit"
+              value={filters.minCreditLimit}
+              onChange={handleFilterChange}
+              placeholder="$0"
+              className="w-full px-4 py-2 bg-midnight-900 border border-electric/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Max Credit Limit</label>
+            <input
+              type="number"
+              name="maxCreditLimit"
+              value={filters.maxCreditLimit}
+              onChange={handleFilterChange}
+              placeholder="$50000"
+              className="w-full px-4 py-2 bg-midnight-900 border border-electric/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Min Availability</label>
+            <select
+              name="availability"
+              value={filters.availability}
+              onChange={handleFilterChange}
+              className="w-full px-4 py-2 bg-midnight-900 border border-electric/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors"
+            >
+              <option value="">Any</option>
+              <option value="1">1+ slots</option>
+              <option value="2">2+ slots</option>
+              <option value="3">3+ slots</option>
+            </select>
           </div>
         </div>
       </div>
 
-      {/* FILTER/SORT SECTION */}
-      <div className="pb-8">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {/* Bank Name Filter */}
-              <div className="flex flex-col">
-                <label className="text-sm font-medium text-gray-700 mb-2">Bank Name</label>
-                <select 
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0A1F44]/20 focus:border-[#0A1F44]/30"
-                  value={filters.bankName}
-                  onChange={(e) => handleFilterChange('bankName', e.target.value)}
+      {/* Table */}
+      <div className="bg-midnight-800/50 backdrop-blur-sm rounded-2xl border border-electric/20 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="bg-midnight-900/50 border-b border-electric/20">
+                <th className="px-6 py-4 text-left text-sm font-semibold text-white">Bank Name</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-white">Card ID</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-white">Credit Limit</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-white">Date Opened</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-white">Purchase Deadline</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-white">Reporting Period</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-white">Availability</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-white">Price</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-white">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredTradelines.map((tradeline, index) => (
+                <motion.tr
+                  key={tradeline.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                  className="border-b border-electric/10 hover:bg-midnight-700/30 transition-colors"
                 >
-                  <option value="">All Banks</option>
-                  <option value="chase">Chase</option>
-                  <option value="capital-one">Capital One</option>
-                  <option value="bank-of-america">Bank of America</option>
-                  <option value="barclays">Barclays</option>
-                  <option value="elan">Elan</option>
-                  <option value="discover">Discover</option>
-                </select>
-              </div>
-
-              {/* Credit Limit Filter */}
-              <div className="flex flex-col">
-                <label className="text-sm font-medium text-gray-700 mb-2">Credit Limit</label>
-                <select 
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0A1F44]/20 focus:border-[#0A1F44]/30"
-                  value={filters.creditLimit}
-                  onChange={(e) => handleFilterChange('creditLimit', e.target.value)}
-                >
-                  <option value="">All Limits</option>
-                  <option value="5000">$5,000+</option>
-                  <option value="10000">$10,000+</option>
-                </select>
-              </div>
-
-              {/* Availability Filter */}
-              <div className="flex flex-col">
-                <label className="text-sm font-medium text-gray-700 mb-2">Availability</label>
-                <select 
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0A1F44]/20 focus:border-[#0A1F44]/30"
-                  value={filters.availability}
-                  onChange={(e) => handleFilterChange('availability', e.target.value)}
-                >
-                  <option value="">All Status</option>
-                  <option value="in-stock">In Stock</option>
-                  <option value="limited">Limited</option>
-                </select>
-              </div>
-
-              {/* Price Sort */}
-              <div className="flex flex-col">
-                <label className="text-sm font-medium text-gray-700 mb-2">Price</label>
-                <select 
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0A1F44]/20 focus:border-[#0A1F44]/30"
-                  value={filters.priceSort}
-                  onChange={(e) => handleFilterChange('priceSort', e.target.value)}
-                >
-                  <option value="">Default</option>
-                  <option value="price-low-high">Price: Low to High</option>
-                  <option value="price-high-low">Price: High to Low</option>
-                </select>
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex justify-between items-center mt-6">
-              <button 
-                onClick={resetFilters}
-                className="px-4 py-2 text-[#0A1F44] hover:text-[#C9A227] font-medium"
-              >
-                Reset Filters
-              </button>
-              <div className="text-sm text-gray-600">
-                Showing {filteredTradelines.length} of {tradelines.length} tradelines
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* LIST VIEW */}
-      <div className="pb-20">
-        <div className="max-w-6xl mx-auto px-4">
-          {/* Table Header */}
-          <div className="bg-gray-50 border border-gray-200 rounded-t-lg p-4">
-            <div className="grid grid-cols-9 gap-4 text-sm font-semibold text-gray-700">
-              <div>Bank Name</div>
-              <div>Card ID</div>
-              <div>Credit Limit</div>
-              <div>Date Opened</div>
-              <div>Purchase Deadline</div>
-              <div>Reporting Period</div>
-              <div>Availability</div>
-              <div>Price</div>
-              <div>Action</div>
-            </div>
-          </div>
-
-          {/* Table Rows */}
-          <div className="bg-white border border-gray-200 border-t-0">
-            {filteredTradelines.map((tradeline, index) => (
-              <motion.div
-                key={tradeline.id}
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-                className="border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition"
-              >
-                <div className="grid grid-cols-9 gap-4 p-4 items-center">
-                  <div className="font-medium text-[#0A1F44]">{tradeline.name}</div>
-                  <div className="text-sm text-gray-600">{tradeline.cardId}</div>
-                  <div className="text-sm text-gray-600">{tradeline.creditLimit}</div>
-                  <div className="text-sm text-gray-600">{tradeline.dateOpened}</div>
-                  <div className="text-sm text-gray-600">{tradeline.purchaseDeadline}</div>
-                  <div className="text-sm text-gray-600">{tradeline.reportingPeriod}</div>
-                  <div className="text-sm text-gray-600">{tradeline.availability}</div>
-                  <div className="font-semibold text-[#C9A227]">{tradeline.price}</div>
-                  <div>
+                  <td className="px-6 py-4">
+                    <div>
+                      <div className="font-semibold text-white">{tradeline.bank}</div>
+                      <div className="text-sm text-gray-400">{tradeline.cardName}</div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 text-white">{tradeline.cardId}</td>
+                  <td className="px-6 py-4 text-white">${tradeline.creditLimit.toLocaleString()}</td>
+                  <td className="px-6 py-4 text-white">{tradeline.dateOpened}</td>
+                  <td className="px-6 py-4 text-white">{tradeline.purchaseDeadline}</td>
+                  <td className="px-6 py-4 text-white text-sm">{tradeline.reportingPeriod}</td>
+                  <td className="px-6 py-4">
+                    <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
+                      tradeline.availability === 1 ? 'bg-orange-500/20 text-orange-400' : 'bg-green-500/20 text-green-400'
+                    }`}>
+                      {tradeline.availability} slot{tradeline.availability > 1 ? 's' : ''}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-1">
+                      <span className="font-semibold text-white">${tradeline.price}</span>
+                      <span className="text-xs text-gray-400">one-time</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
                     <button
-                      onClick={() => handleBuyClick(tradeline)}
-                      className="bg-[#0A1F44] hover:bg-[#020816] text-white text-sm font-medium py-2 px-4 rounded-md transition hover:scale-105"
+                      onClick={() => handleSelectTradeline(tradeline)}
+                      className="bg-electric hover:bg-electric-dark text-obsidian font-semibold py-2 px-4 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-electric/20 text-sm"
                     >
                       Add to cart
                     </button>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+                  </td>
+                </motion.tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        
+        {filteredTradelines.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-gray-400">No tradelines found matching your criteria.</p>
+          </div>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+        <div className="flex items-center gap-4 bg-midnight-800/50 backdrop-blur-sm rounded-xl p-6 border border-electric/10">
+          <div className="w-12 h-12 bg-electric/10 rounded-xl flex items-center justify-center">
+            <Shield className="h-6 w-6 text-electric" />
+          </div>
+          <div>
+            <h4 className="font-semibold text-white">Secure & Verified</h4>
+            <p className="text-sm text-gray-400">All tradelines verified</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-4 bg-midnight-800/50 backdrop-blur-sm rounded-xl p-6 border border-electric/10">
+          <div className="w-12 h-12 bg-electric/10 rounded-xl flex items-center justify-center">
+            <TrendingUp className="h-6 w-6 text-electric" />
+          </div>
+          <div>
+            <h4 className="font-semibold text-white">Fast Results</h4>
+            <p className="text-sm text-gray-400">Report in 7-14 days</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-4 bg-midnight-800/50 backdrop-blur-sm rounded-xl p-6 border border-electric/10">
+          <div className="w-12 h-12 bg-electric/10 rounded-xl flex items-center justify-center">
+            <Lock className="h-6 w-6 text-electric" />
+          </div>
+          <div>
+            <h4 className="font-semibold text-white">Privacy Protected</h4>
+            <p className="text-sm text-gray-400">256-bit encryption</p>
           </div>
         </div>
       </div>
+    </div>
+  );
 
-      {/* MODAL */}
-      <AnimatePresence>
-        {showSignupModal && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
-              onClick={() => setShowSignupModal(false)}
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="fixed inset-0 flex items-center justify-center z-50 p-4"
-            >
-              <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
-                <div className="text-center mb-6">
-                  <div className="w-16 h-16 bg-[#0A1F44] rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-2xl text-white">👤</span>
-                  </div>
-                  <h3 className="text-2xl font-bold text-[#0A1F44] mb-2">
-                    Sign Up Required
-                  </h3>
-                  <p className="text-[#0A1F44]/60">
-                    Create an account to purchase {selectedTradeline?.name}
-                  </p>
-                </div>
+  const DetailsView = () => (
+    <div className="max-w-3xl mx-auto">
+      <button
+        onClick={handleBack}
+        className="mb-6 text-gray-600 hover:text-midnight-900 flex items-center gap-2 transition-colors"
+      >
+        <ArrowRight className="h-4 w-4 rotate-180" />
+        Back to Tradelines
+      </button>
 
-                <button
-                  onClick={handleSignupRedirect}
-                  className="w-full bg-gradient-to-r from-[#0A1F44] to-[#020816] hover:from-[#020816] hover:to-[#0A1F44] text-white font-semibold py-3 rounded-xl transition"
-                >
-                  Sign Up Now
-                </button>
-
-                <button
-                  onClick={() => setShowSignupModal(false)}
-                  className="w-full mt-3 bg-[#0A1F44]/5 hover:bg-[#0A1F44]/10 text-[#0A1F44] font-semibold py-3 rounded-xl transition border border-[#0A1F44]/10"
-                >
-                  Cancel
-                </button>
-
-                <div className="mt-6 text-center text-sm">
-                  Already have an account?{" "}
-                  <Link to="/login" className="text-[#C9A227] font-medium hover:underline">
-                    Log In
-                  </Link>
-                </div>
+      <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+        <div className="bg-gradient-to-r from-royal-900 to-midnight-800 p-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                <CreditCard className="h-6 w-6 text-white" />
               </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+              <div>
+                <h3 className="font-bold text-white text-lg">{selectedTradeline.bank}</h3>
+                <p className="text-electric-light">{selectedTradeline.cardName}</p>
+              </div>
+            </div>
+            <div className="text-right">
+              <p className="text-2xl font-bold text-white">{selectedTradeline.price}</p>
+              <p className="text-sm text-gray-400">one-time fee</p>
+            </div>
+          </div>
+          <div className="flex gap-6 mt-4 text-sm">
+            <span className="text-gray-300">Limit: <span className="text-white">{selectedTradeline.creditLimit}</span></span>
+            <span className="text-gray-300">Age: <span className="text-white">{selectedTradeline.age}</span></span>
+            <span className="text-gray-300">Reports: <span className="text-white">{selectedTradeline.reportingPeriod}</span></span>
+          </div>
+        </div>
 
-      {/* Fixed Floating Button */}
-      <div className="fixed bottom-8 right-8 z-40">
-        <Link
-          to="/contact"
-          className="bg-gradient-to-r from-[#C9A227] to-[#E0B84C] hover:from-[#E0B84C] hover:to-[#F5D36B] text-[#020816] font-semibold py-4 px-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-2"
-        >
-          Selling Tradelines
-        </Link>
+        <div className="p-8">
+          {isComplete && (
+            <div className="bg-green-50 border border-green-200 rounded-xl p-4 mb-6 flex items-center gap-3">
+              <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
+              <div>
+                <p className="text-sm font-medium text-green-800">Information pre-filled from your profile</p>
+                <p className="text-xs text-green-600">Please verify these details are correct</p>
+              </div>
+            </div>
+          )}
+          <h3 className="text-xl font-bold text-midnight-900 mb-2">Complete Your Information</h3>
+          <p className="text-gray-600 mb-6">
+            Please provide your details exactly as they appear on your credit report.
+            This information is required to add you as an authorized user.
+          </p>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">First Name (as appears on ID)</label>
+                <input
+                  type="text"
+                  name="firstName"
+                  value={userDetails.firstName}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors"
+                  placeholder="John"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Last Name (as appears on ID)</label>
+                <input
+                  type="text"
+                  name="lastName"
+                  value={userDetails.lastName}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors"
+                  placeholder="Doe"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={userDetails.email}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors"
+                  placeholder="john@example.com"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={userDetails.phone}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors"
+                  placeholder="(555) 123-4567"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Date of Birth</label>
+                <input
+                  type="date"
+                  name="dob"
+                  value={userDetails.dob}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">SSN (Last 4 digits)</label>
+                <input
+                  type="text"
+                  name="ssn"
+                  value={userDetails.ssn}
+                  onChange={handleInputChange}
+                  required
+                  maxLength="4"
+                  pattern="\d{4}"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors"
+                  placeholder="••••1234"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Street Address</label>
+              <input
+                type="text"
+                name="address"
+                value={userDetails.address}
+                onChange={handleInputChange}
+                required
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors"
+                placeholder="123 Main Street, Apt 4B"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">City</label>
+                <input
+                  type="text"
+                  name="city"
+                  value={userDetails.city}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors"
+                  placeholder="New York"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">State</label>
+                <select
+                  name="state"
+                  value={userDetails.state}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors"
+                >
+                  <option value="">Select State</option>
+                  <option value="AL">Alabama</option>
+                  <option value="AK">Alaska</option>
+                  <option value="AZ">Arizona</option>
+                  <option value="CA">California</option>
+                  <option value="FL">Florida</option>
+                  <option value="NY">New York</option>
+                  <option value="TX">Texas</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">ZIP Code</label>
+                <input
+                  type="text"
+                  name="zipCode"
+                  value={userDetails.zipCode}
+                  onChange={handleInputChange}
+                  required
+                  pattern="\d{5}(-\d{4})?"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors"
+                  placeholder="10001"
+                />
+              </div>
+            </div>
+
+            <div className="bg-soft-gray/50 rounded-xl p-4 flex items-start gap-3">
+              <Info className="h-5 w-5 text-electric flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-gray-600">
+                Your information is securely encrypted and will only be used to add you as an authorized user. We never store your full SSN.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <button
+                type="button"
+                onClick={handleBack}
+                className="flex-1 py-4 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:border-gray-400 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="flex-1 py-4 bg-electric hover:bg-electric-dark text-obsidian font-bold rounded-xl transition-all duration-300 hover:shadow-lg"
+              >
+                Continue to Payment
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+
+  const ConfirmationView = () => (
+    <div className="max-w-2xl mx-auto text-center">
+      <motion.div
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        className="bg-white rounded-2xl border border-gray-200 p-12"
+      >
+        <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+          <CheckCircle className="h-10 w-10 text-green-600" />
+        </div>
+        <h2 className="text-2xl font-bold text-midnight-900 mb-4">Application Submitted!</h2>
+        <p className="text-gray-600 mb-8">
+          Thank you for your application. We&apos;ve received your information for the{' '}
+          <span className="font-semibold text-midnight-900">{selectedTradeline.bank} {selectedTradeline.cardName}</span>.
+          Our team will review and contact you within 24 hours to complete the process.
+        </p>
+        <div className="bg-soft-gray/50 rounded-xl p-6 mb-8">
+          <p className="text-sm text-gray-500 mb-2">Application ID</p>
+          <p className="text-lg font-mono font-semibold text-midnight-900">
+            TL-{Date.now().toString(36).toUpperCase()}
+          </p>
+        </div>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <Link
+            to="/tradelines"
+            onClick={() => setStep('selection')}
+            className="flex-1 py-3 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:border-gray-400 transition-colors"
+          >
+            Browse More Tradelines
+          </Link>
+          <Link
+            to="/dashboard"
+            className="flex-1 py-3 bg-electric hover:bg-electric-dark text-obsidian font-bold rounded-xl transition-colors"
+          >
+            Go to Dashboard
+          </Link>
+        </div>
+      </motion.div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-obsidian via-midnight-900 to-obsidian pt-20 pb-20">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            {step === 'selection' && 'Premium Credit Tradelines'}
+            {step === 'details' && 'Complete Your Application'}
+            {step === 'confirmation' && 'Application Received'}
+          </h1>
+          <p className="text-gray-400 max-w-2xl mx-auto">
+            {step === 'selection' && 'Boost your credit score with authorized user tradelines from trusted financial institutions.'}
+            {step === 'details' && 'Please provide your information to be added as an authorized user.'}
+            {step === 'confirmation' && 'Your application has been submitted successfully.'}
+          </p>
+        </div>
+
+        <div className="flex items-center justify-center gap-4 mb-12">
+          <div className={`flex items-center gap-2 ${step === 'selection' ? 'text-electric' : 'text-gray-500'}`}>
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+              step === 'selection' ? 'bg-electric text-obsidian' : 'bg-midnight-800 text-gray-400 border border-electric/20'
+            }`}>1</div>
+            <span className="text-sm font-medium hidden sm:block text-white">Select</span>
+          </div>
+          <div className="w-12 h-0.5 bg-midnight-800">
+            <div className={`h-full bg-electric transition-all duration-500 ${
+              step === 'details' || step === 'confirmation' ? 'w-full' : 'w-0'
+            }`}></div>
+          </div>
+          <div className={`flex items-center gap-2 ${step === 'details' ? 'text-electric' : 'text-gray-500'}`}>
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+              step === 'details' ? 'bg-electric text-obsidian' : step === 'confirmation' ? 'bg-electric text-obsidian' : 'bg-midnight-800 text-gray-400 border border-electric/20'
+            }`}>2</div>
+            <span className="text-sm font-medium hidden sm:block text-white">Details</span>
+          </div>
+          <div className="w-12 h-0.5 bg-midnight-800">
+            <div className={`h-full bg-electric transition-all duration-500 ${
+              step === 'confirmation' ? 'w-full' : 'w-0'
+            }`}></div>
+          </div>
+          <div className={`flex items-center gap-2 ${step === 'confirmation' ? 'text-electric' : 'text-gray-500'}`}>
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+              step === 'confirmation' ? 'bg-electric text-obsidian' : 'bg-midnight-800 text-gray-400 border border-electric/20'
+            }`}>3</div>
+            <span className="text-sm font-medium hidden sm:block text-white">Confirm</span>
+          </div>
+        </div>
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={step}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            {step === 'selection' && <SelectionView />}
+            {step === 'details' && <DetailsView />}
+            {step === 'confirmation' && <ConfirmationView />}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </div>
   );

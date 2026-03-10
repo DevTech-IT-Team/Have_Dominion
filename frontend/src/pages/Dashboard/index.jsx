@@ -187,10 +187,10 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gradient-to-br from-obsidian via-midnight-900 to-obsidian flex">
       {/* Sidebar */}
       <div className="hidden md:flex md:flex-shrink-0">
-        <div className="flex flex-col w-64 bg-black text-white">
+        <div className="flex flex-col w-64 bg-midnight-900 border-r border-electric/20">
           <div className="flex items-center justify-center h-16 px-4 bg-gray-900 border-b border-amber-600">
             <Award className="h-8 w-8 text-amber-500 mr-2" />
             <h1 className="text-xl font-bold text-amber-500">HaveDominion</h1>

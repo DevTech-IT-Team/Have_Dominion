@@ -31,23 +31,23 @@ export default function DashboardLayout() {
   const hideHeader = currentPath === '/admin/dashboard';
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-basedark">
       {/* Main Content */}
       <div className="flex flex-col">
         {/* Top Header - Hidden for admin dashboard */}
         {!hideHeader && (
-          <header className="bg-white shadow-sm border-b border-gray-200">
+          <header className="bg-navy-800/80 backdrop-blur-md shadow-lg border-b border-gold-500/20">
             <div className="px-6 py-4 flex justify-between items-center">
               <div>
-                <h1 className="text-lg font-semibold text-gray-900">
+                <h1 className="text-lg font-semibold text-gold-400">
                   {getPageTitle()}
                 </h1>
               </div>
               <div className="flex items-center space-x-4">
-                <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                <span className={`px-3 py-1 text-xs font-medium rounded-full ${
                   isAdmin 
-                    ? 'bg-purple-100 text-purple-800' 
-                    : 'bg-blue-100 text-blue-800'
+                    ? 'bg-gold-500/20 text-gold-400 border border-gold-500/30' 
+                    : 'bg-navy-700/50 text-gold-300 border border-navy-600'
                 }`}>
                   {isAdmin ? 'Admin' : 'User'}
                 </span>
@@ -55,7 +55,7 @@ export default function DashboardLayout() {
                   onClick={() => {
                     logout();
                   }}
-                  className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 text-sm font-medium transition-colors"
+                  className="bg-gradient-to-r from-navy-700 to-navy-900 text-white px-4 py-2 rounded-lg hover:from-navy-600 hover:to-navy-800 text-sm font-medium transition-all duration-300 border border-gold-500/30 hover:border-gold-500/50 shadow-md"
                 >
                   Logout
                 </button>
@@ -65,7 +65,7 @@ export default function DashboardLayout() {
         )}
 
         {/* Page Content */}
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-auto bg-basedark">
           <Outlet />
         </main>
       </div>

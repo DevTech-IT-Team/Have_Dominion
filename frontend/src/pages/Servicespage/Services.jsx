@@ -234,8 +234,8 @@ export default function ServiceNeighborhood() {
 
   const getThemeGradient = (theme) => {
     return theme === 'gold' 
-      ? 'from-[#F5D36B]/10 to-[#C9A227]/10 border-[#C9A227]/20' 
-      : 'from-[#0A1F44]/5 to-[#0A1F44]/5 border-[#0A1F44]/10';
+      ? 'from-electric/10 to-electric/5 border-electric/20' 
+      : 'from-royal-900/10 to-midnight-800/10 border-electric/10';
   };
 
   const CategoryDetailPanel = () => (
@@ -336,12 +336,12 @@ export default function ServiceNeighborhood() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 pt-20 pb-20">
+    <div className="min-h-screen bg-gradient-to-br from-obsidian via-midnight-900 to-obsidian pt-20 pb-20">
       {/* Background Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-[#0A1F44]/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-[#C9A227]/5 rounded-full blur-3xl"></div>
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(10,31,68,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(201,162,39,0.03)_1px,transparent_1px)] bg-[size:64px_64px]"></div>
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-royal-900/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-electric/5 rounded-full blur-3xl"></div>
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(10,31,68,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,212,255,0.03)_1px,transparent_1px)] bg-[size:64px_64px]"></div>
       </div>
 
       {/* Category Detail Panel Overlay */}
@@ -352,7 +352,7 @@ export default function ServiceNeighborhood() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-[#0A1F44]/5 backdrop-blur-sm z-40"
+              className="fixed inset-0 bg-obsidian/80 backdrop-blur-sm z-40"
               onClick={closeCategoryPanel}
             />
             <CategoryDetailPanel />
@@ -372,7 +372,7 @@ export default function ServiceNeighborhood() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-6xl font-bold text-[#0A1F44] mb-6"
+            className="text-6xl font-bold text-white mb-6"
           >
             Have Dominion Services
           </motion.h1>
@@ -380,7 +380,7 @@ export default function ServiceNeighborhood() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="text-xl text-[#0A1F44]/70 mb-8 max-w-2xl mx-auto"
+            className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto"
           >
             Master your communication, finances, and future with our comprehensive service ecosystem
           </motion.p>
@@ -398,12 +398,12 @@ export default function ServiceNeighborhood() {
                 placeholder="Search Have Dominion services... (HAM radio, credit, financial, etc.)"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-6 py-4 bg-white/90 border-2 border-[#0A1F44]/10 rounded-2xl text-[#0A1F44] placeholder-[#0A1F44]/40 focus:outline-none focus:ring-2 focus:ring-[#0A1F44]/10 focus:border-[#0A1F44]/20 backdrop-blur-sm text-lg transition-all duration-300 hover:border-[#0A1F44]/20 shadow-lg"
+                className="w-full px-6 py-4 bg-midnight-900/50 border-2 border-gray-600 rounded-2xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-electric/20 focus:border-electric backdrop-blur-sm text-lg transition-all duration-300 hover:border-gray-500 shadow-lg"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[#0A1F44]/50 hover:text-[#0A1F44] transition-colors"
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-electric transition-colors"
                 >
                   ✕
                 </button>
@@ -429,14 +429,14 @@ export default function ServiceNeighborhood() {
                   transition: { duration: 0.3 }
                 }}
                 whileTap={{ scale: 0.98 }}
-                className={`backdrop-blur-sm rounded-2xl p-6 cursor-pointer shadow-xl hover:shadow-2xl transition-all duration-300 bg-white border-2 border-[#0A1F44]/5 hover:border-[#0A1F44]/10 hover:bg-gray-50/50`}
+                className={`backdrop-blur-sm rounded-2xl p-6 cursor-pointer shadow-xl hover:shadow-2xl transition-all duration-300 bg-midnight-800/80 border border-electric/10 hover:border-electric/30 hover:bg-midnight-800/90`}
                 onClick={() => handleCategoryClick(block)}
               >
                 {/* Block Header */}
                 <div className="flex items-center space-x-4 mb-4">
                   <motion.div 
                     whileHover={{ scale: 1.1, rotate: 5 }}
-                    className="p-4 rounded-2xl border-2 transition-all duration-300 hover:shadow-lg bg-[#0A1F44]/5 border-[#0A1F44]/10 hover:border-[#0A1F44]/20 hover:bg-[#0A1F44]/10"
+                    className="p-4 rounded-2xl border-2 transition-all duration-300 hover:shadow-lg bg-royal-900/20 border-electric/20 hover:border-electric/40 hover:bg-royal-900/30"
                     style={{
                       boxShadow: block.id === activeBlock 
                         ? `0 10px 25px -5px ${block.color}40, 0 10px 10px -5px ${block.color}20` 
@@ -446,14 +446,14 @@ export default function ServiceNeighborhood() {
                     {block.icon}
                   </motion.div>
                   <div className="flex-1">
-                    <h3 className="text-xl font-bold text-[#0A1F44]">{block.title}</h3>
-                    <p className="text-[#0A1F44]/60 text-sm">
+                    <h3 className="text-xl font-bold text-white">{block.title}</h3>
+                    <p className="text-gray-400 text-sm">
                       {block.buildings.length} specialized services
                     </p>
                   </div>
                 </div>
 
-                <p className="text-[#0A1F44]/70 text-sm mb-4 leading-relaxed">
+                <p className="text-gray-400 text-sm mb-4 leading-relaxed">
                   {block.description}
                 </p>
 
@@ -463,16 +463,16 @@ export default function ServiceNeighborhood() {
                     <motion.div 
                       key={idx}
                       whileHover={{ x: 4 }}
-                      className={`flex items-center justify-between text-sm p-3 rounded-lg border transition-colors bg-white border-[#0A1F44]/5 hover:bg-gray-50/50 hover:border-[#0A1F44]/10`}
+                      className={`flex items-center justify-between text-sm p-3 rounded-lg border transition-colors bg-midnight-900/50 border-gray-600 hover:bg-midnight-900/70 hover:border-electric/20`}
                     >
                       <div>
-                        <span className="text-[#0A1F44] font-medium">{building.name}</span>
-                        <p className="text-[#0A1F44]/60 text-xs">{building.provider}</p>
+                        <span className="text-white font-medium">{building.name}</span>
+                        <p className="text-gray-500 text-xs">{building.provider}</p>
                       </div>
                       <div className="text-right">
-                        <div className="text-[#C9A227] text-xs font-medium">{building.time}</div>
-                        <div className={`text-xs flex items-center text-[#0A1F44]`}>
-                          <span className={`mr-1 text-[#C9A227]`}>★</span> {building.rating}
+                        <div className="text-electric text-xs font-medium">{building.time}</div>
+                        <div className={`text-xs flex items-center text-gray-400`}>
+                          <span className={`mr-1 text-electric`}>★</span> {building.rating}
                         </div>
                       </div>
                     </motion.div>
@@ -482,9 +482,9 @@ export default function ServiceNeighborhood() {
                 {/* View More Indicator */}
                 {block.buildings.length > 2 && (
                   <motion.div 
-                    className={`text-3xl mb-2 p-3 rounded-full bg-[#C9A227]/10 text-[#C9A227]`}
+                    className={`text-3xl mb-2 p-3 rounded-full bg-electric/10 text-electric`}
                   >
-                    <span className={`text-sm font-medium px-3 py-1 rounded-full border text-[#C9A227] bg-white border-[#C9A227]/20 hover:bg-gray-50`}>
+                    <span className={`text-sm font-medium px-3 py-1 rounded-full border text-electric bg-midnight-900/50 border-electric/20 hover:bg-midnight-900/70`}>
                       +{block.buildings.length - 2} more services →
                     </span>
                   </motion.div>
@@ -501,14 +501,14 @@ export default function ServiceNeighborhood() {
             animate={{ opacity: 1 }}
             className="text-center py-16"
           >
-            <div className="text-8xl mb-6 text-[#C9A227]/20">🔍</div>
-            <h3 className="text-2xl font-bold text-[#0A1F44] mb-3">No services found</h3>
-            <p className="text-[#0A1F44]/60 text-lg">
-              Try searching for "HAM radio", "credit", "financial", "membership", etc.
+            <div className="text-8xl mb-6 text-electric/20">🔍</div>
+            <h3 className="text-2xl font-bold text-white mb-3">No services found</h3>
+            <p className="text-gray-400 text-lg">
+              Try searching for &quot;HAM radio&quot;, &quot;credit&quot;, &quot;financial&quot;, &quot;membership&quot;, etc.
             </p>
             <button
               onClick={() => setSearchQuery('')}
-              className="mt-6 px-6 py-3 bg-[#0A1F44]/5 hover:bg-[#0A1F44]/10 text-[#0A1F44] rounded-xl transition-colors font-medium border-2 border-[#0A1F44]/10 hover:border-[#0A1F44]/20 shadow-sm"
+              className="mt-6 px-6 py-3 bg-midnight-800/50 hover:bg-midnight-800/70 text-white rounded-xl transition-colors font-medium border border-electric/20 hover:border-electric/40 shadow-sm"
             >
               Clear Search
             </button>
@@ -520,27 +520,27 @@ export default function ServiceNeighborhood() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8 }}
-          className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-white/90 backdrop-blur-lg rounded-2xl p-4 border-2 border-[#0A1F44]/10 shadow-2xl"
+          className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-midnight-800/90 backdrop-blur-lg rounded-2xl p-4 border border-electric/20 shadow-2xl"
         >
           <div className="flex space-x-3">
             <motion.button
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
-              className="px-6 py-3 bg-gradient-to-r from-[#0A1F44] to-[#020816] hover:from-[#020816] hover:to-[#0A1F44] text-white rounded-xl transition-all font-medium flex items-center space-x-2 shadow-lg hover:shadow-xl"
+              className="px-6 py-3 bg-electric hover:bg-electric-dark text-obsidian font-bold rounded-xl transition-all font-medium flex items-center space-x-2 shadow-lg hover:shadow-electric/25"
             >
               <span>Join Have Dominion</span>
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
-              className="px-6 py-3 bg-white hover:bg-gray-50 text-[#0A1F44] rounded-xl transition-all font-medium flex items-center space-x-2 border-2 border-[#0A1F44]/10 hover:border-[#0A1F44]/20 shadow-sm"
+              className="px-6 py-3 bg-midnight-900/50 hover:bg-midnight-900/70 text-white rounded-xl transition-all font-medium flex items-center space-x-2 border border-electric/20 hover:border-electric/40 shadow-sm"
             >
               <span>Schedule Consultation</span>
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
-              className="px-6 py-3 bg-white hover:bg-gray-50 text-[#0A1F44] rounded-xl transition-all font-medium flex items-center space-x-2 border-2 border-[#0A1F44]/10 hover:border-[#0A1F44]/20 shadow-sm"
+              className="px-6 py-3 bg-midnight-900/50 hover:bg-midnight-900/70 text-white rounded-xl transition-all font-medium flex items-center space-x-2 border border-electric/20 hover:border-electric/40 shadow-sm"
             >
               <span>Download Resources</span>
             </motion.button>

@@ -31,13 +31,13 @@ const ProofWithoutNoise = () => {
   ];
 
   return (
-    <section id="proof" className="py-16 md:py-20 bg-gradient-to-b from-white to-gray-50 relative overflow-hidden">
+    <section id="proof" className="py-16 md:py-20 bg-gradient-to-b from-navy-900 to-basedark relative overflow-hidden">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#0A1F44] mb-4">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
             Proof Without Noise
           </h2>
-          <p className="text-lg text-[#0A1F44]/70 max-w-3xl mx-auto">
+          <p className="text-lg text-gray-400 max-w-3xl mx-auto">
             Transparent processes you can trust
           </p>
         </div>
@@ -46,17 +46,17 @@ const ProofWithoutNoise = () => {
           {proofs.map((item, index) => (
             <div 
               key={index} 
-              className={`rounded-2xl p-6 border-2 ${item.borderColor} bg-white transition-all duration-500 hover:-translate-y-2 shadow-md hover:shadow-xl`}
+              className={`rounded-2xl p-6 border ${item.theme === 'navy' ? 'border-navy-600/50' : 'border-gold-500/30'} bg-navy-800/40 backdrop-blur-sm transition-all duration-500 hover:-translate-y-2 shadow-lg hover:shadow-gold-500/10 hover:border-gold-500/40`}
             >
-              <div className={`inline-flex p-3 rounded-xl mb-4 ${item.iconBg}`}>
+              <div className={`inline-flex p-3 rounded-xl mb-4 ${item.theme === 'navy' ? 'bg-navy-700/50 text-gold-400' : 'bg-gold-500/20 text-gold-400'}`}>
                 {item.icon}
               </div>
-              <h3 className="text-xl font-bold text-[#0A1F44] mb-3">{item.title}</h3>
-              <p className="text-sm text-[#0A1F44]/60 mb-4">{item.description}</p>
+              <h3 className="text-xl font-bold text-white mb-3">{item.title}</h3>
+              <p className="text-sm text-gray-400 mb-4">{item.description}</p>
               <ul className="space-y-2">
                 {item.features.map((feature, featureIndex) => (
-                  <li key={featureIndex} className="flex items-center space-x-2 text-sm text-[#0A1F44]/70">
-                    <CheckCircle className={`h-4 w-4 flex-shrink-0 ${item.theme === 'navy' ? 'text-[#0A1F44]' : 'text-[#C9A227]'}`} />
+                  <li key={featureIndex} className="flex items-center space-x-2 text-sm text-gray-300">
+                    <CheckCircle className={`h-4 w-4 flex-shrink-0 ${item.theme === 'navy' ? 'text-gold-500' : 'text-gold-400'}`} />
                     <span>{feature}</span>
                   </li>
                 ))}

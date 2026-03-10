@@ -57,16 +57,16 @@ function Login() {
     }
 
     return (
-        <div className='min-h-screen bg-gradient-to-br from-blue-50 to-white flex items-center justify-center px-4'>
-            <div className='max-w-md w-full bg-white rounded-2xl shadow-xl border border-blue-100 p-8'>
+        <div className='min-h-screen bg-gradient-to-br from-obsidian to-midnight-900 flex items-center justify-center px-4'>
+            <div className='max-w-md w-full bg-midnight-800/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-electric/20 p-8'>
                 <div className='text-center mb-8'>
-                    <h1 className='text-3xl font-bold text-blue-950 mb-2'>Welcome Back</h1>
-                    <p className='text-gray-600'>Sign in to your account</p>
+                    <h1 className='text-3xl font-bold text-white mb-2'>Welcome Back</h1>
+                    <p className='text-gray-400'>Sign in to your account</p>
                 </div>
                 
                 <form onSubmit={handleLogin} className='space-y-6'>
                     <div>
-                        <label htmlFor='email' className='block text-sm font-medium text-blue-950 mb-2'>
+                        <label htmlFor='email' className='block text-sm font-medium text-gray-300 mb-2'>
                             Email Address
                         </label>
                         <input
@@ -76,13 +76,13 @@ function Login() {
                             placeholder='Enter your email...'
                             value={loginInfo.email}
                             autoComplete='off'
-                            className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-950 focus:border-transparent outline-none transition-all duration-200 text-black'
+                            className='w-full px-4 py-3 border border-gray-600 rounded-lg focus:ring-2 focus:ring-electric focus:border-transparent outline-none transition-all duration-200 bg-midnight-900/50 text-white placeholder-gray-500'
                             required
                         />
                     </div>
                     
                     <div>
-                        <label htmlFor='password' className='block text-sm font-medium text-blue-950 mb-2'>
+                        <label htmlFor='password' className='block text-sm font-medium text-gray-300 mb-2'>
                             Password
                         </label>
                         <div className="relative">
@@ -93,13 +93,13 @@ function Login() {
                                 placeholder='Enter your password...'
                                 value={loginInfo.password}
                                 autoComplete='new-password'
-                                className='w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-950 focus:border-transparent outline-none transition-all duration-200 text-black'
+                                className='w-full px-4 py-3 pr-12 border border-gray-600 rounded-lg focus:ring-2 focus:ring-electric focus:border-transparent outline-none transition-all duration-200 bg-midnight-900/50 text-white placeholder-gray-500'
                                 required
                             />
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-electric focus:outline-none"
                             >
                                 {showPassword ? (
                                     <EyeOff className="h-5 w-5" />
@@ -113,11 +113,11 @@ function Login() {
                     <button 
                         type='submit' 
                         disabled={isLoading}
-                        className='w-full bg-blue-950 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-900 focus:ring-4 focus:ring-blue-950 focus:ring-opacity-25 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center space-x-2'
+                        className='w-full bg-electric hover:bg-electric-dark text-obsidian font-bold py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center space-x-2'
                     >
                         {isLoading ? (
                             <>
-                                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <svg className="animate-spin h-5 w-5 text-obsidian" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
@@ -131,7 +131,7 @@ function Login() {
                     <div className="flex justify-between items-center">
                         <Link 
                             to="/forgot-password" 
-                            className='text-sm text-blue-950 hover:text-blue-900 transition-colors duration-200'
+                            className='text-sm text-electric hover:text-electric-light transition-colors duration-200'
                         >
                             Forgot Password?
                         </Link>
@@ -139,17 +139,17 @@ function Login() {
                 </form>
                 
                 <div className='mt-6 text-center'>
-                    <span className='text-gray-600'>Don't have an account? </span>
+                    <span className='text-gray-400'>Don&apos;t have an account? </span>
                     <Link 
                         to="/signup" 
-                        className='text-blue-950 font-semibold hover:text-blue-900 transition-colors duration-200'
+                        className='text-electric font-semibold hover:text-electric-light transition-colors duration-200'
                     >
                         Sign Up
                     </Link>
 
                     <Link
                      to="/admin/login"
-                     className="block font-semibold text-center  text-blue-950 mt-4"
+                     className="block font-semibold text-center text-electric hover:text-electric-light mt-4"
                     >
                        Login as Admin
                     </Link>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, X, LogOut, Sun, LayoutDashboard, User } from 'lucide-react';
+import { Menu, X, LogOut, Sun, LayoutDashboard, User, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import logo from '../assets/logo.png';
@@ -16,7 +16,6 @@ export default function Navbar() {
   
   const handleLogout = () => {
     logout()
-    // logout() already navigates to '/', so we don't need navigate('/') here
     scrollToTop()
   }
 
@@ -47,125 +46,135 @@ export default function Navbar() {
 
   const navLinks = [
     { name: 'Home', path: '/' },
+    { name: 'Get Tradelines', path: '/tradelines' },
     { name: 'Services', path: '/services' },
     { name: 'About', path: '/about' },
     { name: 'Contact', path: '/contact' },
   ]
 
   return (
-    <nav className={`sticky top-0 z-50 bg-transparent transition-all duration-300 ${
-      isScrolled ? 'py-2 backdrop-blur-md bg-white/80' : 'py-0'
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      isScrolled 
+        ? 'py-3 backdrop-blur-xl bg-obsidian/80 border-b border-white/5' 
+        : 'py-4 bg-transparent'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <Link to="/" onClick={scrollToTop} className="flex items-center space-x-4 group">
-            <div className="flex-shrink-0 h-24 w-24 flex items-center justify-center rounded-xl p-1.5">
+        <div className="flex justify-between items-center">
+          {/* Logo */}
+          <Link to="/" onClick={scrollToTop} className="flex items-center space-x-3 group">
+            <motion.div 
+              whileHover={{ scale: 1.05 }}
+              className="relative"
+            >
+              <div className="absolute inset-0 bg-electric/20 blur-xl rounded-full"></div>
               <img 
                 src={logo} 
                 alt="HAVE DOMINION Logo" 
-                className="h-20 w-20 object-contain drop-shadow-lg"
-                style={{ mixBlendMode: 'multiply' }}
+                className="relative h-12 w-12 object-contain drop-shadow-lg"
               />
-            </div>
+            </motion.div>
             <div className="flex flex-col">
-              <span className="text-xl font-bold text-[#0A1F44] tracking-tight">
+              <span className="text-lg font-bold text-white tracking-tight group-hover:text-electric transition-colors">
                 HAVE DOMINION
               </span>
-              <span className="text-xs text-[#0A1F44]/70 tracking-wider">EXCELLENCE & DOMINION</span>
+              <span className="text-[10px] text-white/50 tracking-widest uppercase">Excellence & Dominion</span>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex gap-8 items-center">
-            {navLinks.map((link) => (
+          <div className="hidden md:flex items-center gap-1">
+            {navLinks.map((link, index) => (
               <Link 
                 key={link.name}
                 to={link.path} 
                 onClick={scrollToTop}
-                className="relative text-[#0A1F44]/80 hover:text-[#C9A227] transition-all duration-300 font-semibold tracking-wide group"
+                className="relative px-4 py-2 text-sm text-white transition-all duration-300 font-medium tracking-wide group"
               >
-                {link.name}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#C9A227] via-[#E0B84C] to-[#F5D36B] transition-all duration-300 group-hover:w-full"></span>
-                <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-[#0A1F44]/10"></span>
+                <span className="relative z-10">{link.name}</span>
+                <motion.span 
+                  layoutId="navHighlight"
+                  className="absolute inset-0 bg-white/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                />
+                <span className="absolute bottom-1 left-4 right-4 h-0.5 bg-electric scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
               </Link>
             ))}
           </div>
 
           {/* Auth Buttons - Desktop */}
-          {user ? (
-            <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center gap-3">
+            {user ? (
               <div className="flex items-center relative user-dropdown">
                 <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="flex items-center hover:bg-[#0A1F44]/5 rounded-lg p-2 transition-colors duration-200"
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-electric/30 transition-all duration-300 group"
                 >
-                  <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#0A1F44] via-[#0A1F44]/80 to-[#020816] text-white font-bold flex items-center justify-center mr-3 border-2 border-[#C9A227]/50 shadow-lg hover:border-[#C9A227] hover:shadow-[#C9A227]/20 transition-all duration-300">
-                    {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-sm font-medium text-[#0A1F44]">
-                      {user.name || user.email}
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-electric to-royal-500 flex items-center justify-center">
+                    <span className="text-obsidian font-bold text-sm">
+                      {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
                     </span>
-                    <span className="text-xs text-[#0A1F44]/60">Welcome back!</span>
                   </div>
+                  <span className="text-sm text-white/80 group-hover:text-white">{user.name || user.email}</span>
+                  <ChevronDown className={`h-4 w-4 text-white/50 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`} />
                 </button>
+                
                 <AnimatePresence>
                   {isDropdownOpen && (
-                    <motion.div 
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
                       transition={{ duration: 0.2 }}
-                      className="absolute top-full right-0 mt-3 w-48 bg-white backdrop-blur-lg rounded-xl shadow-2xl py-2 border border-[#0A1F44]/20 shadow-[#0A1F44]/10"
+                      className="absolute right-0 top-full mt-2 w-56 bg-midnight-800/95 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl overflow-hidden"
                     >
-                      <Link
-                        to={user?.role === 'admin' ? '/admin/dashboard' : '/dashboard'}
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          setIsDropdownOpen(false)
-                          scrollToTop()
-                        }}
-                        className="w-full text-left px-4 py-2.5 text-sm text-[#0A1F44] hover:bg-[#0A1F44]/5 hover:text-[#C9A227] flex items-center transition-colors duration-200 rounded-lg mx-1"
-                      >
-                        <LayoutDashboard className="h-4 w-4 mr-2" />
-                        Dashboard
-                      </Link>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleLogout()
-                          setIsDropdownOpen(false)
-                        }}
-                        className="w-full text-left px-4 py-2.5 text-sm text-[#0A1F44] hover:bg-[#0A1F44]/5 hover:text-[#C9A227] flex items-center transition-colors duration-200 rounded-lg mx-1"
-                      >
-                        <LogOut className="h-4 w-4 mr-2" />
-                        Sign Out
-                      </button>
+                      <div className="p-2">
+                        <Link
+                          to="/dashboard"
+                          onClick={() => { setIsDropdownOpen(false); scrollToTop(); }}
+                          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-white/70 hover:text-white hover:bg-white/5 transition-colors"
+                        >
+                          <LayoutDashboard className="h-4 w-4" />
+                          <span className="text-sm">Dashboard</span>
+                        </Link>
+                        <Link
+                          to="/profile"
+                          onClick={() => { setIsDropdownOpen(false); scrollToTop(); }}
+                          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-white/70 hover:text-white hover:bg-white/5 transition-colors"
+                        >
+                          <User className="h-4 w-4" />
+                          <span className="text-sm">Profile</span>
+                        </Link>
+                        <div className="h-px bg-white/10 my-1"></div>
+                        <button
+                          onClick={handleLogout}
+                          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors"
+                        >
+                          <LogOut className="h-4 w-4" />
+                          <span className="text-sm">Sign Out</span>
+                        </button>
+                      </div>
                     </motion.div>
                   )}
                 </AnimatePresence>
               </div>
-            </div>
-          ) : (
-            <div className="hidden md:flex items-center space-x-4">
-              <Link 
-                to="/login" 
-                onClick={scrollToTop}
-                className="px-5 py-2 text-sm font-semibold text-[#0A1F44] bg-white hover:bg-gray-50 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 border border-[#0A1F44]/20"
-              >
-                Login
-              </Link>
-              <Link 
-                to="/signup" 
-                onClick={scrollToTop}
-                className="px-6 py-2.5 text-sm font-bold text-white bg-gradient-to-r from-[#0A1F44] to-[#020816] hover:from-[#020816] hover:to-[#0A1F44] rounded-xl transition-all duration-300 shadow-md hover:shadow-xl hover:scale-105 border border-[#C9A227]/50 relative overflow-hidden group"
-              >
-                <span className="relative z-10">Sign Up</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-[#C9A227] to-[#E0B84C] translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-              </Link>
-            </div>
-          )}
-
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  onClick={scrollToTop}
+                  className="px-5 py-2.5 text-sm text-white/70 hover:text-white font-medium transition-colors"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/signup"
+                  onClick={scrollToTop}
+                  className="px-5 py-2.5 text-sm bg-electric hover:bg-electric-light text-obsidian font-semibold rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-electric/20 hover:scale-105"
+                >
+                  Get Started
+                </Link>
+              </>
+            )}
+          </div>
           {/* Mobile menu button */}
           <button 
             onClick={toggleMenu} 
