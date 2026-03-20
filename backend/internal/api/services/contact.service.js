@@ -1,5 +1,4 @@
 const Contact = require('../../database/models/Contact');
-const { logger } = require('../../common/logger');
 
 class ContactService {
   async createContact(contactData) {
@@ -7,15 +6,8 @@ class ContactService {
       const contact = new Contact(contactData);
       await contact.save();
       
-      logger.info('New contact submission created', { 
-        contactId: contact._id, 
-        email: contact.email,
-        service: contact.service 
-      });
-      
       return contact;
     } catch (error) {
-      logger.error('Error creating contact submission', { error: error.message, data: contactData });
       throw error;
     }
   }
@@ -49,7 +41,6 @@ class ContactService {
         }
       };
     } catch (error) {
-      logger.error('Error fetching contacts', { error: error.message });
       throw error;
     }
   }
@@ -62,7 +53,6 @@ class ContactService {
       }
       return contact;
     } catch (error) {
-      logger.error('Error fetching contact by ID', { contactId, error: error.message });
       throw error;
     }
   }
@@ -82,10 +72,8 @@ class ContactService {
         throw new Error('Contact not found');
       }
 
-      logger.info('Contact status updated', { contactId, status });
       return contact;
     } catch (error) {
-      logger.error('Error updating contact status', { contactId, status, error: error.message });
       throw error;
     }
   }
@@ -98,10 +86,8 @@ class ContactService {
         throw new Error('Contact not found');
       }
 
-      logger.info('Contact deleted', { contactId });
       return { message: 'Contact deleted successfully' };
     } catch (error) {
-      logger.error('Error deleting contact', { contactId, error: error.message });
       throw error;
     }
   }
@@ -115,7 +101,6 @@ class ContactService {
       logger.info('User contacts fetched', { email, count: contacts.length });
       return contacts;
     } catch (error) {
-      logger.error('Error fetching contacts by email', { email, error: error.message });
       throw error;
     }
   }
@@ -152,7 +137,6 @@ class ContactService {
 
       return statistics;
     } catch (error) {
-      logger.error('Error fetching contact statistics', { error: error.message });
       throw error;
     }
   }

@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const { authMiddleware } = require('../../auth/middleware');
 const tradelineService = require('../services/tradeline.service');
-const { logger } = require('../../common/logger');
 
 // Create new tradeline (admin only)
 router.post('/', authMiddleware(true), async (req, res, next) => {
@@ -16,7 +15,8 @@ router.post('/', authMiddleware(true), async (req, res, next) => {
       accountAge,
       accountType,
       status,
-      notes
+      notes,
+      assignedUserId
     } = req.body;
 
     // Basic validation
@@ -36,14 +36,9 @@ router.post('/', authMiddleware(true), async (req, res, next) => {
       accountAge: Number(accountAge),
       accountType,
       status: status || 'Active',
-      notes
+      notes,
+      assignedUserId: assignedUserId || null
     }, req.user.id);
-
-    logger.info('Admin created new tradeline', { 
-      adminId: req.user.id, 
-      tradelineId: tradeline._id,
-      bankName: tradeline.bankName 
-    });
 
     res.status(201).json({
       success: true,
@@ -74,14 +69,27 @@ router.get('/', authMiddleware(true), async (req, res, next) => {
       sortOrder
     });
 
-    logger.info('Admin fetched all tradelines', { 
-      adminId: req.user?.id, 
-      total: result.pagination.total 
-    });
-
     res.status(200).json({
       success: true,
       message: 'Tradelines fetched successfully',
+      data: result
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Get user tradelines (for logged-in user - only their assigned tradelines)
+router.get('/my-tradelines', authMiddleware(false), async (req, res, next) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    
+    const result = await tradelineService.getTradelinesByUserId(req.user.id, { page, limit });
+
+    res.status(200).json({
+      success: true,
+      message: 'User tradelines fetched successfully',
       data: result
     });
   } catch (error) {
@@ -93,11 +101,6 @@ router.get('/', authMiddleware(true), async (req, res, next) => {
 router.get('/:tradelineId', authMiddleware(true), async (req, res, next) => {
   try {
     const tradeline = await tradelineService.getTradelineById(req.params.tradelineId);
-
-    logger.info('Admin fetched tradeline', { 
-      adminId: req.user?.id, 
-      tradelineId: req.params.tradelineId 
-    });
 
     res.status(200).json({
       success: true,
@@ -121,7 +124,8 @@ router.put('/:tradelineId', authMiddleware(true), async (req, res, next) => {
       accountAge,
       accountType,
       status,
-      notes
+      notes,
+      assignedUserId
     } = req.body;
 
     const updateData = {};
@@ -134,17 +138,13 @@ router.put('/:tradelineId', authMiddleware(true), async (req, res, next) => {
     if (accountType !== undefined) updateData.accountType = accountType;
     if (status !== undefined) updateData.status = status;
     if (notes !== undefined) updateData.notes = notes;
+    if (assignedUserId !== undefined) updateData.assignedUserId = assignedUserId || null;
 
     const tradeline = await tradelineService.updateTradeline(
       req.params.tradelineId, 
       updateData, 
       req.user.id
     );
-
-    logger.info('Admin updated tradeline', { 
-      adminId: req.user?.id, 
-      tradelineId: req.params.tradelineId 
-    });
 
     res.status(200).json({
       success: true,
@@ -161,11 +161,6 @@ router.delete('/:tradelineId', authMiddleware(true), async (req, res, next) => {
   try {
     const result = await tradelineService.deleteTradeline(req.params.tradelineId);
 
-    logger.info('Admin deleted tradeline', { 
-      adminId: req.user?.id, 
-      tradelineId: req.params.tradelineId 
-    });
-
     res.status(200).json({
       success: true,
       message: result.message,
@@ -181,27 +176,10 @@ router.get('/statistics/overview', authMiddleware(true), async (req, res, next) 
   try {
     const stats = await tradelineService.getTradelineStatistics();
 
-    logger.info('Admin fetched tradeline statistics', { adminId: req.user?.id });
-
     res.status(200).json({
       success: true,
       message: 'Tradeline statistics fetched successfully',
       data: stats
-    });
-  } catch (error) {
-    next(error);
-  }
-});
-
-// Get user tradelines (public - for user dashboard)
-router.get('/user/all', async (req, res, next) => {
-  try {
-    const tradelines = await tradelineService.getUserTradelines();
-
-    res.status(200).json({
-      success: true,
-      message: 'User tradelines fetched successfully',
-      data: tradelines
     });
   } catch (error) {
     next(error);

@@ -13,13 +13,15 @@ const errorHandler = (err, req, res, next) => {
   const code = err.code || 'INTERNAL_ERROR';
   const message = err.message || 'Internal server error';
 
-  logger.error(message, {
-    statusCode,
-    code,
-    stack: err.stack,
-    path: req.path,
-    method: req.method,
-  });
+  // Only log server errors (500), not client errors (400, 401, 403, 404)
+  if (statusCode >= 500) {
+    logger.error(message, {
+      statusCode,
+      code,
+      path: req.path,
+      method: req.method,
+    });
+  }
 
   res.status(statusCode).json({
     error: {

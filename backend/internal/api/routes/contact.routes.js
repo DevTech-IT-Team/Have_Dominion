@@ -3,7 +3,6 @@ const router = express.Router();
 const { optionalAuthMiddleware, authMiddleware } = require('../../auth/middleware');
 const mongoose = require('mongoose');
 const Contact = require('../../database/models/Contact');
-const { logger } = require('../../common/logger');
 
 // Always use MongoDB service since connection is working
 const contactService = require('../services/contact.service');
@@ -13,21 +12,8 @@ router.post('/', optionalAuthMiddleware(), async (req, res, next) => {
   try {
     const { name, email, service, message } = req.body;
 
-    logger.info('Contact form submission received', { 
-      name, 
-      email, 
-      service, 
-      messageLength: message?.length 
-    });
-
     // Basic validation
     if (!name || !email || !service || !message) {
-      logger.warn('Contact form validation failed', { 
-        name: !!name, 
-        email: !!email, 
-        service: !!service, 
-        message: !!message 
-      });
       return res.status(400).json({
         success: false,
         message: 'All fields are required: name, email, service, message'
@@ -39,12 +25,6 @@ router.post('/', optionalAuthMiddleware(), async (req, res, next) => {
       email,
       service,
       message
-    });
-
-    logger.info('Contact form submitted successfully', { 
-      contactId: contact._id, 
-      email: contact.email,
-      status: contact.status 
     });
 
     res.status(201).json({
@@ -70,12 +50,6 @@ router.get('/my-requests', authMiddleware(false), async (req, res, next) => {
     }
 
     const contacts = await contactService.getContactsByEmail(userEmail);
-
-    logger.info('User fetched their contacts', { 
-      userId: req.user?.id, 
-      email: userEmail,
-      count: contacts.length 
-    });
 
     res.status(200).json({
       success: true,
@@ -104,11 +78,6 @@ router.get('/', authMiddleware(true), async (req, res, next) => {
       sortOrder
     });
 
-    logger.info('Admin fetched all contacts', { 
-      adminId: req.user?.id, 
-      total: result.pagination.total 
-    });
-
     res.status(200).json({
       success: true,
       message: 'Contacts fetched successfully',
@@ -123,11 +92,6 @@ router.get('/', authMiddleware(true), async (req, res, next) => {
 router.get('/:contactId', authMiddleware(true), async (req, res, next) => {
   try {
     const contact = await contactService.getContactById(req.params.contactId);
-
-    logger.info('Admin fetched contact', { 
-      adminId: req.user?.id, 
-      contactId: req.params.contactId 
-    });
 
     res.status(200).json({
       success: true,
@@ -153,12 +117,6 @@ router.patch('/:contactId/status', authMiddleware(true), async (req, res, next) 
 
     const contact = await contactService.updateContactStatus(req.params.contactId, status);
 
-    logger.info('Admin updated contact status', { 
-      adminId: req.user?.id, 
-      contactId: req.params.contactId,
-      status 
-    });
-
     res.status(200).json({
       success: true,
       message: 'Contact status updated successfully',
@@ -174,11 +132,6 @@ router.delete('/:contactId', authMiddleware(true), async (req, res, next) => {
   try {
     const result = await contactService.deleteContact(req.params.contactId);
 
-    logger.info('Admin deleted contact', { 
-      adminId: req.user?.id, 
-      contactId: req.params.contactId 
-    });
-
     res.status(200).json({
       success: true,
       message: result.message,
@@ -193,8 +146,6 @@ router.delete('/:contactId', authMiddleware(true), async (req, res, next) => {
 router.get('/statistics/overview', authMiddleware(true), async (req, res, next) => {
   try {
     const stats = await contactService.getContactStatistics();
-
-    logger.info('Admin fetched contact statistics', { adminId: req.user?.id });
 
     res.status(200).json({
       success: true,

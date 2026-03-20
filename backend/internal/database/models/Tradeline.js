@@ -70,6 +70,13 @@ const tradelineSchema = new mongoose.Schema({
   lastUpdatedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
+  },
+  
+  // Assigned user (who can see this tradeline)
+  assignedUserId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    default: null
   }
 }, {
   timestamps: true
@@ -79,6 +86,7 @@ const tradelineSchema = new mongoose.Schema({
 tradelineSchema.index({ status: 1, reportedDate: -1 });
 tradelineSchema.index({ createdBy: 1 });
 tradelineSchema.index({ accountType: 1 });
+tradelineSchema.index({ assignedUserId: 1 });
 
 // Method to calculate credit utilization
 tradelineSchema.methods.calculateUtilization = function() {
@@ -100,7 +108,8 @@ tradelineSchema.methods.getSummary = function() {
     accountType: this.accountType,
     status: this.status,
     reportedDate: this.reportedDate,
-    lastUpdated: this.lastUpdated
+    lastUpdated: this.lastUpdated,
+    assignedUserId: this.assignedUserId
   };
 };
 

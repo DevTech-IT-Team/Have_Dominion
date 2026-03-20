@@ -1,5 +1,4 @@
 const Tradeline = require('../../database/models/Tradeline');
-const { logger } = require('../../common/logger');
 
 class TradelineService {
   async createTradeline(tradelineData, adminId) {
@@ -12,15 +11,8 @@ class TradelineService {
       
       await tradeline.save();
       
-      logger.info('New tradeline created', { 
-        tradelineId: tradeline._id, 
-        bankName: tradeline.bankName,
-        createdBy: adminId 
-      });
-      
       return tradeline;
     } catch (error) {
-      logger.error('Error creating tradeline', { error: error.message, data: tradelineData });
       throw error;
     }
   }
@@ -43,6 +35,7 @@ class TradelineService {
       const tradelines = await Tradeline.find(query)
         .populate('createdBy', 'name email')
         .populate('lastUpdatedBy', 'name email')
+        .populate('assignedUserId', 'name email')
         .sort(sort)
         .limit(limit * 1)
         .skip((page - 1) * limit)
@@ -60,7 +53,6 @@ class TradelineService {
         }
       };
     } catch (error) {
-      logger.error('Error fetching tradelines', { error: error.message });
       throw error;
     }
   }
@@ -69,7 +61,8 @@ class TradelineService {
     try {
       const tradeline = await Tradeline.findById(tradelineId)
         .populate('createdBy', 'name email')
-        .populate('lastUpdatedBy', 'name email');
+        .populate('lastUpdatedBy', 'name email')
+        .populate('assignedUserId', 'name email');
       
       if (!tradeline) {
         throw new Error('Tradeline not found');
@@ -77,7 +70,6 @@ class TradelineService {
       
       return tradeline.getSummary();
     } catch (error) {
-      logger.error('Error fetching tradeline by ID', { tradelineId, error: error.message });
       throw error;
     }
   }
@@ -93,16 +85,15 @@ class TradelineService {
         },
         { new: true, runValidators: true }
       ).populate('createdBy', 'name email')
-       .populate('lastUpdatedBy', 'name email');
+       .populate('lastUpdatedBy', 'name email')
+       .populate('assignedUserId', 'name email');
 
       if (!tradeline) {
         throw new Error('Tradeline not found');
       }
 
-      logger.info('Tradeline updated', { tradelineId, updatedBy: adminId });
       return tradeline.getSummary();
     } catch (error) {
-      logger.error('Error updating tradeline', { tradelineId, error: error.message });
       throw error;
     }
   }
@@ -115,10 +106,8 @@ class TradelineService {
         throw new Error('Tradeline not found');
       }
 
-      logger.info('Tradeline deleted', { tradelineId });
       return { message: 'Tradeline deleted successfully' };
     } catch (error) {
-      logger.error('Error deleting tradeline', { tradelineId, error: error.message });
       throw error;
     }
   }
@@ -162,20 +151,31 @@ class TradelineService {
 
       return statistics;
     } catch (error) {
-      logger.error('Error fetching tradeline statistics', { error: error.message });
       throw error;
     }
   }
 
-  async getUserTradelines(userId) {
+  async getTradelinesByUserId(userId, { page = 1, limit = 10 }) {
     try {
-      const tradelines = await Tradeline.find({ status: 'Active' })
+      const tradelines = await Tradeline.find({ assignedUserId: userId })
+        .populate('createdBy', 'name email')
         .sort({ reportedDate: -1 })
+        .limit(limit * 1)
+        .skip((page - 1) * limit)
         .exec();
 
-      return tradelines.map(t => t.getSummary());
+      const total = await Tradeline.countDocuments({ assignedUserId: userId });
+
+      return {
+        tradelines: tradelines.map(t => t.getSummary()),
+        pagination: {
+          total,
+          page,
+          limit,
+          pages: Math.ceil(total / limit)
+        }
+      };
     } catch (error) {
-      logger.error('Error fetching user tradelines', { userId, error: error.message });
       throw error;
     }
   }

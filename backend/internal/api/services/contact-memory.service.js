@@ -2,8 +2,6 @@
 let contacts = [];
 let contactIdCounter = 1;
 
-const { logger } = require('../../common/logger');
-
 class InMemoryContactService {
   async createContact(contactData) {
     try {
@@ -17,15 +15,8 @@ class InMemoryContactService {
       
       contacts.push(contact);
       
-      logger.info('New contact submission created (in-memory)', { 
-        contactId: contact._id, 
-        email: contact.email,
-        service: contact.service 
-      });
-      
       return contact;
     } catch (error) {
-      logger.error('Error creating contact submission (in-memory)', { error: error.message, data: contactData });
       throw error;
     }
   }
@@ -69,7 +60,6 @@ class InMemoryContactService {
         }
       };
     } catch (error) {
-      logger.error('Error fetching contacts (in-memory)', { error: error.message });
       throw error;
     }
   }
@@ -82,7 +72,6 @@ class InMemoryContactService {
       }
       return contact;
     } catch (error) {
-      logger.error('Error fetching contact by ID (in-memory)', { contactId, error: error.message });
       throw error;
     }
   }
@@ -98,10 +87,8 @@ class InMemoryContactService {
       contacts[contactIndex].status = status;
       contacts[contactIndex].updatedAt = new Date();
 
-      logger.info('Contact status updated (in-memory)', { contactId, status });
       return contacts[contactIndex];
     } catch (error) {
-      logger.error('Error updating contact status (in-memory)', { contactId, status, error: error.message });
       throw error;
     }
   }
@@ -116,10 +103,8 @@ class InMemoryContactService {
 
       const deletedContact = contacts.splice(contactIndex, 1)[0];
 
-      logger.info('Contact deleted (in-memory)', { contactId });
       return { message: 'Contact deleted successfully' };
     } catch (error) {
-      logger.error('Error deleting contact (in-memory)', { contactId, error: error.message });
       throw error;
     }
   }
@@ -145,7 +130,6 @@ class InMemoryContactService {
         responded: stats.responded || 0
       };
     } catch (error) {
-      logger.error('Error fetching contact statistics (in-memory)', { error: error.message });
       throw error;
     }
   }

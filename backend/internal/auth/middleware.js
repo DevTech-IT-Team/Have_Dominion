@@ -5,6 +5,11 @@ const authMiddleware = (isAdmin = false) => {
   return (req, res, next) => {
     try {
       const authHeader = req.headers.authorization;
+      
+      if (!authHeader) {
+        throw new AppError('Missing authorization header', 401, 'MISSING_TOKEN');
+      }
+      
       const token = extractToken(authHeader);
       const decoded = verifyToken(token, isAdmin);
 
