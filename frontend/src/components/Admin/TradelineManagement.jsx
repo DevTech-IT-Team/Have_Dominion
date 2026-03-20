@@ -11,6 +11,8 @@ const TradelineManagement = () => {
   const [statusFilter, setStatusFilter] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [users, setUsers] = useState([]);
+  const [usersLoading, setUsersLoading] = useState(false);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -22,7 +24,8 @@ const TradelineManagement = () => {
     accountAge: '',
     accountType: 'Revolving',
     status: 'Active',
-    notes: ''
+    notes: '',
+    assignedUserId: ''
   });
 
   const accountTypes = ['Revolving', 'Installment', 'Mortgage', 'Auto Loan', 'Personal Loan', 'Other'];
@@ -93,7 +96,8 @@ const TradelineManagement = () => {
       accountAge: tradeline.accountAge.toString(),
       accountType: tradeline.accountType,
       status: tradeline.status,
-      notes: tradeline.notes || ''
+      notes: tradeline.notes || '',
+      assignedUserId: tradeline.assignedUserId?.id || ''
     });
     setShowForm(true);
   };
@@ -119,6 +123,36 @@ const TradelineManagement = () => {
     }
   };
 
+  const handleSell = async (tradelineId) => {
+    if (!window.confirm('Are you sure you want to sell this tradeline? This will remove it from the assigned user\'s dashboard.')) {
+      return;
+    }
+
+    try {
+      // Get the current tradeline data
+      const tradeline = tradelines.find(t => t.id === tradelineId);
+      if (!tradeline) {
+        setError('Tradeline not found');
+        return;
+      }
+
+      // Update tradeline to unassign the user (sell it)
+      const response = await adminService.updateTradeline(tradelineId, {
+        ...tradeline,
+        assignedUserId: '' // Remove user assignment
+      });
+
+      if (response.success) {
+        fetchTradelines(); // Refresh the list
+        alert('Tradeline sold successfully and removed from user dashboard');
+      } else {
+        setError(response.message || 'Failed to sell tradeline');
+      }
+    } catch (err) {
+      setError(err.message || 'Error selling tradeline');
+    }
+  };
+
   const resetForm = () => {
     setFormData({
       bankName: '',
@@ -129,7 +163,8 @@ const TradelineManagement = () => {
       accountAge: '',
       accountType: 'Revolving',
       status: 'Active',
-      notes: ''
+      notes: '',
+      assignedUserId: ''
     });
   };
 
@@ -137,6 +172,27 @@ const TradelineManagement = () => {
     if (utilization > 80) return 'text-red-600 bg-red-50';
     if (utilization > 60) return 'text-yellow-600 bg-yellow-50';
     return 'text-green-600 bg-green-50';
+  };
+
+  const fetchUsers = async () => {
+    try {
+      setUsersLoading(true);
+      console.log('Fetching users for dropdown...');
+      const response = await adminService.getUsersDropdown();
+      console.log('Users dropdown response:', response);
+      if (response.success) {
+        console.log('Users fetched:', response.data);
+        setUsers(response.data);
+      } else {
+        console.error('Failed to fetch users:', response.message);
+        setError(response.message || 'Failed to fetch users');
+      }
+    } catch (err) {
+      console.error('Error fetching users:', err);
+      setError(err.message || 'Error fetching users');
+    } finally {
+      setUsersLoading(false);
+    }
   };
 
   if (loading) {
@@ -195,6 +251,7 @@ const TradelineManagement = () => {
               onClick={() => {
                 resetForm();
                 setEditingTradeline(null);
+                fetchUsers();
                 setShowForm(true);
               }}
               className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center text-sm font-medium"
@@ -261,7 +318,7 @@ const TradelineManagement = () => {
                         type="text"
                         value={formData.bankName}
                         onChange={(e) => setFormData({...formData, bankName: e.target.value})}
-                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-gray-900"
                         placeholder="e.g., Chase, Bank of America"
                         required
                       />
@@ -278,7 +335,7 @@ const TradelineManagement = () => {
                         type="text"
                         value={formData.accountNumber}
                         onChange={(e) => setFormData({...formData, accountNumber: e.target.value})}
-                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all font-mono"
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all font-mono text-gray-900"
                         placeholder="****1234"
                         required
                       />
@@ -303,7 +360,7 @@ const TradelineManagement = () => {
                           type="number"
                           value={formData.creditLimit}
                           onChange={(e) => setFormData({...formData, creditLimit: e.target.value})}
-                          className="w-full pl-8 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                          className="w-full pl-8 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-gray-900"
                           placeholder="0"
                           min="0"
                           step="100"
@@ -320,7 +377,7 @@ const TradelineManagement = () => {
                           type="number"
                           value={formData.currentBalance}
                           onChange={(e) => setFormData({...formData, currentBalance: e.target.value})}
-                          className="w-full pl-8 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                          className="w-full pl-8 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-gray-900"
                           placeholder="0"
                           min="0"
                           step="100"
@@ -336,7 +393,7 @@ const TradelineManagement = () => {
                           type="number"
                           value={formData.paymentHistory}
                           onChange={(e) => setFormData({...formData, paymentHistory: e.target.value})}
-                          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-gray-900"
                           placeholder="100"
                           min="0"
                           max="100"
@@ -352,7 +409,7 @@ const TradelineManagement = () => {
                         type="number"
                         value={formData.accountAge}
                         onChange={(e) => setFormData({...formData, accountAge: e.target.value})}
-                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-gray-900"
                         placeholder="0"
                         min="0"
                         required
@@ -376,7 +433,7 @@ const TradelineManagement = () => {
                       <select
                         value={formData.accountType}
                         onChange={(e) => setFormData({...formData, accountType: e.target.value})}
-                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all bg-white"
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all bg-white text-gray-900"
                         required
                       >
                         {accountTypes.map(type => (
@@ -390,13 +447,44 @@ const TradelineManagement = () => {
                       <select
                         value={formData.status}
                         onChange={(e) => setFormData({...formData, status: e.target.value})}
-                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all bg-white"
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all bg-white text-gray-900"
                       >
                         {statusOptions.map(status => (
                           <option key={status} value={status}>{status}</option>
                         ))}
                       </select>
                     </div>
+                  </div>
+                </div>
+
+                {/* User Assignment Section */}
+                <div>
+                  <h4 className="text-sm font-semibold text-gray-900 mb-4 flex items-center">
+                    <svg className="w-4 h-4 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    Assign to User
+                  </h4>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Select User</label>
+                    <select
+                      value={formData.assignedUserId}
+                      onChange={(e) => setFormData({...formData, assignedUserId: e.target.value})}
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all bg-white text-gray-900"
+                      disabled={usersLoading}
+                    >
+                      <option value="">-- No User Assigned --</option>
+                      {usersLoading ? (
+                        <option value="" disabled>Loading users...</option>
+                      ) : users.length === 0 ? (
+                        <option value="" disabled>No users found</option>
+                      ) : (
+                        users.map(user => (
+                          <option key={user.id} value={user.id}>{user.name} ({user.email})</option>
+                        ))
+                      )}
+                    </select>
+                    <p className="text-xs text-gray-500 mt-1">Select a user to assign this tradeline to their account</p>
                   </div>
                 </div>
 
@@ -411,7 +499,7 @@ const TradelineManagement = () => {
                   <textarea
                     value={formData.notes}
                     onChange={(e) => setFormData({...formData, notes: e.target.value})}
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all resize-none"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all resize-none text-gray-900"
                     rows="4"
                     placeholder="Additional notes about this tradeline (optional)..."
                   />
@@ -462,13 +550,14 @@ const TradelineManagement = () => {
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Account Age</th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Type</th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Assigned To</th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-100">
               {tradelines.length === 0 ? (
                 <tr>
-                  <td colSpan="10" className="px-6 py-16 text-center">
+                  <td colSpan="11" className="px-6 py-16 text-center">
                     <div className="flex flex-col items-center">
                       <svg className="w-16 h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
@@ -511,7 +600,7 @@ const TradelineManagement = () => {
                       <div className="flex items-center">
                         <div className="text-sm font-medium text-gray-900">{tradeline.paymentHistory}%</div>
                         <svg className="ml-1 w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
                       </div>
                     </td>
@@ -533,6 +622,25 @@ const TradelineManagement = () => {
                         {tradeline.status}
                       </span>
                     </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        {tradeline.assignedUserId ? (
+                          <>
+                            <div className="flex-shrink-0 h-8 w-8 bg-indigo-100 rounded-full flex items-center justify-center">
+                              <svg className="h-4 w-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                              </svg>
+                            </div>
+                            <div className="ml-2">
+                              <div className="text-sm font-medium text-gray-900">{tradeline.assignedUserId.name || tradeline.assignedUserId}</div>
+                              <div className="text-xs text-gray-500">{tradeline.assignedUserId.email || ''}</div>
+                            </div>
+                          </>
+                        ) : (
+                          <span className="text-sm text-gray-400 italic">Unassigned</span>
+                        )}
+                      </div>
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex space-x-2">
                         <button
@@ -540,6 +648,12 @@ const TradelineManagement = () => {
                           className="text-indigo-600 hover:text-indigo-900 font-medium transition-colors"
                         >
                           Edit
+                        </button>
+                        <button
+                          onClick={() => handleSell(tradeline.id)}
+                          className="text-green-600 hover:text-green-900 font-medium transition-colors"
+                        >
+                          Sell
                         </button>
                         <button
                           onClick={() => handleDelete(tradeline.id)}
@@ -622,12 +736,28 @@ const TradelineManagement = () => {
                       </span>
                       <span className="text-xs text-gray-500">{tradeline.accountAge} months</span>
                     </div>
+                    <div className="flex items-center space-x-2">
+                      {tradeline.assignedUserId && (
+                        <span className="text-xs text-indigo-600 font-medium">
+                          {typeof tradeline.assignedUserId === 'object' ? tradeline.assignedUserId.name : ''}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-200">
                     <div className="flex space-x-2">
                       <button
                         onClick={() => handleEdit(tradeline)}
                         className="text-indigo-600 hover:text-indigo-900 font-medium text-sm"
                       >
                         Edit
+                      </button>
+                      <button
+                        onClick={() => handleSell(tradeline.id)}
+                        className="text-green-600 hover:text-green-900 font-medium text-sm"
+                      >
+                        Sell
                       </button>
                       <button
                         onClick={() => handleDelete(tradeline.id)}

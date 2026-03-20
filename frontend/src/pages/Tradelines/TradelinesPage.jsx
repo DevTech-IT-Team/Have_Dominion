@@ -26,7 +26,8 @@ const TradelinesPage = () => {
     address: address || '',
     city: city || '',
     state: state || '',
-    zipCode: zipCode || ''
+    zipCode: zipCode || '',
+    transactionType: ''
   });
 
   const tradelines = [
@@ -553,6 +554,55 @@ const TradelinesPage = () => {
               </p>
             </div>
 
+            <div className="bg-soft-gray/50 rounded-xl p-6 mb-6">
+              <h4 className="text-lg font-semibold text-midnight-900 mb-4">Select Transaction Type <span className="text-red-500">*</span></h4>
+              <p className="text-sm text-gray-500 mb-4">Please select one option (required)</p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <label 
+                  className={`flex items-center gap-3 bg-white border-2 rounded-xl p-4 cursor-pointer transition-colors ${
+                    userDetails.transactionType === 'buy' 
+                      ? 'border-electric bg-electric/5' 
+                      : 'border-gray-200 hover:border-electric'
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="transactionType"
+                    value="buy"
+                    checked={userDetails.transactionType === 'buy'}
+                    onChange={handleInputChange}
+                    required
+                    className="w-5 h-5 text-electric border-gray-300 focus:ring-electric"
+                  />
+                  <div>
+                    <span className="font-semibold text-midnight-900">Buy Tradeline</span>
+                    <p className="text-sm text-gray-500">Purchase an authorized user slot</p>
+                  </div>
+                </label>
+                <label 
+                  className={`flex items-center gap-3 bg-white border-2 rounded-xl p-4 cursor-pointer transition-colors ${
+                    userDetails.transactionType === 'sell' 
+                      ? 'border-amber-400 bg-amber-50' 
+                      : 'border-gray-200 hover:border-amber-400'
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="transactionType"
+                    value="sell"
+                    checked={userDetails.transactionType === 'sell'}
+                    onChange={handleInputChange}
+                    required
+                    className="w-5 h-5 text-amber-500 border-gray-300 focus:ring-amber-500"
+                  />
+                  <div>
+                    <span className="font-semibold text-midnight-900">Sell Tradeline</span>
+                    <p className="text-sm text-gray-500">Add someone to your credit card</p>
+                  </div>
+                </label>
+              </div>
+            </div>
+
             <div className="flex items-center gap-4">
               <button
                 type="button"
@@ -565,7 +615,7 @@ const TradelinesPage = () => {
                 type="submit"
                 className="flex-1 py-4 bg-electric hover:bg-electric-dark text-obsidian font-bold rounded-xl transition-all duration-300 hover:shadow-lg"
               >
-                Continue to Payment
+                Submit
               </button>
             </div>
           </form>
@@ -622,12 +672,10 @@ const TradelinesPage = () => {
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             {step === 'selection' && 'Premium Credit Tradelines'}
             {step === 'details' && 'Complete Your Application'}
-            {step === 'confirmation' && 'Application Received'}
           </h1>
           <p className="text-gray-400 max-w-2xl mx-auto">
             {step === 'selection' && 'Boost your credit score with authorized user tradelines from trusted financial institutions.'}
-            {step === 'details' && 'Please provide your information to be added as an authorized user.'}
-            {step === 'confirmation' && 'Your application has been submitted successfully.'}
+            {step === 'details' && 'Choose to buy or sell tradelines.'}
           </p>
         </div>
 
@@ -640,25 +688,14 @@ const TradelinesPage = () => {
           </div>
           <div className="w-12 h-0.5 bg-midnight-800">
             <div className={`h-full bg-electric transition-all duration-500 ${
-              step === 'details' || step === 'confirmation' ? 'w-full' : 'w-0'
+              step === 'details' ? 'w-full' : 'w-0'
             }`}></div>
           </div>
           <div className={`flex items-center gap-2 ${step === 'details' ? 'text-electric' : 'text-gray-500'}`}>
             <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-              step === 'details' ? 'bg-electric text-obsidian' : step === 'confirmation' ? 'bg-electric text-obsidian' : 'bg-midnight-800 text-gray-400 border border-electric/20'
+              step === 'details' ? 'bg-electric text-obsidian' : 'bg-midnight-800 text-gray-400 border border-electric/20'
             }`}>2</div>
             <span className="text-sm font-medium hidden sm:block text-white">Details</span>
-          </div>
-          <div className="w-12 h-0.5 bg-midnight-800">
-            <div className={`h-full bg-electric transition-all duration-500 ${
-              step === 'confirmation' ? 'w-full' : 'w-0'
-            }`}></div>
-          </div>
-          <div className={`flex items-center gap-2 ${step === 'confirmation' ? 'text-electric' : 'text-gray-500'}`}>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-              step === 'confirmation' ? 'bg-electric text-obsidian' : 'bg-midnight-800 text-gray-400 border border-electric/20'
-            }`}>3</div>
-            <span className="text-sm font-medium hidden sm:block text-white">Confirm</span>
           </div>
         </div>
 
@@ -672,7 +709,6 @@ const TradelinesPage = () => {
           >
             {step === 'selection' && <SelectionView />}
             {step === 'details' && <DetailsView />}
-            {step === 'confirmation' && <ConfirmationView />}
           </motion.div>
         </AnimatePresence>
       </div>

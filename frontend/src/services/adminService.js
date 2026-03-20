@@ -232,17 +232,34 @@ export const adminService = {
 
   // Get statistics
   async getStatistics() {
-    try {
-      const response = await api.get('/admin/statistics');
-      return handleResponse(response);
-    } catch (error) {
-      console.error('Statistics fetch error:', error);
-      // Extract error message from axios error response
-      const errorMessage = error.response?.data?.message || 
-                          error.response?.data?.error || 
-                          error.message || 
-                          'Failed to fetch statistics';
-      throw new Error(errorMessage);
-    }
+    const response = await fetch(`${API_BASE}/admin/statistics`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    
+    return handleResponse(response);
+  },
+
+  // Get users dropdown for tradeline assignment
+  async getUsersDropdown() {
+    const response = await fetch(`${API_BASE}/admin/users-dropdown`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  // Get user's assigned tradelines
+  async getMyTradelines({ page = 1, limit = 10 }) {
+    const params = new URLSearchParams();
+    params.append('page', page.toString());
+    params.append('limit', limit.toString());
+
+    const response = await fetch(`${API_BASE}/tradelines/my-tradelines?${params}`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+
+    return handleResponse(response);
   }
 };

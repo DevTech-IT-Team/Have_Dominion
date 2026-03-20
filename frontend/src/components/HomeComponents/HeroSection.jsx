@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { GraduationCap, CreditCard, ShieldCheck, TrendingUp, Zap, ArrowRight, Play } from 'lucide-react';
+import { GraduationCap, CreditCard, ShieldCheck, TrendingUp, Zap, ArrowRight, Play, BookOpen } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const HeroSection = () => {
@@ -41,6 +41,22 @@ const HeroSection = () => {
               </span>
               <span className="text-sm text-electric font-medium">Now Accepting New Members</span>
               <ArrowRight className="h-3 w-3 text-electric group-hover:translate-x-1 transition-transform" />
+            </motion.div>
+
+            {/* Educational Tutorials Banner */}
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.25 }}
+              className="inline-flex items-center gap-3 bg-gradient-to-r from-amber-500/20 to-orange-500/20 backdrop-blur-sm border border-amber-400/30 rounded-full px-5 py-2.5 mx-auto"
+            >
+              <BookOpen className="h-4 w-4 text-amber-400" />
+              <span className="text-sm text-amber-100 font-medium">
+                Expert Education Hub — Launching Soon
+              </span>
+              <span className="text-xs bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full">
+                Coming Soon
+              </span>
             </motion.div>
 
             {/* Main Headline */}

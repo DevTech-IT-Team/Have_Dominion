@@ -28,13 +28,7 @@ api.interceptors.request.use(
 
     // Log request in development
     if (import.meta.env.DEV) {
-      console.log('API Request:', {
-        method: config.method?.toUpperCase(),
-        url: config.url,
-        baseURL: config.baseURL,
-        data: config.data,
-        headers: config.headers,
-      });
+      console.log('API Request:', config.method?.toUpperCase(), config.url);
     }
     return config;
   },
@@ -52,20 +46,9 @@ api.interceptors.response.use(
   (error) => {
     // Log error details for debugging
     if (error.response) {
-      console.error('API Error Response:', {
-        status: error.response.status,
-        statusText: error.response.statusText,
-        url: error.config?.url,
-        method: error.config?.method,
-        requestData: error.config?.data,
-        responseData: error.response.data,
-        fullError: JSON.stringify(error.response.data, null, 2),
-      });
+      console.error(`API Error: ${error.response.status} ${error.config?.url}`);
     } else if (error.request) {
-      console.error('API Request Error:', {
-        message: 'No response received',
-        url: error.config?.url,
-      });
+      console.error('API Request Error: No response received');
     } else {
       console.error('API Error:', error.message);
     }

@@ -6,7 +6,7 @@ import './styles/global.css';
 
 function App() {
   return (
-    <Router>
+    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <AuthProvider>
         <div className="min-h-screen bg-basedark text-gray-100">
           <AppRoutes />
