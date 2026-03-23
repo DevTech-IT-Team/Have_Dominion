@@ -11,6 +11,18 @@ const UserManagement = () => {
     isActive: undefined
   });
   const [pagination, setPagination] = useState({ total: 0, pages: 0 });
+  
+  // Edit modal state
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editingUser, setEditingUser] = useState(null);
+  const [editFormData, setEditFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    isActive: true,
+    hasMembership: false
+  });
+  const [editLoading, setEditLoading] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -49,6 +61,70 @@ const UserManagement = () => {
       } catch (err) {
         setError(err.message || 'Failed to delete user');
       }
+    }
+  };
+
+  // Open edit modal
+  const handleEditClick = (user) => {
+    setEditingUser(user);
+    setEditFormData({
+      name: user.name || '',
+      email: user.email || '',
+      password: '',
+      isActive: user.isActive !== false,
+      hasMembership: user.hasMembership === true
+    });
+    setEditModalOpen(true);
+  };
+
+  // Close edit modal
+  const handleCloseEditModal = () => {
+    setEditModalOpen(false);
+    setEditingUser(null);
+    setEditFormData({
+      name: '',
+      email: '',
+      password: '',
+      isActive: true,
+      hasMembership: false
+    });
+  };
+
+  // Handle form input changes
+  const handleEditFormChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setEditFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  // Submit edit form
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    if (!editingUser) return;
+
+    setEditLoading(true);
+    try {
+      const updateData = {
+        name: editFormData.name,
+        email: editFormData.email,
+        isActive: editFormData.isActive,
+        hasMembership: editFormData.hasMembership
+      };
+
+      // Only include password if it's not empty
+      if (editFormData.password && editFormData.password.trim() !== '') {
+        updateData.password = editFormData.password;
+      }
+
+      await adminService.updateUser(editingUser._id || editingUser.id, updateData);
+      handleCloseEditModal();
+      fetchUsers();
+    } catch (err) {
+      setError(err.message || 'Failed to update user');
+    } finally {
+      setEditLoading(false);
     }
   };
 
@@ -115,6 +191,9 @@ const UserManagement = () => {
                 Status
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Membership
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Joined
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -150,10 +229,22 @@ const UserManagement = () => {
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                    user.hasMembership 
+                      ? 'bg-green-100 text-green-800' 
+                      : 'bg-gray-100 text-gray-800'
+                  }`}>
+                    {user.hasMembership ? 'Active' : 'None'}
+                  </span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {new Date(user.createdAt).toLocaleDateString()}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <button className="text-indigo-600 hover:text-indigo-900 mr-3">
+                  <button 
+                    onClick={() => handleEditClick(user)}
+                    className="text-indigo-600 hover:text-indigo-900 mr-3"
+                  >
                     Edit
                   </button>
                   <button 
@@ -201,6 +292,103 @@ const UserManagement = () => {
           >
             Next
           </button>
+        </div>
+      )}
+      {/* Edit User Modal */}
+      {editModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-black rounded-lg p-6 w-full max-w-md mx-4">
+            <h2 className="text-xl font-bold mb-4 text-white">Edit User</h2>
+            <form onSubmit={handleEditSubmit}>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-white mb-1">
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={editFormData.name}
+                    onChange={handleEditFormChange}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-black"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-white mb-1">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={editFormData.email}
+                    onChange={handleEditFormChange}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-black"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-white mb-1">
+                    New Password (leave blank to keep current)
+                  </label>
+                  <input
+                    type="password"
+                    name="password"
+                    value={editFormData.password}
+                    onChange={handleEditFormChange}
+                    placeholder="Enter new password"
+                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-black"
+                  />
+                </div>
+                
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    name="isActive"
+                    checked={editFormData.isActive}
+                    onChange={handleEditFormChange}
+                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                  />
+                  <label className="ml-2 text-sm text-white">
+                    Active User
+                  </label>
+                </div>
+                
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    name="hasMembership"
+                    checked={editFormData.hasMembership}
+                    onChange={handleEditFormChange}
+                    className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                  />
+                  <label className="ml-2 text-sm text-white">
+                    Active Membership (Sell Tradeline Access)
+                  </label>
+                </div>
+              </div>
+              
+              <div className="flex justify-end space-x-3 mt-6">
+                <button
+                  type="button"
+                  onClick={handleCloseEditModal}
+                  className="px-4 py-2 border border-gray-300 rounded-md text-white hover:bg-gray-800"
+                  disabled={editLoading}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50"
+                  disabled={editLoading}
+                >
+                  {editLoading ? 'Saving...' : 'Save Changes'}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </div>

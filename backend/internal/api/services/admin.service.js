@@ -1,5 +1,6 @@
 const User = require('../../database/models/User');
 const { AppError } = require('../../common/error-handler');
+const bcrypt = require('bcryptjs');
 
 class AdminService {
   async getAllUsers(filters = {}) {
@@ -51,6 +52,15 @@ class AdminService {
 
   async updateUser(userId, updateData) {
     try {
+      // If password is being updated, hash it manually since findByIdAndUpdate bypasses pre-save middleware
+      if (updateData.password && updateData.password.trim() !== '') {
+        const salt = await bcrypt.genSalt(10);
+        updateData.password = await bcrypt.hash(updateData.password, salt);
+      } else {
+        // Remove password field if empty to avoid overwriting with empty string
+        delete updateData.password;
+      }
+
       const user = await User.findByIdAndUpdate(userId, updateData, {
         new: true,
         runValidators: true,

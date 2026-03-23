@@ -64,4 +64,27 @@ router.delete('/profile', authMiddleware(false), async (req, res, next) => {
   }
 });
 
+// Change password (public route - verifies by email + current password)
+router.post('/change-password', async (req, res, next) => {
+  try {
+    const { email, currentPassword, newPassword } = req.body;
+    
+    if (!email || !currentPassword || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email, current password, and new password are required',
+      });
+    }
+
+    const result = await userService.changePasswordByEmail(email, currentPassword, newPassword);
+
+    res.status(200).json({
+      success: true,
+      message: result.message,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;

@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify';
-import { Lock, ArrowLeft, Eye, EyeOff, CheckCircle, Mail } from 'lucide-react';
+import { Lock, ArrowLeft, Eye, EyeOff, CheckCircle } from 'lucide-react';
 import { handleError, handleSuccess } from '../../lib/utils';
 import api from '../../api/axios';
 
-function ForgotPassword() {
+function ChangePassword() {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
-        email: '',
         currentPassword: '',
         newPassword: '',
         confirmPassword: ''
@@ -29,12 +29,9 @@ function ForgotPassword() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        if (!formData.email || !formData.currentPassword || !formData.newPassword || !formData.confirmPassword) {
+        // Validation
+        if (!formData.currentPassword || !formData.newPassword || !formData.confirmPassword) {
             return handleError('All fields are required');
-        }
-
-        if (!formData.email.includes('@') || !formData.email.includes('.')) {
-            return handleError('Please enter a valid email address');
         }
 
         if (formData.newPassword.length < 6) {
@@ -52,7 +49,6 @@ function ForgotPassword() {
         setIsLoading(true);
         try {
             const response = await api.post("users/change-password", { 
-                email: formData.email,
                 currentPassword: formData.currentPassword,
                 newPassword: formData.newPassword
             });
@@ -97,11 +93,11 @@ function ForgotPassword() {
 
                     <div className="space-y-4">
                         <Link 
-                            to="/login"
+                            to="/dashboard"
                             className='w-full bg-electric hover:bg-electric-dark text-obsidian font-bold py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center space-x-2'
                         >
                             <ArrowLeft className="h-5 w-5" />
-                            <span>Back to Login</span>
+                            <span>Back to Dashboard</span>
                         </Link>
                     </div>
                 </div>
@@ -117,32 +113,12 @@ function ForgotPassword() {
                     <div className="flex justify-center mb-4">
                         <Lock className="h-12 w-12 text-electric" />
                     </div>
-                    <h1 className='text-3xl font-bold text-white mb-2'>Reset Password</h1>
+                    <h1 className='text-3xl font-bold text-white mb-2'>Change Password</h1>
                     <p className='text-gray-400'>Enter your current password and choose a new one.</p>
                 </div>
                 
                 <form onSubmit={handleSubmit} className='space-y-6'>
-                    {/* Email */}
-                    <div>
-                        <label htmlFor='email' className='block text-sm font-medium text-gray-300 mb-2'>
-                            Email Address
-                        </label>
-                        <div className="relative">
-                            <input
-                                onChange={handleChange}
-                                type='email'
-                                name='email'
-                                placeholder='Enter your email...'
-                                value={formData.email}
-                                autoComplete='email'
-                                className='w-full px-4 py-3 pr-12 border border-gray-600 rounded-lg focus:ring-2 focus:ring-electric focus:border-transparent outline-none transition-all duration-200 bg-midnight-900/50 text-white placeholder-gray-500'
-                                required
-                                autoFocus
-                            />
-                            <Mail className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                        </div>
-                    </div>
-
+                    {/* Current Password */}
                     <div>
                         <label htmlFor='currentPassword' className='block text-sm font-medium text-gray-300 mb-2'>
                             Current Password
@@ -163,11 +139,16 @@ function ForgotPassword() {
                                 onClick={() => setShowCurrentPassword(!showCurrentPassword)}
                                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-electric focus:outline-none"
                             >
-                                {showCurrentPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                {showCurrentPassword ? (
+                                    <EyeOff className="h-5 w-5" />
+                                ) : (
+                                    <Eye className="h-5 w-5" />
+                                )}
                             </button>
                         </div>
                     </div>
 
+                    {/* New Password */}
                     <div>
                         <label htmlFor='newPassword' className='block text-sm font-medium text-gray-300 mb-2'>
                             New Password
@@ -189,11 +170,16 @@ function ForgotPassword() {
                                 onClick={() => setShowNewPassword(!showNewPassword)}
                                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-electric focus:outline-none"
                             >
-                                {showNewPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                {showNewPassword ? (
+                                    <EyeOff className="h-5 w-5" />
+                                ) : (
+                                    <Eye className="h-5 w-5" />
+                                )}
                             </button>
                         </div>
                     </div>
 
+                    {/* Confirm Password */}
                     <div>
                         <label htmlFor='confirmPassword' className='block text-sm font-medium text-gray-300 mb-2'>
                             Confirm New Password
@@ -214,7 +200,11 @@ function ForgotPassword() {
                                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-electric focus:outline-none"
                             >
-                                {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                {showConfirmPassword ? (
+                                    <EyeOff className="h-5 w-5" />
+                                ) : (
+                                    <Eye className="h-5 w-5" />
+                                )}
                             </button>
                         </div>
                     </div>
@@ -240,11 +230,11 @@ function ForgotPassword() {
                 
                 <div className='mt-6 text-center'>
                     <Link 
-                        to="/login"
+                        to="/dashboard"
                         className='text-electric font-semibold hover:text-electric-light transition-colors duration-200 flex items-center justify-center space-x-2'
                     >
                         <ArrowLeft className="h-4 w-4" />
-                        <span>Back to Login</span>
+                        <span>Back to Dashboard</span>
                     </Link>
                 </div>
             </div>
@@ -253,4 +243,4 @@ function ForgotPassword() {
     )
 }
 
-export default ForgotPassword
+export default ChangePassword

@@ -82,6 +82,45 @@ const Tradelines = () => {
 
   return (
     <div className="space-y-6">
+      {/* Sell Tradeline Section - Only for users with active membership */}
+      {user?.hasMembership && (
+        <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg shadow-sm border border-green-200 p-6">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+            <div>
+              <h2 className="text-xl font-bold text-green-800 flex items-center">
+                <svg className="w-6 h-6 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08.402-2.599 1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Sell Your Tradeline
+              </h2>
+              <p className="text-green-700 mt-1">You have an active membership. You can sell your tradelines to earn money.</p>
+            </div>
+            <button className="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors shadow-md">
+              List Tradeline for Sale
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* No Membership Banner */}
+      {!user?.hasMembership && (
+        <div className="bg-gray-50 rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="flex items-start gap-4">
+            <div className="flex-shrink-0">
+              <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800">Sell Tradeline Feature</h3>
+              <p className="text-gray-600 mt-1">
+                Contact an administrator to activate your membership and unlock the ability to sell tradelines.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header Section */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">

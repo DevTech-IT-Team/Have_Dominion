@@ -3,9 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { CreditCard, CheckCircle, Lock, Star, TrendingUp, Shield, ArrowRight, Info, ChevronRight, Search } from 'lucide-react';
 import { useProfile } from '../../hooks/useProfile';
+import { useAuth } from '../../contexts/AuthContext';
 
 const TradelinesPage = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const { profile, firstName, lastName, email, phone, dob, address, city, state, zipCode, isComplete } = useProfile();
   
   const [step, setStep] = useState('selection');
@@ -556,13 +558,12 @@ const TradelinesPage = () => {
 
             <div className="bg-soft-gray/50 rounded-xl p-6 mb-6">
               <h4 className="text-lg font-semibold text-midnight-900 mb-4">Select Transaction Type <span className="text-red-500">*</span></h4>
-              <p className="text-sm text-gray-500 mb-4">Please select one option (required)</p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <label 
                   className={`flex items-center gap-3 bg-white border-2 rounded-xl p-4 cursor-pointer transition-colors ${
                     userDetails.transactionType === 'buy' 
-                      ? 'border-electric bg-electric/5' 
-                      : 'border-gray-200 hover:border-electric'
+                      ? 'border-blue-400 bg-blue-50' 
+                      : 'border-gray-200 hover:border-blue-400'
                   }`}
                 >
                   <input
@@ -572,34 +573,38 @@ const TradelinesPage = () => {
                     checked={userDetails.transactionType === 'buy'}
                     onChange={handleInputChange}
                     required
-                    className="w-5 h-5 text-electric border-gray-300 focus:ring-electric"
+                    className="w-5 h-5 text-blue-500 border-gray-300 focus:ring-blue-500"
                   />
                   <div>
                     <span className="font-semibold text-midnight-900">Buy Tradeline</span>
-                    <p className="text-sm text-gray-500">Purchase an authorized user slot</p>
+                    <p className="text-sm text-gray-500">Get added as authorized user</p>
                   </div>
                 </label>
-                <label 
-                  className={`flex items-center gap-3 bg-white border-2 rounded-xl p-4 cursor-pointer transition-colors ${
-                    userDetails.transactionType === 'sell' 
-                      ? 'border-amber-400 bg-amber-50' 
-                      : 'border-gray-200 hover:border-amber-400'
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="transactionType"
-                    value="sell"
-                    checked={userDetails.transactionType === 'sell'}
-                    onChange={handleInputChange}
-                    required
-                    className="w-5 h-5 text-amber-500 border-gray-300 focus:ring-amber-500"
-                  />
-                  <div>
-                    <span className="font-semibold text-midnight-900">Sell Tradeline</span>
-                    <p className="text-sm text-gray-500">Add someone to your credit card</p>
-                  </div>
-                </label>
+                
+                {/* Sell Tradeline - Only visible to logged-in users with active membership */}
+                {user && user.hasMembership && (
+                  <label 
+                    className={`flex items-center gap-3 bg-white border-2 rounded-xl p-4 cursor-pointer transition-colors ${
+                      userDetails.transactionType === 'sell' 
+                        ? 'border-amber-400 bg-amber-50' 
+                        : 'border-gray-200 hover:border-amber-400'
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="transactionType"
+                      value="sell"
+                      checked={userDetails.transactionType === 'sell'}
+                      onChange={handleInputChange}
+                      required
+                      className="w-5 h-5 text-amber-500 border-gray-300 focus:ring-amber-500"
+                    />
+                    <div>
+                      <span className="font-semibold text-midnight-900">Sell Tradeline</span>
+                      <p className="text-sm text-gray-500">Add someone to your credit card</p>
+                    </div>
+                  </label>
+                )}
               </div>
             </div>
 

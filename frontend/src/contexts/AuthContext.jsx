@@ -69,6 +69,7 @@ export const AuthProvider = ({ children }) => {
         email: userResp.email,
         name: userResp.name,
         role: userResp.role.toLowerCase(),
+        hasMembership: userResp.hasMembership,
         token,
         redirectUrl:
           userResp.role.toLowerCase() === 'admin'
