@@ -23,7 +23,8 @@ const contactSchema = new mongoose.Schema({
       'Credit Tradelines',
       'Document Management',
       'Security Services',
-      'General Inquiry'
+      'General Inquiry',
+      'Membership Request'
     ]
   },
   message: {

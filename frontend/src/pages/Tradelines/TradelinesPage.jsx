@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { CreditCard, CheckCircle, Lock, Star, TrendingUp, Shield, ArrowRight, Info, ChevronRight, Search } from 'lucide-react';
 import { useProfile } from '../../hooks/useProfile';
 import { useAuth } from '../../contexts/AuthContext';
+import { adminService } from '../../services/adminService';
 
 const TradelinesPage = () => {
   const navigate = useNavigate();
@@ -31,6 +32,8 @@ const TradelinesPage = () => {
     zipCode: zipCode || '',
     transactionType: ''
   });
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
 
   const tradelines = [
     {
@@ -148,16 +151,52 @@ const TradelinesPage = () => {
     return matchesBank && matchesMinLimit && matchesMaxLimit && matchesAvailability;
   });
 
-  const handleInputChange = (e) => {
-    setUserDetails({
-      ...userDetails,
-      [e.target.name]: e.target.value
-    });
-  };
+  const handleInputChange = useCallback((e) => {
+    const { name, value } = e.target;
+    setUserDetails(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setStep('confirmation');
+    setSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const formData = {
+        tradelineName: selectedTradeline.cardName,
+        price: selectedTradeline.price,
+        feeType: 'one-time fee',
+        creditLimit: selectedTradeline.creditLimit.toString(),
+        age: selectedTradeline.age,
+        reportDates: selectedTradeline.reportingPeriod,
+        firstName: userDetails.firstName,
+        lastName: userDetails.lastName,
+        email: userDetails.email,
+        phoneNumber: userDetails.phone,
+        dateOfBirth: userDetails.dob,
+        ssnLast4: userDetails.ssn,
+        streetAddress: userDetails.address,
+        city: userDetails.city,
+        state: userDetails.state,
+        zipCode: userDetails.zipCode,
+        transactionType: userDetails.transactionType
+      };
+
+      const result = await adminService.submitTradelineForm(formData);
+      
+      if (result.success) {
+        setStep('confirmation');
+      } else {
+        setSubmitError(result.message || 'Failed to submit application');
+      }
+    } catch (err) {
+      setSubmitError(err.message || 'Error submitting application. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleBack = () => {
@@ -356,320 +395,6 @@ const TradelinesPage = () => {
     </div>
   );
 
-  const DetailsView = () => (
-    <div className="max-w-3xl mx-auto">
-      <button
-        onClick={handleBack}
-        className="mb-6 text-gray-600 hover:text-midnight-900 flex items-center gap-2 transition-colors"
-      >
-        <ArrowRight className="h-4 w-4 rotate-180" />
-        Back to Tradelines
-      </button>
-
-      <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-        <div className="bg-gradient-to-r from-royal-900 to-midnight-800 p-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                <CreditCard className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <h3 className="font-bold text-white text-lg">{selectedTradeline.bank}</h3>
-                <p className="text-electric-light">{selectedTradeline.cardName}</p>
-              </div>
-            </div>
-            <div className="text-right">
-              <p className="text-2xl font-bold text-white">{selectedTradeline.price}</p>
-              <p className="text-sm text-gray-400">one-time fee</p>
-            </div>
-          </div>
-          <div className="flex gap-6 mt-4 text-sm">
-            <span className="text-gray-300">Limit: <span className="text-white">{selectedTradeline.creditLimit}</span></span>
-            <span className="text-gray-300">Age: <span className="text-white">{selectedTradeline.age}</span></span>
-            <span className="text-gray-300">Reports: <span className="text-white">{selectedTradeline.reportingPeriod}</span></span>
-          </div>
-        </div>
-
-        <div className="p-8">
-          {isComplete && (
-            <div className="bg-green-50 border border-green-200 rounded-xl p-4 mb-6 flex items-center gap-3">
-              <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-              <div>
-                <p className="text-sm font-medium text-green-800">Information pre-filled from your profile</p>
-                <p className="text-xs text-green-600">Please verify these details are correct</p>
-              </div>
-            </div>
-          )}
-          <h3 className="text-xl font-bold text-midnight-900 mb-2">Complete Your Information</h3>
-          <p className="text-gray-600 mb-6">
-            Please provide your details exactly as they appear on your credit report.
-            This information is required to add you as an authorized user.
-          </p>
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">First Name (as appears on ID)</label>
-                <input
-                  type="text"
-                  name="firstName"
-                  value={userDetails.firstName}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors"
-                  placeholder="John"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Last Name (as appears on ID)</label>
-                <input
-                  type="text"
-                  name="lastName"
-                  value={userDetails.lastName}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors"
-                  placeholder="Doe"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={userDetails.email}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors"
-                  placeholder="john@example.com"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
-                <input
-                  type="tel"
-                  name="phone"
-                  value={userDetails.phone}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors"
-                  placeholder="(555) 123-4567"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Date of Birth</label>
-                <input
-                  type="date"
-                  name="dob"
-                  value={userDetails.dob}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">SSN (Last 4 digits)</label>
-                <input
-                  type="text"
-                  name="ssn"
-                  value={userDetails.ssn}
-                  onChange={handleInputChange}
-                  required
-                  maxLength="4"
-                  pattern="\d{4}"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors"
-                  placeholder="••••1234"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Street Address</label>
-              <input
-                type="text"
-                name="address"
-                value={userDetails.address}
-                onChange={handleInputChange}
-                required
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors"
-                placeholder="123 Main Street, Apt 4B"
-              />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">City</label>
-                <input
-                  type="text"
-                  name="city"
-                  value={userDetails.city}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors"
-                  placeholder="New York"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">State</label>
-                <select
-                  name="state"
-                  value={userDetails.state}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors"
-                >
-                  <option value="">Select State</option>
-                  <option value="AL">Alabama</option>
-                  <option value="AK">Alaska</option>
-                  <option value="AZ">Arizona</option>
-                  <option value="CA">California</option>
-                  <option value="FL">Florida</option>
-                  <option value="NY">New York</option>
-                  <option value="TX">Texas</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">ZIP Code</label>
-                <input
-                  type="text"
-                  name="zipCode"
-                  value={userDetails.zipCode}
-                  onChange={handleInputChange}
-                  required
-                  pattern="\d{5}(-\d{4})?"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors"
-                  placeholder="10001"
-                />
-              </div>
-            </div>
-
-            <div className="bg-soft-gray/50 rounded-xl p-4 flex items-start gap-3">
-              <Info className="h-5 w-5 text-electric flex-shrink-0 mt-0.5" />
-              <p className="text-sm text-gray-600">
-                Your information is securely encrypted and will only be used to add you as an authorized user. We never store your full SSN.
-              </p>
-            </div>
-
-            <div className="bg-soft-gray/50 rounded-xl p-6 mb-6">
-              <h4 className="text-lg font-semibold text-midnight-900 mb-4">Select Transaction Type <span className="text-red-500">*</span></h4>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <label 
-                  className={`flex items-center gap-3 bg-white border-2 rounded-xl p-4 cursor-pointer transition-colors ${
-                    userDetails.transactionType === 'buy' 
-                      ? 'border-blue-400 bg-blue-50' 
-                      : 'border-gray-200 hover:border-blue-400'
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="transactionType"
-                    value="buy"
-                    checked={userDetails.transactionType === 'buy'}
-                    onChange={handleInputChange}
-                    required
-                    className="w-5 h-5 text-blue-500 border-gray-300 focus:ring-blue-500"
-                  />
-                  <div>
-                    <span className="font-semibold text-midnight-900">Buy Tradeline</span>
-                    <p className="text-sm text-gray-500">Get added as authorized user</p>
-                  </div>
-                </label>
-                
-                {/* Sell Tradeline - Only visible to logged-in users with active membership */}
-                {user && user.hasMembership && (
-                  <label 
-                    className={`flex items-center gap-3 bg-white border-2 rounded-xl p-4 cursor-pointer transition-colors ${
-                      userDetails.transactionType === 'sell' 
-                        ? 'border-amber-400 bg-amber-50' 
-                        : 'border-gray-200 hover:border-amber-400'
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="transactionType"
-                      value="sell"
-                      checked={userDetails.transactionType === 'sell'}
-                      onChange={handleInputChange}
-                      required
-                      className="w-5 h-5 text-amber-500 border-gray-300 focus:ring-amber-500"
-                    />
-                    <div>
-                      <span className="font-semibold text-midnight-900">Sell Tradeline</span>
-                      <p className="text-sm text-gray-500">Add someone to your credit card</p>
-                    </div>
-                  </label>
-                )}
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <button
-                type="button"
-                onClick={handleBack}
-                className="flex-1 py-4 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:border-gray-400 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="flex-1 py-4 bg-electric hover:bg-electric-dark text-obsidian font-bold rounded-xl transition-all duration-300 hover:shadow-lg"
-              >
-                Submit
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  );
-
-  const ConfirmationView = () => (
-    <div className="max-w-2xl mx-auto text-center">
-      <motion.div
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        className="bg-white rounded-2xl border border-gray-200 p-12"
-      >
-        <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-          <CheckCircle className="h-10 w-10 text-green-600" />
-        </div>
-        <h2 className="text-2xl font-bold text-midnight-900 mb-4">Application Submitted!</h2>
-        <p className="text-gray-600 mb-8">
-          Thank you for your application. We&apos;ve received your information for the{' '}
-          <span className="font-semibold text-midnight-900">{selectedTradeline.bank} {selectedTradeline.cardName}</span>.
-          Our team will review and contact you within 24 hours to complete the process.
-        </p>
-        <div className="bg-soft-gray/50 rounded-xl p-6 mb-8">
-          <p className="text-sm text-gray-500 mb-2">Application ID</p>
-          <p className="text-lg font-mono font-semibold text-midnight-900">
-            TL-{Date.now().toString(36).toUpperCase()}
-          </p>
-        </div>
-        <div className="flex flex-col sm:flex-row gap-4">
-          <Link
-            to="/tradelines"
-            onClick={() => setStep('selection')}
-            className="flex-1 py-3 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:border-gray-400 transition-colors"
-          >
-            Browse More Tradelines
-          </Link>
-          <Link
-            to="/dashboard"
-            className="flex-1 py-3 bg-electric hover:bg-electric-dark text-obsidian font-bold rounded-xl transition-colors"
-          >
-            Go to Dashboard
-          </Link>
-        </div>
-      </motion.div>
-    </div>
-  );
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-obsidian via-midnight-900 to-obsidian pt-20 pb-20">
       <div className="max-w-7xl mx-auto px-4">
@@ -704,18 +429,301 @@ const TradelinesPage = () => {
           </div>
         </div>
 
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={step}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.3 }}
-          >
-            {step === 'selection' && <SelectionView />}
-            {step === 'details' && <DetailsView />}
-          </motion.div>
-        </AnimatePresence>
+        {step === 'selection' && (
+          <AnimatePresence mode="wait">
+            <motion.div
+              key="selection"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <SelectionView />
+            </motion.div>
+          </AnimatePresence>
+        )}
+        
+        {step === 'details' && (
+          <div>
+            <div className="max-w-3xl mx-auto">
+              <button
+                onClick={handleBack}
+                className="mb-6 text-gray-600 hover:text-midnight-900 flex items-center gap-2 transition-colors"
+              >
+                <ArrowRight className="h-4 w-4 rotate-180" />
+                Back to Tradelines
+              </button>
+
+              <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                <div className="bg-gradient-to-r from-royal-900 to-midnight-800 p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                        <CreditCard className="h-6 w-6 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-white text-lg">{selectedTradeline.bank}</h3>
+                        <p className="text-electric-light">{selectedTradeline.cardName}</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-2xl font-bold text-white">{selectedTradeline.price}</p>
+                      <p className="text-sm text-gray-400">one-time fee</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-6 mt-4 text-sm">
+                    <span className="text-gray-300">Limit: <span className="text-white">{selectedTradeline.creditLimit}</span></span>
+                    <span className="text-gray-300">Age: <span className="text-white">{selectedTradeline.age}</span></span>
+                    <span className="text-gray-300">Reports: <span className="text-white">{selectedTradeline.reportingPeriod}</span></span>
+                  </div>
+                </div>
+
+                <div className="p-8">
+                  {isComplete && (
+                    <div className="bg-green-50 border border-green-200 rounded-xl p-4 mb-6 flex items-center gap-3">
+                      <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
+                      <div>
+                        <p className="text-sm font-medium text-green-800">Information pre-filled from your profile</p>
+                        <p className="text-xs text-green-600">Please verify these details are correct</p>
+                      </div>
+                    </div>
+                  )}
+                  <h3 className="text-xl font-bold text-midnight-900 mb-2">Complete Your Information</h3>
+                  <p className="text-gray-600 mb-6">
+                    Please provide your details exactly as they appear on your credit report.
+                    This information is required to add you as an authorized user.
+                  </p>
+
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    {submitError && (
+                      <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-center gap-3">
+                        <Info className="h-5 w-5 text-red-600 flex-shrink-0" />
+                        <p className="text-sm text-red-800">{submitError}</p>
+                      </div>
+                    )}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">First Name (as appears on ID)</label>
+                        <input
+                          type="text"
+                          name="firstName"
+                          value={userDetails.firstName}
+                          onChange={handleInputChange}
+                          required
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors text-black"
+                          placeholder="John"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Last Name (as appears on ID)</label>
+                        <input
+                          type="text"
+                          name="lastName"
+                          value={userDetails.lastName}
+                          onChange={handleInputChange}
+                          required
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors text-black"
+                          placeholder="Doe"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                        <input
+                          type="email"
+                          name="email"
+                          value={userDetails.email}
+                          onChange={handleInputChange}
+                          required
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors text-black"
+                          placeholder="john@example.com"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                        <input
+                          type="tel"
+                          name="phone"
+                          value={userDetails.phone}
+                          onChange={handleInputChange}
+                          required
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors text-black"
+                          placeholder="(555) 123-4567"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Date of Birth</label>
+                        <input
+                          type="date"
+                          name="dob"
+                          value={userDetails.dob}
+                          onChange={handleInputChange}
+                          required
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors text-black"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">SSN (Last 4 digits)</label>
+                        <input
+                          type="text"
+                          name="ssn"
+                          value={userDetails.ssn}
+                          onChange={handleInputChange}
+                          required
+                          maxLength="4"
+                          pattern="\d{4}"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors text-black"
+                          placeholder="••••1234"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Street Address</label>
+                      <input
+                        type="text"
+                        name="address"
+                        value={userDetails.address}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors text-black"
+                        placeholder="123 Main Street, Apt 4B"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">City</label>
+                        <input
+                          type="text"
+                          name="city"
+                          value={userDetails.city}
+                          onChange={handleInputChange}
+                          required
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors text-black"
+                          placeholder="New York"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">State</label>
+                        <select
+                          name="state"
+                          value={userDetails.state}
+                          onChange={handleInputChange}
+                          required
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors text-black"
+                        >
+                          <option value="">Select State</option>
+                          <option value="AL">Alabama</option>
+                          <option value="AK">Alaska</option>
+                          <option value="AZ">Arizona</option>
+                          <option value="CA">California</option>
+                          <option value="FL">Florida</option>
+                          <option value="NY">New York</option>
+                          <option value="TX">Texas</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">ZIP Code</label>
+                        <input
+                          type="text"
+                          name="zipCode"
+                          value={userDetails.zipCode}
+                          onChange={handleInputChange}
+                          required
+                          pattern="\d{5}(-\d{4})?"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-electric/50 focus:border-electric transition-colors text-black"
+                          placeholder="10001"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="bg-soft-gray/50 rounded-xl p-4 flex items-start gap-3">
+                      <Info className="h-5 w-5 text-electric flex-shrink-0 mt-0.5" />
+                      <p className="text-sm text-gray-600">
+                        Your information is securely encrypted and will only be used to add you as an authorized user. We never store your full SSN.
+                      </p>
+                    </div>
+
+                    <div className="bg-soft-gray/50 rounded-xl p-6 mb-6">
+                      <h4 className="text-lg font-semibold text-midnight-900 mb-4">Select Transaction Type <span className="text-red-500">*</span></h4>
+                      <div className="flex flex-col sm:flex-row gap-4">
+                        <label 
+                          className={`flex items-center gap-3 bg-white border-2 rounded-xl p-4 cursor-pointer transition-colors ${
+                            userDetails.transactionType === 'buy' 
+                              ? 'border-blue-400 bg-blue-50' 
+                              : 'border-gray-200 hover:border-blue-400'
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name="transactionType"
+                            value="buy"
+                            checked={userDetails.transactionType === 'buy'}
+                            onChange={handleInputChange}
+                            required
+                            className="w-5 h-5 text-blue-500 border-gray-300 focus:ring-blue-500"
+                          />
+                          <div>
+                            <span className="font-semibold text-midnight-900">Buy Tradeline</span>
+                            <p className="text-sm text-gray-500">Get added as authorized user</p>
+                          </div>
+                        </label>
+                        
+                        {user && user.hasMembership && (
+                          <label 
+                            className={`flex items-center gap-3 bg-white border-2 rounded-xl p-4 cursor-pointer transition-colors ${
+                              userDetails.transactionType === 'sell' 
+                                ? 'border-amber-400 bg-amber-50' 
+                                : 'border-gray-200 hover:border-amber-400'
+                            }`}
+                          >
+                            <input
+                              type="radio"
+                              name="transactionType"
+                              value="sell"
+                              checked={userDetails.transactionType === 'sell'}
+                              onChange={handleInputChange}
+                              required
+                              className="w-5 h-5 text-amber-500 border-gray-300 focus:ring-amber-500"
+                            />
+                            <div>
+                              <span className="font-semibold text-midnight-900">Sell Tradeline</span>
+                              <p className="text-sm text-gray-500">Add someone to your credit card</p>
+                            </div>
+                          </label>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                      <button
+                        type="button"
+                        onClick={handleBack}
+                        disabled={submitting}
+                        className="flex-1 py-4 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:border-gray-400 transition-colors disabled:opacity-50"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={submitting}
+                        className="flex-1 py-4 bg-electric hover:bg-electric-dark text-obsidian font-bold rounded-xl transition-all duration-300 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {submitting ? 'Submitting...' : 'Submit'}
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -28,6 +28,8 @@ const contactRoutes = require("../internal/api/routes/contact.routes");
 
 const tradelineRoutes = require("../internal/api/routes/tradeline.routes");
 
+const tradelineFormRoutes = require("../internal/api/routes/tradelineForm.routes");
+
 
 
 const app = express();
@@ -197,6 +199,8 @@ app.use(`${apiPrefix}/admin`, adminRoutes);
 app.use(`${apiPrefix}/contact`, contactRoutes);
 
 app.use(`${apiPrefix}/tradeline`, tradelineRoutes);
+
+app.use(`${apiPrefix}/tradeline-forms`, tradelineFormRoutes);
 
 
 

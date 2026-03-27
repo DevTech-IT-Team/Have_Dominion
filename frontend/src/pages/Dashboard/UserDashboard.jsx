@@ -964,7 +964,21 @@ const UserDashboard = () => {
 
                   <CreditCard className="h-12 w-12 text-gray-300 mx-auto mb-3" />
 
-                  <p className="text-sm text-gray-600">No tradelines available</p>
+                  <p className="text-sm text-gray-600 mb-4">No tradelines available</p>
+
+                  <button
+
+                    onClick={() => navigate('/tradelines')}
+
+                    className="inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors"
+
+                  >
+
+                    <CreditCard className="h-4 w-4 mr-2" />
+
+                    Browse Tradelines
+
+                  </button>
 
                 </div>
 
@@ -1059,6 +1073,24 @@ const UserDashboard = () => {
                 </div>
 
               )}
+
+              <div className="mt-4 pt-4 border-t border-gray-200">
+
+                <button
+
+                  onClick={() => navigate('/tradelines')}
+
+                  className="w-full flex items-center justify-center px-4 py-2 bg-indigo-50 text-indigo-700 text-sm font-medium rounded-lg hover:bg-indigo-100 transition-colors"
+
+                >
+
+                  <CreditCard className="h-4 w-4 mr-2" />
+
+                  {tradelines.length === 0 ? 'Browse Tradelines' : 'Browse More Tradelines'}
+
+                </button>
+
+              </div>
 
             </div>
 

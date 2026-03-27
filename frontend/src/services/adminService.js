@@ -261,5 +261,74 @@ export const adminService = {
     });
 
     return handleResponse(response);
+  },
+
+  // ==================== TRADELINE FORMS ====================
+
+  // Get all tradeline form submissions
+  async getTradelineForms(params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    const response = await fetch(`${API_BASE}/tradeline-forms${queryString ? '?' + queryString : ''}`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    
+    return handleResponse(response);
+  },
+
+  // Get single tradeline form by ID
+  async getTradelineFormById(formId) {
+    const response = await fetch(`${API_BASE}/tradeline-forms/${formId}`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    
+    return handleResponse(response);
+  },
+
+  // Update tradeline form status
+  async updateTradelineFormStatus(formId, status, adminNotes) {
+    try {
+      console.log('Updating tradeline form status:', { formId, status, adminNotes });
+      const response = await api.patch(`/tradeline-forms/${formId}/status`, {
+        status,
+        adminNotes
+      });
+      console.log('Update response:', response);
+      return handleResponse(response);
+    } catch (error) {
+      console.error('Error updating tradeline form status:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+      });
+      const errorMessage = error.response?.data?.message || 
+                          error.message || 
+                          'Failed to update status';
+      throw new Error(errorMessage);
+    }
+  },
+
+  // Delete tradeline form
+  async deleteTradelineForm(formId) {
+    const response = await fetch(`${API_BASE}/tradeline-forms/${formId}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+    
+    return handleResponse(response);
+  },
+
+  // Submit tradeline form (public - no auth required)
+  async submitTradelineForm(formData) {
+    const response = await fetch(`${API_BASE}/tradeline-forms`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
+    
+    return handleResponse(response);
   }
 };

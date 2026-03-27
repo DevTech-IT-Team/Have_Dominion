@@ -1,4 +1,5 @@
 const Contact = require('../../database/models/Contact');
+const { logger } = require('../../common/logger');
 
 class ContactService {
   async createContact(contactData) {
